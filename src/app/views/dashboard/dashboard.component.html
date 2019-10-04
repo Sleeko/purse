@@ -1,0 +1,33 @@
+<div class="animated fadeIn">
+  <div class="row">
+      <div class="col-sm-6 col-lg-4">
+          <div class="card text-white bg-dark">
+            <div class="card-body py-1 px-3">
+              <div class="normal-text">Your Code: {{code}}</div>
+            </div>
+          </div>
+      </div>
+  </div>
+  <div class="row">
+      <p-table [value]="members" [scrollable]="true" scrollHeight="70vh">
+          <ng-template pTemplate="header">
+              <tr>
+                  <th>Level</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Status</th>
+                  <th>Cycle</th>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData>
+              <tr>
+                  <td>{{rowData.level}}</td>
+                  <td>{{rowData.firstName}}</td>
+                  <td>{{rowData.lastName}}</td>
+                  <td>{{rowData.isActive == true ? 'Active': 'InActive'}}</td>
+                  <td>{{rowData.cycle}}</td>
+              </tr>
+          </ng-template>
+      </p-table>
+  </div>
+</div>

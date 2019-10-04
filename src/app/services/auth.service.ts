@@ -4,6 +4,9 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthService {
+
+  public isLoggedIn: boolean = false;
+   
   constructor() {}
 
   public isAuthenticated(): boolean {
@@ -23,8 +26,8 @@ export class AuthService {
       token: '2323523523DFSWERWERWER'
     };
     await sessionStorage.setItem('userData', JSON.stringify(loginApiResponce));
-    return true;
-  }
+    return false;
+  } 
 
   public async logout() {
     await sessionStorage.removeItem('userData');

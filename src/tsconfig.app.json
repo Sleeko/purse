@@ -3,23 +3,20 @@
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "baseUrl": "./",
+    "module": "esnext",
+    "target": "es5",
+    "types": [],
     "paths": {
       "@angular/*": [
         "../node_modules/@angular/*"
-      ],
-      "@nebular/*": [
-        "../node_modules/@nebular/*"
       ]
     }
   },
+  "angularCompilerOptions": {
+    "enableIvy": false
+  },
   "exclude": [
     "test.ts",
-    "**/*.spec.ts",
-    "../node_modules/@nebular/**/*.spec.ts"
-  ],
-  "include": [
-    "../src/*.ts",
-    "../src/**/*.ts",
-    "../node_modules/@nebular/**/*.ts"
+    "**/*.spec.ts"
   ]
 }

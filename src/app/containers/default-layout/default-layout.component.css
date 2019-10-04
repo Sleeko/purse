@@ -1,0 +1,8 @@
+.bar-header {
+    width: 80vw !important;
+}
+
+
+.app-header button:nth-child(3) {
+    display: none !important;
+}
