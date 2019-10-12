@@ -15,14 +15,19 @@ export class AuthService {
   constructor(public afAuth: AngularFireAuth, public db: AngularFireDatabase) {}
 
   public isAuthenticated(): boolean {
-    return this.getCurrentUser().uid !== null ? true : false;
+    const userData = sessionStorage.getItem('userData');
+    console.log(userData);
+    if (userData && userData.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public async login(postData) {
     const loginApiResponce = {
-      name: 'Srinivas Tamada',
-      uid: 1,
-      token: '2323523523DFSWERWERWER'
+      name: postData.name,
+      uid: postData.uid,
     };
     await sessionStorage.setItem('userData', JSON.stringify(loginApiResponce));
     return false;

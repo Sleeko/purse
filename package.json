@@ -1,21 +1,12 @@
 {
   "name": "purse-diverse",
-  "version": "2.5.2",
-  "description": "CoreUI Free Angular 2+ Admin Template",
+  "version": "1.0.1",
+  "description": "Purse Diverse",
   "author": {
-    "name": "Łukasz Holeczek",
-    "url": "http://holeczek.pl",
-    "github": "https://github.com/mrholek",
-    "twitter": "https://twitter.com/lukaszholeczek"
+    "name": "Łukasz Holeczek"
   },
-  "contributors": [
-    {
-      "name": "Andrzej Kopański",
-      "url": "https://github.com/xidedix"
-    }
-  ],
-  "homepage": "https://coreui.io/angular",
-  "copyright": "Copyright 2019 creativeLabs Łukasz Holeczek",
+  "homepage": "",
+  "copyright": "",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
