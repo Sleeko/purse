@@ -50,6 +50,7 @@ import {
   AppFooterModule,
   AppSidebarModule,
 } from '@coreui/angular';
+import { UserService } from './services/user.service';
 
 
 
@@ -88,7 +89,7 @@ import {
   providers: [{
     provide: LocationStrategy,
     useClass: HashLocationStrategy
-  }],
+  }, UserService],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

@@ -3,6 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import { AngularFireDatabase } from '@angular/fire/database';
+import { FirebaseUserModel } from '../model/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,13 +15,7 @@ export class AuthService {
   constructor(public afAuth: AngularFireAuth, public db: AngularFireDatabase) {}
 
   public isAuthenticated(): boolean {
-    const userData = sessionStorage.getItem('userData');
-    console.log(userData);
-    if (userData && userData.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.getCurrentUser().uid !== null ? true : false;
   }
 
   public async login(postData) {
@@ -64,4 +59,18 @@ export class AuthService {
         }, err => reject(err));
     });
   }
+
+  getCurrentUser() {
+    const user = new FirebaseUserModel();
+    this.afAuth.authState.subscribe((auth) => {
+      if (auth && auth.uid) {
+        user.uid = auth.uid;
+        user.name = auth.displayName;
+        this.isLoggedIn = true;
+      }
+    });
+
+    return user;
+  }
+
 }

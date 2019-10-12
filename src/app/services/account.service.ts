@@ -9,7 +9,6 @@ import { Observable } from 'rxjs';
 export class AccountService {
 
   private accountUrl = AppConstants.BASE_API_URL + '/account';
-  
   constructor(private http: HttpClient) { }
 
   validateCodeIfExist(code: string): Observable<any> {

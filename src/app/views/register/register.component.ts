@@ -3,16 +3,15 @@ import { FormBuilder, FormGroup, Validators, AbstractControl, FormControl } from
 import { AccountService } from '../../services/account.service';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-import { Code } from '../model/member.model';
 
 @Component({
   selector: 'app-register',
   templateUrl: 'register.component.html'
 })
-export class RegisterComponent implements OnInit{
+export class RegisterComponent implements OnInit {
 
   registerFormGroup: FormGroup;
-  listOfCode: Code[];
+  listOfCode: any[];
   constructor(private formBuilder: FormBuilder,
               private accountService: AccountService,
               private authService: AuthService,
