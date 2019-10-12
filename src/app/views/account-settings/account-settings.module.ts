@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AccountSettingsComponent } from './account-settings.component';
 import { AccountSettingsRoutingModule } from './account-settings-routing.module';
+import {NgxMaskModule} from 'ngx-mask';
+
 
 @NgModule({
   imports: [
@@ -15,7 +17,8 @@ import { AccountSettingsRoutingModule } from './account-settings-routing.module'
     BsDropdownModule,
     CommonModule,
     ReactiveFormsModule,
-    ButtonsModule.forRoot()
+    ButtonsModule.forRoot(),
+    NgxMaskModule.forRoot(),
   ],
   declarations: [ AccountSettingsComponent ]
 })
