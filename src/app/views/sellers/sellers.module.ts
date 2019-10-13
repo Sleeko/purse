@@ -6,6 +6,9 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
 
 import { SellersComponent } from './sellers.component';
 import { SellersRoutingModule } from './sellers-routing.module';
+import { NguCarouselModule } from '@ngu/carousel';
+import { CommonModule } from '@angular/common';
+
 
 @NgModule({
   imports: [
@@ -13,7 +16,10 @@ import { SellersRoutingModule } from './sellers-routing.module';
     SellersRoutingModule,
     ChartsModule,
     BsDropdownModule,
-    ButtonsModule.forRoot()
+    ButtonsModule.forRoot(),
+    NguCarouselModule,
+    FormsModule,
+    CommonModule
   ],
   declarations: [ SellersComponent ]
 })
