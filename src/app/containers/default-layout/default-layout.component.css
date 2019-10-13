@@ -3,11 +3,15 @@
 }
 
 
-.app-header button:nth-child(3) {
+.header-app /deep/ .app-header button:nth-child(4) {
     display: none !important;
 }
 
 
 .header-app /deep/ button:last-child{
     display: none !important;
+}
+
+.btn-group, .btn-group-vertical {
+    float: right;
 }
