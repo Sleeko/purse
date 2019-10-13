@@ -1,3 +1,4 @@
+<div class="header-app">
 <app-header
   [navbarBrandRouterLink]="['/dashboard']"
   [fixed]="true"
@@ -6,9 +7,23 @@
   [sidebarToggler]="'lg'"
   [asideMenuToggler]="'lg'">
   <div class="bar-header">
-
+      <div class="btn-group" dropdown>
+          <img dropdownToggle id="button-basic" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" class="rounded-circle img-fluid dropdown-toggle float-right mr-2" alt="Cinque Terre" height="35" width="35">
+          <!-- <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
+                  aria-controls="dropdown-basic">
+            Button dropdown <span class="caret"></span>
+          </button> -->
+          <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
+              role="menu" aria-labelledby="button-basic">
+            <li role="menuitem"><span class="dropdown-item" (click)="logout()">Log Out</span></li>
+            <!-- <li role="menuitem"><a class="dropdown-item" href="#">Another action</a></li> -->
+         
+          </ul>
+        </div>
+      
   </div>
 </app-header>
+</div>
 <div class="app-body">
   <app-sidebar [fixed]="true" [display]="'lg'">
     <app-sidebar-nav [navItems]="navItems" [perfectScrollbar] [disabled]="sidebarMinimized"></app-sidebar-nav>

@@ -1,7 +1,7 @@
 <div class="animated fadeIn">
   <div class="row">
       <div class="col-sm-6 col-lg-4">
-          <div class="card text-white bg-dark">
+          <div class="card text-white bg-success border-0 rounded-0">
             <div class="card-body py-1 px-3">
               <div class="normal-text">Your Code: {{code}}</div>
             </div>
@@ -9,7 +9,7 @@
       </div>
   </div>
   <div class="row dash-table">
-      <p-table [value]="members" [scrollable]="true" scrollHeight="70vh">
+      <p-table [value]="members" [scrollable]="true" scrollHeight="50vh">
           <ng-template pTemplate="header">
               <tr class="dash-header">
                   <th [ngStyle]="{'width': '10%'}">

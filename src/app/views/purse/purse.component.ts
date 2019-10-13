@@ -12,5 +12,5 @@ export class PurseComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  layAwayPurse: number = 0.20;
+  layAwayPurse: number = 60;
 }
