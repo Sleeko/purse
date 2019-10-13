@@ -40,6 +40,15 @@ export const navItems: NavData[] = [
     }
   },
   {
+    name: 'Admin Dashboard',
+    url: '/admin-dashboard',
+    icon: 'fa fa-money fa-5x',
+    badge: {
+      variant: 'info',
+      text: ''
+    }
+  },
+  {
     name: 'Purse',
     url: '/purse',
     icon: 'fa fa-money fa-5x',
