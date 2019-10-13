@@ -9,6 +9,7 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 
 import { HttpClientModule } from '@angular/common/http';
 import {TableModule} from 'primeng/table';
+import {CommonModule} from "@angular/common";
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import {TableModule} from 'primeng/table';
     BsDropdownModule,  
     HttpClientModule,
     TableModule,
-    ButtonsModule.forRoot()
+    ButtonsModule.forRoot(),
+    CommonModule
   ],
   declarations: [ DashboardComponent ]
 })

@@ -32,15 +32,14 @@ export class AccountService {
     return this.http.post(this.accountUrl + '/uploadPhoto' , photo);
   }
 
-  completeRegister(data: any, url: any) {
-    data.photo = url;
+  completeRegister(photoUrl: any, data: any) {
+    data.photo = photoUrl;
     return this.http.post(this.completeRegister + '/completeRegister' , data);
   }
 
-
   savePhotoAndRegister(photo: any, data: any){
     return this.http.post(this.accountUrl + '/uploadPhoto' , photo).pipe(
-      flatMap(url=> this.completeRegister(data, url))
+      flatMap(photoUrl=> this.completeRegister(photoUrl, data))
     );
   }
   

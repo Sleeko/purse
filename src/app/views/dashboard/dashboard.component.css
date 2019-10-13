@@ -5,3 +5,41 @@
 .purse-label {
     font-size: 1rem !important;
 }
+
+.dash-header > th, .dash-body > td{
+    border:0px !important;
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #c8ced3;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-size: 0.875rem;
+}
+
+.dash-table /deep/ .ui-table-scrollable-header{
+     border: 1px solid #adb4ba !important;
+ }
+
+
+.dash-header > th {
+    color: #5c6873;
+    background-color: #e4e7ea;
+    border-color: #c8ced3;
+}
+
+.dash-header > th {
+    color: #5c6873;
+    background-color: #e4e7ea;
+    border-color: #c8ced3;
+    vertical-align: bottom;
+    border-bottom: 2px solid #c8ced3;
+}
+
+.dash-body td {
+    vertical-align: middle;
+}
+
+.img-avatar, .avatar > img, .img-circle {
+    max-width: 100%;
+    height: auto;
+    border-radius: 50em;
+}

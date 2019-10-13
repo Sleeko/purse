@@ -8,22 +8,31 @@
           </div>
       </div>
   </div>
-  <div class="row">
+  <div class="row dash-table">
       <p-table [value]="members" [scrollable]="true" scrollHeight="70vh">
           <ng-template pTemplate="header">
-              <tr>
+              <tr class="dash-header">
+                  <th [ngStyle]="{'width': '10%'}">
+                        <i class="icon-people"></i>
+                  </th>
+                  <th>Name</th>
                   <th>Level</th>
-                  <th>First Name</th>
-                  <th>Last Name</th>
                   <th>Status</th>
                   <th>Cycle</th>
               </tr>
           </ng-template>
           <ng-template pTemplate="body" let-rowData>
-              <tr>
+              <tr class="dash-body">
+                  <td [ngStyle]="{'width': '10%'}">
+                    <img [src]="rowData.photoUrl" class="rounded-circle img-fluid" alt="Cinque Terre" height="35" width="35">
+                  </td>
+                  <td>
+                      <div>{{rowData.firstName +  " " + rowData.lastName}}</div>
+                      <div class="small text-muted">
+                            <span>Registered: {{rowData.registered |  date}}</span>
+                       </div>
+                  </td>
                   <td>{{rowData.level}}</td>
-                  <td>{{rowData.firstName}}</td>
-                  <td>{{rowData.lastName}}</td>
                   <td>{{rowData.isActive == true ? 'Active': 'InActive'}}</td>
                   <td>{{rowData.cycle}}</td>
               </tr>
