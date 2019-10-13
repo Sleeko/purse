@@ -26,51 +26,50 @@ export class AccountSettingsComponent implements OnInit {
     let nowDate = new Date().toISOString().split('T')[0];
     console.log(nowDate);
     this.registerCompleteFormGroup = this.formBuilder.group({
-      firstName: ['',[Validators.required]],
-      middleName: ['',[Validators.required]],
-      lastName: ['',[Validators.required]],
-      address: ['',[Validators.required]],
-      dateOfBirth: [nowDate,[Validators.required, CustomValidators.ageValidator]],
-      placeOfBirth: [null,[Validators.required]],
-      gender: [null,[Validators.required]],
-      civilStatus: ['',[Validators.required]],
-      nationality: ['',[Validators.required]],
-      contactNumber: ['',[Validators.required]],
-      tinNumber: [null,[Validators.required]],
-      bankAccount: [null,[Validators.required]],
+      firstName: ['', [Validators.required]],
+      middleName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
+      address: ['', [Validators.required]],
+      dateOfBirth: [nowDate, [Validators.required, CustomValidators.ageValidator]],
+      placeOfBirth: [null, [Validators.required]],
+      gender: [null, [Validators.required]],
+      civilStatus: ['', [Validators.required]],
+      nationality: ['', [Validators.required]],
+      contactNumber: ['', [Validators.required]],
+      tinNumber: [null, [Validators.required]],
+      bankAccount: [null, [Validators.required]],
       emailAddress: [null],
-      photo: [null,[Validators.required]],
-      paymayaAccount: [null,[Validators.required]],
+      photo: [null, [Validators.required]],
+      paymayaAccount: [null, [Validators.required]],
       beneficiaries: this.formBuilder.array([this.beneficiaries])
     });
     console.log(this.registerCompleteFormGroup);
-    
   }
 
   get beneficiaries(): FormGroup {
     let nowDate = new Date().toISOString().split('T')[0];
     return this.formBuilder.group({
-      firstName: ['',[Validators.required]],
-      middleName: ['',[Validators.required]],
+      firstName: ['', [Validators.required]],
+      middleName: ['', [Validators.required]],
       lastName: ['',[Validators.required]],
-      address: ['',[Validators.required]],
+      address: ['', [Validators.required]],
       dateOfBirth: [nowDate,[Validators.required]],
-      placeOfBirth: [null,[Validators.required]],
-      gender: [null,[Validators.required]],
-      civilStatus: ['',[Validators.required]],
-      nationality: ['',[Validators.required]],
-      contactNumber: ['',[Validators.required]],
-      tinNumber: [null,[Validators.required]],
+      placeOfBirth: [null, [Validators.required]],
+      gender: [null, [Validators.required]],
+      civilStatus: ['', [Validators.required]],
+      nationality: ['', [Validators.required]],
+      contactNumber: ['', [Validators.required]],
+      tinNumber: [null, [Validators.required]],
     });
   }
 
 
   addBenefeciary() {
-    (this.registerCompleteFormGroup.get("beneficiaries") as FormArray).push(this.beneficiaries);
+    (this.registerCompleteFormGroup.get('beneficiaries') as FormArray).push(this.beneficiaries);
   }
 
   deleteBeneficiary(index) {
-    (this.registerCompleteFormGroup.get("beneficiaries") as FormArray).removeAt(index);
+    (this.registerCompleteFormGroup.get('beneficiaries') as FormArray).removeAt(index);
   }
 
   onFileChange($event) {
@@ -82,19 +81,17 @@ export class AccountSettingsComponent implements OnInit {
 
   completeRegister(value: any) {
     this.accountService.savePhotoAndRegister(this.photoFile, value).subscribe(
-      data=> {
+      data => {
 
       },
-      err=>{
+      err => {
 
-      }, 
-      ()=> {
+      },
+      () => {
         alert('Registratio Successfuly completed');
-      }
-    )
+      });
   }
 
-  
 
   // Clone any Object
   cloneObject(object: any) {

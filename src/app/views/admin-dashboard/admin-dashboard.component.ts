@@ -10,7 +10,6 @@ import { Product } from '../../model/product.model';
 @Component({
   templateUrl: 'admin-dashboard.component.html',
   styles: [`
-
     h1{
       min-height: 200px;
       background-color: #ccc;
@@ -47,7 +46,6 @@ import { Product } from '../../model/product.model';
     .text-purse {
       color: #20853b;
     }
-    
   `]
 })
 export class AdminDashboardComponent implements OnInit {
