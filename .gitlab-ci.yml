@@ -24,7 +24,6 @@ build:
   only:
     - staging
 
-
 deploy:
   stage: deploy
   only:
