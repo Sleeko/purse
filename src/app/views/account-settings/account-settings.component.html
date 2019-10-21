@@ -237,7 +237,7 @@
                 <label>Beneficiaries' Details</label>
                 <br/>
                 <div formArrayName="beneficiaries">
-                    <div *ngFor=" let beneficiary of registerCompleteFormGroup.get('beneficiaries').controls; let beneficiaryIndex = index"
+                    <div *ngFor=" let beneficiary of registerCompleteFormGroup.get('beneficiaries')['controls']; let beneficiaryIndex = index"
                       [formGroupName]="beneficiaryIndex" class="px-3">
                       <div class="card">
                           <div class="card-header py-1 pt-2"><span class="mt-2">Beneficiary {{beneficiaryIndex + 1}}</span>
