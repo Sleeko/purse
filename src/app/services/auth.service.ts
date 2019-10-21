@@ -65,6 +65,17 @@ export class AuthService {
     });
   }
 
+  doLogout() {
+    return new Promise((resolve, reject) => {
+      if (firebase.auth().currentUser) {
+        this.afAuth.auth.signOut();
+        resolve();
+      } else {
+        reject();
+      }
+    });
+  }
+
   getCurrentUser() {
     const user = new FirebaseUserModel();
     this.afAuth.authState.subscribe((auth) => {
