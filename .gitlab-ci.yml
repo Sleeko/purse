@@ -21,16 +21,18 @@ build:
   script:
     - npm install @angular/cli
     - ./node_modules/.bin/ng build --prod --build-optimizer
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist/*
   only:
     - staging
 
 deploy:
   stage: deploy
-  only:
-    - staging 
   script:
     - npm install -g firebase-tools
-    - firebase use --token $FIREBASE_TOKEN
+    - firebase use --add purse-diverse --token $FIREBASE_TOKEN staging
     - firebase deploy --token $FIREBASE_TOKEN
   only:
     - staging
