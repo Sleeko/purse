@@ -67,6 +67,15 @@ export const navItems: NavData[] = [
     }
   },
   {
+    name: 'Vouchers',
+    url: '/vouchers',
+    icon: 'fa fa-clipboard fa-5x',
+    badge: {
+      variant: 'info',
+      text: ''
+    }
+  },
+  {
     name: 'Account Settings',
     url: '/account-settings',
     icon: 'fa fa-user-o fa-5x',
@@ -90,6 +99,15 @@ export const navItems: NavData[] = [
     icon: 'fa fa-file fa-5x',
     badge: {
       variant: 'info',
+      text: ''
+    }
+  },
+  {
+    name: 'Quit',
+    url:'',
+    icon: 'fa fa-ban fa-5x',
+    badge: {
+      variant : 'info',
       text: ''
     }
   }

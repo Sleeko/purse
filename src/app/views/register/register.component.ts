@@ -29,6 +29,9 @@ export class RegisterComponent implements OnInit {
         //[Validators.required],
         //this.validateCode.bind(this)
       ],
+      referrerCode : [
+        ''
+      ],
       passwords: this.formBuilder.group({
           password: ['', [Validators.required]],
           confirm_password: ['', [Validators.required]],
@@ -61,6 +64,7 @@ export class RegisterComponent implements OnInit {
     const req = {
       email: formData.email,
       code: formData.code,
+      referrerCode : formData.referrerCode,
       password: formData.passwords.password,
     };
 

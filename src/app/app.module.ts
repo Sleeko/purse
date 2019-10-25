@@ -27,6 +27,8 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ChartsModule } from 'ng2-charts';
 import { HttpClientModule } from '@angular/common/http';
+import { NgxSpinnerModule } from "ngx-spinner";
+
 
 import { AppComponent } from './app.component';
 
@@ -51,6 +53,7 @@ import {
   AppSidebarModule,
 } from '@coreui/angular';
 import { UserService } from './services/user.service';
+import { RequestVoucherComponent } from './views/request-voucher/request-voucher.component';
 
 
 
@@ -75,7 +78,8 @@ import { UserService } from './services/user.service';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireDatabaseModule,
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    NgxSpinnerModule
   ],
   declarations: [
     AppComponent,
@@ -84,7 +88,7 @@ import { UserService } from './services/user.service';
     P500Component,
     LoginComponent,
     RegisterComponent,
-    ForgotComponent
+    ForgotComponent,
   ],
   providers: [{
     provide: LocationStrategy,

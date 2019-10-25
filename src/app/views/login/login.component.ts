@@ -52,6 +52,7 @@ export class LoginComponent implements OnInit {
       .then(res => {
         if (this.authService.login(this.authService.getCurrentUser())) {
           this.router.navigate(['/dashboard']);
+          console.log('Current User ' , this.authService.getCurrentUser());
         }
       }, err => {
         console.log(err);

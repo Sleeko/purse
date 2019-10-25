@@ -87,6 +87,10 @@ export const routes: Routes = [
       {
         path: 'terms-and-conditions',
         loadChildren: () => import('./views/terms-and-conditions/terms-and-conditions.module').then(m => m.TermsAndConditionsModule)
+      },
+      {
+        path: 'vouchers',
+        loadChildren: () => import('./views/vouchers/vouchers.module').then(m => m.VouchersModule)
       }
     ]
   },
