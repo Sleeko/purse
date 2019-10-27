@@ -28,6 +28,7 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ChartsModule } from 'ng2-charts';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxSpinnerModule } from "ngx-spinner";
+import {CarouselModule} from 'primeng/carousel';
 
 
 import { AppComponent } from './app.component';
@@ -54,6 +55,7 @@ import {
 } from '@coreui/angular';
 import { UserService } from './services/user.service';
 import { RequestVoucherComponent } from './views/request-voucher/request-voucher.component';
+import { NguCarousel, NguCarouselModule } from '@ngu/carousel';
 
 
 
@@ -79,7 +81,9 @@ import { RequestVoucherComponent } from './views/request-voucher/request-voucher
     AngularFirestoreModule,
     AngularFireDatabaseModule,
     AngularFireAuthModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    NguCarouselModule,
+    CarouselModule
   ],
   declarations: [
     AppComponent,

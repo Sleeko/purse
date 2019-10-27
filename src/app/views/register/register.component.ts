@@ -3,21 +3,91 @@ import { FormBuilder, FormGroup, Validators, AbstractControl, FormControl } from
 import { AccountService } from '../../services/account.service';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { NguCarouselConfig } from '@ngu/carousel';
+import { Observable, interval } from 'rxjs';
+import { startWith, take, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-register',
-  templateUrl: 'register.component.html'
+  templateUrl: 'register.component.html',
+  styles : [
+    ` h1{
+      min-height: 200px;
+      background-color: #ccc;
+      text-align: center;
+      line-height: 200px;
+    }
+    .leftRs {
+        position: absolute;
+        margin: auto;
+        top: 0;
+        bottom: 0;
+        width: 50px;
+        height: 50px;
+        box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, .3);
+        border-radius: 999px;
+        left: 0;
+    }
+
+    .rightRs {
+        position: absolute;
+        margin: auto;
+        top: 0;
+        bottom: 0;
+        width: 50px;
+        height: 50px;
+        box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, .3);
+        border-radius: 999px;
+        right: 0;
+    }
+    .product-style {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-size: 0.9rem;
+    }
+    .text-purse {
+      color: #20853b;
+    }
+    
+    input[type=radio] {
+      height: 1.2em;
+  }
+
+    `
+  ]
 })
 export class RegisterComponent implements OnInit {
 
+  // carouselConfig: NguCarouselConfig = {
+  //   grid: { xs: 1, sm: 1, md: 1, lg: 1, all: 0 },
+  //   load: 3,
+  //   interval: {timing: 4000, initialDelay: 1000},
+  //   loop: true,
+  //   touch: true,
+  //   velocity: 0.2
+  // }
+
+  // test : string[] = ['1','2','3'];
+  // carouselItems : Observable<String[]>;
   registerFormGroup: FormGroup;
   listOfCode: any[];
+  isSeller : boolean = false;
+
   constructor(private formBuilder: FormBuilder,
               private accountService: AccountService,
               private authService: AuthService,
               public router: Router) { }
 
   ngOnInit() {
+    // this.carouselItems = interval(500).pipe(
+    //   startWith(-1),
+    //   take(10),
+    //   map(val => {
+    //     let i=0;
+    //     const data = this.test;
+    //     return data;
+    //   })
+    // );
+    
     this.registerFormGroup = this.formBuilder.group({
       email: [
         '',
@@ -32,6 +102,18 @@ export class RegisterComponent implements OnInit {
       referrerCode : [
         ''
       ],
+      sellerName:[
+        ''       
+      ],
+      contactNumber : [
+        null
+      ],
+      sellerUrl : [
+        ''
+      ],
+      isSeller : [
+        1
+      ],
       passwords: this.formBuilder.group({
           password: ['', [Validators.required]],
           confirm_password: ['', [Validators.required]],
@@ -39,6 +121,7 @@ export class RegisterComponent implements OnInit {
     });
     console.log(this.registerFormGroup);
     this.authService.getListOfCode().valueChanges().subscribe(e => this.listOfCode = e);
+    this.registerFormGroup.get('isSeller').valueChanges.subscribe(data => { data == 1 ? this.isSeller = true : this.isSeller = false });
   }
 
   passwordConfirming(c: AbstractControl): { invalid: boolean } {
@@ -100,5 +183,8 @@ export class RegisterComponent implements OnInit {
         alert(err.message);
       });
   }
+
+ 
+  
 
 }
