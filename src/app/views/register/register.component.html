@@ -9,7 +9,7 @@
               <img width="60%" alt="Angular Logo" src="assets/images/Purse Diversified Logo - 01.jpg">
             </div>
             <h5 class="card-title text-center mt-4 mb-3 text-success lead font-weight-bold">REGISTER</h5>
-            <div *ngIf="isSeller" class="animated fadeIn fadeOut">
+            <div *ngIf="!isSeller" class="animated fadeIn fadeOut">
               <div class="form-group">
                 <label>Seller Name</label>
                 <input class="form-control" formControlName="sellerName">
@@ -47,11 +47,13 @@
               <div class="row">
                 <div class="col-2" style="margin-left:33%">
                   <label for="seller">Seller</label>
-                  <input class="form-control" type="radio" name="isSeller" id="seller" [value]="1" formControlName="isSeller">
+                  <input class="form-control" type="radio" name="isSeller" id="seller" [value]="0"
+                    formControlName="isSeller">
                 </div>
                 <div class="col-2">
                   <label for="member">Member</label>
-                  <input type="radio" class="form-control" name="isSeller" id="member" [value]="0" formControlName="isSeller">
+                  <input type="radio" class="form-control" name="isSeller" id="member" [value]="1"
+                    formControlName="isSeller">
                 </div>
               </div>
             </div>
@@ -82,21 +84,15 @@
         </div>
       </div>
       <div class="carousel">
-        <!-- <ngu-carousel #myCarousel [inputs]="carouselConfig" [dataSource]="test">
-          <div *nguCarouselDef="let item;" class="item">
-            <div class="tile">{{item}}</div>
-          </div>
+        <ngu-carousel #myCarousel [inputs]="carouselConfig" [dataSource]="carouselItems | async">
+          <ngu-tile *nguCarouselDef="let item; let i = index; let ani = animate">
+            <div class="tile">
+              <img style="width:100%;height:180px;" [src]="item.photoUrl" alt="" />
+            </div>
+          </ngu-tile>
           <button NguCarouselNext class="rightRs">></button>
           <button NguCarouselPrev class="leftRs"><</button>
-          <ul class="myPoint" NguCarouselPoint>
-            <li *ngFor="let j of myCarousel.pointNumbers; let j = index" [class.active]="j==myCarousel.activePoint" (click)="myCarousel.moveTo(j)"></li>
-          </ul>
-        </ngu-carousel> -->
-        <!-- <carousel [value]="test">
-          <ng-template let-car pTemplate="item">
-              Content to display
-          </ng-template>
-      </carousel> -->
+        </ngu-carousel>
       </div>
     </div>
   </div>

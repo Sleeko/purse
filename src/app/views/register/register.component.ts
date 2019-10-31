@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { NguCarouselConfig } from '@ngu/carousel';
 import { Observable, interval } from 'rxjs';
 import { startWith, take, map } from 'rxjs/operators';
+import { Product } from '../../model/product.model';
 
 @Component({
   selector: 'app-register',
@@ -57,20 +58,47 @@ import { startWith, take, map } from 'rxjs/operators';
 })
 export class RegisterComponent implements OnInit {
 
-  // carouselConfig: NguCarouselConfig = {
-  //   grid: { xs: 1, sm: 1, md: 1, lg: 1, all: 0 },
-  //   load: 3,
-  //   interval: {timing: 4000, initialDelay: 1000},
-  //   loop: true,
-  //   touch: true,
-  //   velocity: 0.2
-  // }
+  carouselConfig: NguCarouselConfig = {
+    grid: { xs: 1, sm: 1, md: 1, lg: 3, all: 0 },
+    speed: 250,
+    point: {
+      visible: true
+    },
+    touch: true,
+    loop: true,
+    interval: { timing: 1500 },
+    animation: 'lazy'
+  }
 
-  // test : string[] = ['1','2','3'];
-  // carouselItems : Observable<String[]>;
+  imgags: any[] = [
+    {
+      photoUrl: "https://picsum.photos/id/237/200/322"
+    },
+    {
+      photoUrl: "https://picsum.photos/id/222/200/312"
+    },
+    {
+      photoUrl: "https://picsum.photos/id/236/200/324"
+    },
+    {
+      photoUrl: "https://picsum.photos/id/235/200/342"
+    },
+    {
+      photoUrl: "https://picsum.photos/id/234/200/325"
+    },
+    {
+      photoUrl: "https://picsum.photos/id/324/200/352"
+    },
+    {
+      photoUrl: "https://picsum.photos/id/232/200/315"
+    }
+  ];
+
+  test : string[] = ['asdasdasdasdasd','12312312312312312','zxc123zxc123zxcasd123'];
+  carouselItems : Observable<Featured[]>;
   registerFormGroup: FormGroup;
   listOfCode: any[];
-  isSeller : boolean = false;
+  isSeller : boolean = true;
 
   constructor(private formBuilder: FormBuilder,
               private accountService: AccountService,
@@ -78,15 +106,15 @@ export class RegisterComponent implements OnInit {
               public router: Router) { }
 
   ngOnInit() {
-    // this.carouselItems = interval(500).pipe(
-    //   startWith(-1),
-    //   take(10),
-    //   map(val => {
-    //     let i=0;
-    //     const data = this.test;
-    //     return data;
-    //   })
-    // );
+    this.carouselItems = interval(500).pipe(
+      startWith(-1),
+      take(10),
+      map(val => {
+        let i=0;
+        const data = this.imgags;
+        return data;
+      })
+    );
     
     this.registerFormGroup = this.formBuilder.group({
       email: [
@@ -183,8 +211,8 @@ export class RegisterComponent implements OnInit {
         alert(err.message);
       });
   }
+}
 
- 
-  
-
+export class Featured {
+    photoUrl : string;
 }

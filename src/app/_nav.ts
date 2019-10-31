@@ -85,14 +85,22 @@ export const navItems: NavData[] = [
     }
   },
   {
-    name: 'FAQ',
-    url: '/faq',
-    icon: 'fa fa-question-circle fa-5x',
+    name: 'New Page',
+    url: '/new-page',
+    icon: 'fa fa-sticky-note fa-5x',
     badge: {
       variant: 'info',
       text: ''
     }
-  },
+  },  // {
+  //   name: 'FAQ',
+  //   url: '/faq',
+  //   icon: 'fa fa-question-circle fa-5x',
+  //   badge: {
+  //     variant: 'info',
+  //     text: ''
+  //   }
+  // },
   {
     name: 'Terms and Conditions',
     url: '/terms-and-conditions',
@@ -104,12 +112,12 @@ export const navItems: NavData[] = [
   },
   {
     name: 'Quit',
-    url:'',
     icon: 'fa fa-ban fa-5x',
     badge: {
       variant : 'info',
       text: ''
     }
-  }
+  },
+
 
 ];

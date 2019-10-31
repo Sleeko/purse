@@ -9,6 +9,7 @@ import { LoginComponent } from './views/login/login.component';
 import { RegisterComponent } from './views/register/register.component';
 import { AuthGuard } from './guards/auth.guard';
 import { ForgotComponent } from './views/forgot/forgot.component';
+import { NewPageModule } from './views/new-page/new-page.module';
 
 export const routes: Routes = [
   {
@@ -91,6 +92,10 @@ export const routes: Routes = [
       {
         path: 'vouchers',
         loadChildren: () => import('./views/vouchers/vouchers.module').then(m => m.VouchersModule)
+      },
+      {
+        path: 'new-page',
+        loadChildren: () => import('./views/new-page/new-page.module').then(m => m.NewPageModule)
       }
     ]
   },
