@@ -13,7 +13,9 @@ export class VouchersComponent implements OnInit {
   vouchers: Voucher[] = [];
 
   currentUser;
-  isAdmin : boolean = true;
+
+  //change this while role is not implemented
+  isAdmin : boolean = false;
 
   constructor(
     private modalService: NgbModal,

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FeaturedContent } from '../../model/featured-content.model';
 
 @Component({
   selector: 'app-new-page',
@@ -21,6 +22,9 @@ export class NewPageComponent implements OnInit {
   }
 
   saveNewFeaturedContent(){
+    var content : FeaturedContent;
+    content = this.contentForm.getRawValue();
+    console.log('Content ' , content);
   }
 
 }
