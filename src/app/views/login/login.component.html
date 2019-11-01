@@ -1,0 +1,40 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+      <div class="card card-signin mt-4 mb-3">
+        <div class="card-body">
+          <form class="form-signin" [formGroup]="loginForm">
+            <div class="p-20 text-center mb-5">
+              <img width="60%" alt="Purse Logo" src="assets/images/Purse Diversified Logo - 01.jpg">
+            </div>
+            <div class="form-label-group mt-3 control">
+              <label for="inputEmail small font-weight-bold">Email address:</label>
+              <input  class="form-control" id="inputEmail" type="text" formControlName="email" >
+            </div>
+            <div class="form-label-group mt-3 control">
+              <label for="inputPassword small font-weight-bold">Password:</label>
+              <input type="password" id="inputPassword" formControlName="password" class="form-control" placeholder="Password">
+            </div>
+            <div class="custom-control custom-checkbox mt-2">
+              <label class="float-right small">
+                  <div class="control">
+                      <a class="ForgetPwd text-success" routerLink="/forgot" >Forgot password?</a>
+                   </div>
+              </label>
+            </div>
+            <div class="mt-5 mb-2">
+                <button class="btn btn-md btn-success btn-block text-uppercase" (click)="tryLogin(loginForm.value)">Log In</button>
+            </div>
+          </form>
+          <div class="text-center p-0 pt-3">
+              <small class="form-text text-muted">Don't have an account? Sign up
+                  <a class="text-success font-weight-bold" routerLink="/register" routerLinkActive="active">
+                    here
+                  </a>
+              </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
