@@ -1,31 +1,30 @@
 <div class="container animated fadeIn">
     <button *ngIf="!isAdmin" class="mb-1 btn btn-primary btn-right" (click)="requestVoucher()">Request Voucher</button>
     <div>
-            <p-table [value]="vouchers" styleClass="ui-noborder"> 
-                    <ng-template pTemplate="header">
-                        <tr class="text-center">
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Store Name</th>
-                            <th>{{isAdmin ? 'Amount':'Amount Request'}}</th>
-                            <th *ngIf="!isAdmin">Status</th>
-                            <th *ngIf="isAdmin"></th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-voucher let-i="rowIndex">
-                        <tr class="text-center">
-                            <td>{{i+1}}</td>
-                            <td>{{voucher.name}}</td>
-                            <td>{{voucher.storeCode}}</td>
-                            <td>₱{{voucher.amount}}</td>
-                            <td *ngIf="!isAdmin">{{voucher.status | uppercase}}</td>
-                            <td *ngIf="isAdmin">
-                                <button class="btn btn-success mx-1" (click)="approveVoucher(voucher?.id)">Approve</button>
-                                <button class="btn btn-danger" (click)="denyVoucher(voucher?.id)">Deny</button>
-                            </td>
-                        </tr>
-                    </ng-template>
-                </p-table>
+        <p-table [value]="vouchers">
+            <ng-template pTemplate="header">
+                <tr class="text-center" style="font-size: 1.25em">
+                    <th class="w-10">#</th>
+                    <th>Name</th>
+                    <th>Store Name</th>
+                    <th class="w-15">{{isAdmin ? 'Amount':'Amount Request'}}</th>
+                    <th *ngIf="!isAdmin">Status</th>
+                    <th *ngIf="isAdmin"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-voucher let-i="rowIndex">
+                <tr class="text-center">
+                    <td>{{i+1}}</td>
+                    <td>{{voucher.name}}</td>
+                    <td>{{voucher.storeCode}}</td>
+                    <td>₱{{voucher.amount}}</td>
+                    <td *ngIf="!isAdmin">{{voucher.status | uppercase}}</td>
+                    <td *ngIf="isAdmin">
+                        <button class="btn btn-success mx-1" (click)="approveVoucher(voucher?.id)">Approve</button>
+                        <button class="btn btn-danger" (click)="denyVoucher(voucher?.id)">Deny</button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
     </div>
 </div>
-

@@ -13,6 +13,8 @@ export class VouchersComponent implements OnInit {
   vouchers: Voucher[] = [];
 
   currentUser;
+
+  //change this while role is not implemented
   isAdmin : boolean = false;
 
   constructor(
