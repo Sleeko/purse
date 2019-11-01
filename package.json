@@ -45,6 +45,7 @@
     "moment": "^2.24.0",
     "mutationobserver-shim": "^0.3.3",
     "ng2-charts": "^2.3.0",
+    "ng2-currency-mask": "^5.3.1",
     "ngb-modal": "^2.0.3",
     "ngx-bootstrap": "^5.2.0",
     "ngx-mask": "^8.1.2",

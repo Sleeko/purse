@@ -96,6 +96,10 @@ export const routes: Routes = [
       {
         path: 'new-page',
         loadChildren: () => import('./views/new-page/new-page.module').then(m => m.NewPageModule)
+      },
+      {
+        path: 'quit',
+        loadChildren: () => import('./views/quit/quit.module').then(m => m.QuitModule)
       }
     ]
   },

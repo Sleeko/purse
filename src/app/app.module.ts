@@ -54,7 +54,6 @@ import {
   AppSidebarModule,
 } from '@coreui/angular';
 import { UserService } from './services/user.service';
-import { RequestVoucherComponent } from './views/request-voucher/request-voucher.component';
 import { NguCarousel, NguCarouselModule } from '@ngu/carousel';
 
 
@@ -83,7 +82,7 @@ import { NguCarousel, NguCarouselModule } from '@ngu/carousel';
     AngularFireAuthModule,
     NgxSpinnerModule,
     NguCarouselModule,
-    CarouselModule
+    CarouselModule,
   ],
   declarations: [
     AppComponent,

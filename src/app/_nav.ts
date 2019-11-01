@@ -112,6 +112,7 @@ export const navItems: NavData[] = [
   },
   {
     name: 'Quit',
+    url: '/quit',
     icon: 'fa fa-ban fa-5x',
     badge: {
       variant : 'info',

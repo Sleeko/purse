@@ -56,11 +56,11 @@ export class VouchersComponent implements OnInit {
   }
 
   denyVoucher(voucherId){
-
+    //TODO
   }
 
   approveVoucher(voucherId){
-
+    //TODO
   }
 
 }
