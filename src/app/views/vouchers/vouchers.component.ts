@@ -13,7 +13,7 @@ export class VouchersComponent implements OnInit {
   vouchers: Voucher[] = [];
 
   currentUser;
-  isAdmin : boolean = true;
+  isAdmin : boolean = false;
 
   constructor(
     private modalService: NgbModal,
