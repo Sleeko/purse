@@ -5,6 +5,7 @@ import { QuitRoutingModule } from './quit-routing.module';
 import { QuitComponent } from './quit.component';
 import { SharedModalComponent } from '../shared-modal/shared-modal.component';
 import { SharedModalModule } from '../shared-modal/shared-modal.module';
+import { NgbModule, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -13,9 +14,13 @@ import { SharedModalModule } from '../shared-modal/shared-modal.module';
     CommonModule,
     QuitRoutingModule,
     SharedModalModule,
+    NgbModule
   ],
   entryComponents : [
-    SharedModalComponent
+    SharedModalComponent,
+  ],
+  providers: [
+    NgbActiveModal
   ]
 
 })

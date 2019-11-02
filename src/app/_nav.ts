@@ -75,15 +75,15 @@ export const navItems: NavData[] = [
       text: ''
     }
   },
-  {
-    name: 'Account Settings',
-    url: '/account-settings',
-    icon: 'fa fa-user-o fa-5x',
-    badge: {
-      variant: 'info',
-      text: ''
-    }
-  },
+  // {
+  //   name: 'Account Settings',
+  //   url: '/account-settings',
+  //   icon: 'fa fa-user-o fa-5x',
+  //   badge: {
+  //     variant: 'info',
+  //     text: ''
+  //   }
+  // },
   {
     name: 'New Page',
     url: '/new-page',

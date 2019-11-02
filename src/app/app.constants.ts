@@ -30,6 +30,7 @@ export class AppConstants {
   public static get SEARCH_BUTTON(): string { return 'searchBtn'; }
   public static get CLEAR_BUTTON(): string { return 'clearBtn'; }
 
+
   // variables
   public static get SESSION_TIMEOUT_THRESHOLD(): number { return 300; }
   public static get UNITS(): any { return [ 'g', 'ml', 'tablets', 'capsules', 'troches', 'suppositories', 'lollipops', 'treats', 'other' ]}
@@ -37,4 +38,7 @@ export class AppConstants {
   public static get STRENGTH_PERCENT(): string { return '%'; }
   public static get STRENGTH_MG(): string { return 'mg'; }
   public static get STRENGTH_RATIO(): string { return ':'; }
+  public static get YES() : string { return 'Yes';}
+  public static get NO() : string { return 'No';}
+
 }

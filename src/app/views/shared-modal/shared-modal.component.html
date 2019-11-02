@@ -1,10 +1,17 @@
 <div class="card">
     <div class="card-header">
-        <p>{{header}}</p>
+        <h4 class="pt-2">{{header}}</h4>
     </div>
     <div class="card-body text-center">
         <span>{{message}}</span>
     </div>
-    <button *ngIf="isBtn1Show" (click)="btn1Click()">{{btn1}}</button>
-    <button *ngIf="isBtn2Show" (click)="btn2Click()">{{btn2}}</button>
+    <div>
+        <div class="card-footer">
+            <div class="float-right mb-2">
+                <button class="btn btn-outline-dark" *ngIf="isBtn1Show" (click)="btn1Click()">{{btn1}}</button>
+                <button class="btn btn-outline-dark" *ngIf="isBtn2Show" (click)="btn2Click()">{{btn2}}</button>
+            </div>
+        </div>
+    </div>
+
 </div>
