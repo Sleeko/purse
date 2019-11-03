@@ -94,6 +94,10 @@ export const routes: Routes = [
         loadChildren: () => import('./views/vouchers/vouchers.module').then(m => m.VouchersModule)
       },
       {
+        path: 'contact-us',
+        loadChildren: () => import('./views/contact-us/contact-us.module').then(m => m.ContactUsModule)
+      },
+      {
         path: 'new-page',
         loadChildren: () => import('./views/new-page/new-page.module').then(m => m.NewPageModule)
       },
