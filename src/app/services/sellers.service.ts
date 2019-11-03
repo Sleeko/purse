@@ -11,7 +11,7 @@ export class SellersService {
   constructor(private http: HttpClient) { }
 
   getSellers() {
-    // let url: any = ""
-    // return this.http.get<any[]>(url);
+    let url: any = ""
+    return this.http.get<any[]>(url);
   }
 }
