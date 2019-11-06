@@ -100,6 +100,10 @@ export const routes: Routes = [
       {
         path: 'quit',
         loadChildren: () => import('./views/quit/quit.module').then(m => m.QuitModule)
+      },
+      {
+        path :'seller-profile',
+        loadChildren: () => import('./views/seller-profile/seller-profile.module').then(m => m.SellerProfileModule)
       }
     ]
   },
