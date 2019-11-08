@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { SellerProfileRoutingModule } from './seller-profile-routing.module';
 import { SellerProfileComponent } from './seller-profile.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import {TabMenuModule} from 'primeng/tabmenu';
+import {MenuItem} from 'primeng/api';
 
 
 
@@ -13,6 +15,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     SellerProfileRoutingModule,
     ReactiveFormsModule,
+    TabMenuModule,
   ],
 })
 export class SellerProfileModule { }

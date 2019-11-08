@@ -98,6 +98,9 @@ export class DashboardComponent implements OnInit {
 
   member: Member;
 
+  //change this one to TRUE to reveal the SELLER PROFILE component.
+  isSeller : boolean = false;
+
   constructor(private memberService: MemberService) { }
 
   ngOnInit(): void {

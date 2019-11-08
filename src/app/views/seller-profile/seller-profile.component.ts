@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-seller-profile',
@@ -8,6 +9,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class SellerProfileComponent implements OnInit {
 
+  private items : MenuItem[];
   private sellerProfileForm : FormGroup;
   private sellerProfileEditDisabled : boolean = true;
 
@@ -17,6 +19,11 @@ export class SellerProfileComponent implements OnInit {
 
   ngOnInit() {
     this.initSellerProfile();
+    this.items = [
+      {label: 'Dashboard', icon: 'fa fa-fw fa-bar-chart'},
+      {label: 'Calendar', icon: 'fa fa-fw fa-calendar'},
+      {label: 'Settings', icon: 'fa fa-fw fa-book'},
+  ];
   }
 
   initSellerProfile(){
