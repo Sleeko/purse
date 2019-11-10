@@ -11,7 +11,7 @@ import { Product } from '../../model/product.model';
 @Component({
   selector: 'app-register',
   templateUrl: 'register.component.html',
-  styles : [
+  styles: [
     ` h1{
       min-height: 200px;
       background-color: #ccc;
@@ -52,6 +52,14 @@ import { Product } from '../../model/product.model';
     input[type=radio] {
       height: 1.2em;
   }
+
+  input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}
 
     `
   ]
@@ -94,28 +102,28 @@ export class RegisterComponent implements OnInit {
     }
   ];
 
-  test : string[] = ['asdasdasdasdasd','12312312312312312','zxc123zxc123zxcasd123'];
-  carouselItems : Observable<Featured[]>;
+  test: string[] = ['asdasdasdasdasd', '12312312312312312', 'zxc123zxc123zxcasd123'];
+  carouselItems: Observable<Featured[]>;
   registerFormGroup: FormGroup;
   listOfCode: any[];
-  isSeller : boolean = true;
+  isSeller: boolean = true;
 
   constructor(private formBuilder: FormBuilder,
-              private accountService: AccountService,
-              private authService: AuthService,
-              public router: Router) { }
+    private accountService: AccountService,
+    private authService: AuthService,
+    public router: Router) { }
 
   ngOnInit() {
     this.carouselItems = interval(500).pipe(
       startWith(-1),
       take(10),
       map(val => {
-        let i=0;
+        let i = 0;
         const data = this.imgags;
         return data;
       })
     );
-    
+
     this.registerFormGroup = this.formBuilder.group({
       email: [
         '',
@@ -127,25 +135,25 @@ export class RegisterComponent implements OnInit {
         //[Validators.required],
         //this.validateCode.bind(this)
       ],
-      referrerCode : [
+      referrerCode: [
         ''
       ],
-      sellerName:[
-        ''       
+      sellerName: [
+        ''
       ],
-      contactNumber : [
+      contactNumber: [
         null
       ],
-      sellerUrl : [
+      sellerUrl: [
         ''
       ],
-      isSeller : [
+      isSeller: [
         1
       ],
       passwords: this.formBuilder.group({
-          password: ['', [Validators.required]],
-          confirm_password: ['', [Validators.required]],
-      }, {validator: this.passwordConfirming}),
+        password: ['', [Validators.required]],
+        confirm_password: ['', [Validators.required]],
+      }, { validator: this.passwordConfirming }),
     });
     console.log(this.registerFormGroup);
     this.authService.getListOfCode().valueChanges().subscribe(e => this.listOfCode = e);
@@ -153,9 +161,9 @@ export class RegisterComponent implements OnInit {
   }
 
   passwordConfirming(c: AbstractControl): { invalid: boolean } {
-      if (c.get('password').value !== c.get('confirm_password').value) {
-          return {invalid: true};
-      }
+    if (c.get('password').value !== c.get('confirm_password').value) {
+      return { invalid: true };
+    }
   }
 
   validateCode(control: AbstractControl) {
@@ -175,7 +183,7 @@ export class RegisterComponent implements OnInit {
     const req = {
       email: formData.email,
       code: formData.code,
-      referrerCode : formData.referrerCode,
+      referrerCode: formData.referrerCode,
       password: formData.passwords.password,
     };
 
@@ -184,14 +192,14 @@ export class RegisterComponent implements OnInit {
       console.log('code is already used.');
       alert('code is already used.');
     } else if (result && !result.isUsed) {
-        const payload = {
-          email: req.email,
-          password: req.password
-        };
-        this.tryRegister(payload);
-        // TODO: @bryan
-        // after successfully creating an account, update the validation code status 'isUsed' into true.
-        // clear the form fields and redirect it into login page.
+      const payload = {
+        email: req.email,
+        password: req.password
+      };
+      this.tryRegister(payload);
+      // TODO: @bryan
+      // after successfully creating an account, update the validation code status 'isUsed' into true.
+      // clear the form fields and redirect it into login page.
     } else {
       console.log('code is invalid.');
       alert('Invalid code!');
@@ -214,5 +222,5 @@ export class RegisterComponent implements OnInit {
 }
 
 export class Featured {
-    photoUrl : string;
+  photoUrl: string;
 }

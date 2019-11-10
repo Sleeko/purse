@@ -16,7 +16,7 @@
               </div>
               <div class="form-group">
                 <label>Contact Number</label>
-                <input class="form-control" type="number" formControlName="contactNumber">
+                <input class="form-control" type="number" min="0" formControlName="contactNumber"  oninput="validity.valid||(value='');">
               </div>
               <div class="form-group">
                 <label>Facebook/Website URL</label>

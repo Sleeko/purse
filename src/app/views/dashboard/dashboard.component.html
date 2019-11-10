@@ -1,42 +1,48 @@
 <div class="animated fadeIn">
-  <div class="row">
-      <div class="col-sm-6 col-lg-4">
-          <div class="card text-white bg-success border-0 rounded-0">
-            <div class="card-body py-1 px-3">
-              <div class="normal-text">Your Referral Code: {{code}}</div>
+    <div *ngIf="!isSeller">
+        <div class="row">
+            <div class="col-sm-6 col-lg-4">
+                <div class="card text-white bg-success border-0 rounded-0">
+                    <div class="card-body py-1 px-3">
+                        <div class="normal-text">Your Referral Code: {{code}}</div>
+                    </div>
+                </div>
             </div>
-          </div>
-      </div>
-  </div>
-  <div class="row dash-table">
-      <p-table [value]="members" [scrollable]="true" scrollHeight="50vh">
-          <ng-template pTemplate="header">
-              <tr class="dash-header">
-                  <th [ngStyle]="{'width': '10%'}">
-                        <i class="icon-people"></i>
-                  </th>
-                  <th>Name</th>
-                  <th>Level</th>
-                  <th>Status</th>
-                  <th>Cycle</th>
-              </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-rowData>
-              <tr class="dash-body">
-                  <td [ngStyle]="{'width': '10%'}">
-                    <img [src]="rowData.photoUrl" class="rounded-circle img-fluid" alt="Cinque Terre" height="35" width="35">
-                  </td>
-                  <td>
-                      <div>{{rowData.firstName +  " " + rowData.lastName}}</div>
-                      <div class="small text-muted">
-                            <span>Registered: {{rowData.registered |  date}}</span>
-                       </div>
-                  </td>
-                  <td>{{rowData.level}}</td>
-                  <td>{{rowData.isActive == true ? 'Active': 'InActive'}}</td>
-                  <td>{{rowData.cycle}}</td>
-              </tr>
-          </ng-template>
-      </p-table>
-  </div>
+        </div>
+        <div class="row dash-table">
+            <p-table [value]="members" [scrollable]="true" scrollHeight="50vh">
+                <ng-template pTemplate="header">
+                    <tr class="dash-header">
+                        <th [ngStyle]="{'width': '10%'}">
+                            <i class="icon-people"></i>
+                        </th>
+                        <th>Name</th>
+                        <th>Level</th>
+                        <th>Status</th>
+                        <th>Cycle</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData>
+                    <tr class="dash-body">
+                        <td [ngStyle]="{'width': '10%'}">
+                            <img [src]="rowData.photoUrl" class="rounded-circle img-fluid" alt="Cinque Terre"
+                                height="35" width="35">
+                        </td>
+                        <td>
+                            <div>{{rowData.firstName +  " " + rowData.lastName}}</div>
+                            <div class="small text-muted">
+                                <span>Registered: {{rowData.registered |  date}}</span>
+                            </div>
+                        </td>
+                        <td>{{rowData.level}}</td>
+                        <td>{{rowData.isActive == true ? 'Active': 'InActive'}}</td>
+                        <td>{{rowData.cycle}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <div *ngIf="isSeller" class="m-2">
+        <app-seller-profile></app-seller-profile>
+    </div>
 </div>

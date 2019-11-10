@@ -7,6 +7,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AccountSettingsComponent } from './account-settings.component';
 import { AccountSettingsRoutingModule } from './account-settings-routing.module';
 import {NgxMaskModule} from 'ngx-mask';
+import { BlockSpecialCharDirective } from '../../directives/block-special-char.directive';
+import { DirectivesModule } from '../../directives/directives.module';
 
 
 @NgModule({
@@ -19,6 +21,7 @@ import {NgxMaskModule} from 'ngx-mask';
     ReactiveFormsModule,
     ButtonsModule.forRoot(),
     NgxMaskModule.forRoot(),
+    DirectivesModule
   ],
   declarations: [ AccountSettingsComponent ]
 })
