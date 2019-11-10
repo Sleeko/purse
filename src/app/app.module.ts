@@ -56,6 +56,8 @@ import {
 import { UserService } from './services/user.service';
 import { NguCarousel, NguCarouselModule } from '@ngu/carousel';
 import { DisableFormControlDirective } from './directives/disable-form-control.directive';
+import { BlockSpecialCharDirective } from './directives/block-special-char.directive';
+import { DirectivesModule } from './directives/directives.module';
 
 
 
@@ -84,6 +86,7 @@ import { DisableFormControlDirective } from './directives/disable-form-control.d
     NgxSpinnerModule,
     NguCarouselModule,
     CarouselModule,
+    DirectivesModule
   ],
   declarations: [
     AppComponent,
@@ -93,7 +96,6 @@ import { DisableFormControlDirective } from './directives/disable-form-control.d
     LoginComponent,
     RegisterComponent,
     ForgotComponent,
-    DisableFormControlDirective,
   ],
   providers: [{
     provide: LocationStrategy,

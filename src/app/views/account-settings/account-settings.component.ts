@@ -9,7 +9,8 @@ import { CustomValidators } from '../../utils/custom-validators';
 import * as moment from 'moment';
 
 @Component({
-  templateUrl: 'account-settings.component.html'
+  templateUrl: 'account-settings.component.html',
+  styleUrls : ['./account-settings.css']
 })
 export class AccountSettingsComponent implements OnInit {
 
