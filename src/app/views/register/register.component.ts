@@ -4,9 +4,14 @@ import { AccountService } from '../../services/account.service';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { NguCarouselConfig } from '@ngu/carousel';
-import { Observable, interval } from 'rxjs';
+import { Observable, interval, BehaviorSubject, Subject } from 'rxjs';
 import { startWith, take, map } from 'rxjs/operators';
 import { Product } from '../../model/product.model';
+import { UtilsService } from '../../services/utils.service';
+import { Code } from '../../model/code.model';
+import { UserInfo } from '../../model/user-info.model';
+import { UserService } from '../../services/user.service';
+
 
 @Component({
   selector: 'app-register',
@@ -48,7 +53,6 @@ import { Product } from '../../model/product.model';
     .text-purse {
       color: #20853b;
     }
-    
     input[type=radio] {
       height: 1.2em;
   }
@@ -68,7 +72,7 @@ export class RegisterComponent implements OnInit {
     loop: true,
     interval: { timing: 1500 },
     animation: 'lazy'
-  }
+  };
 
   imgags: any[] = [
     {
@@ -94,28 +98,31 @@ export class RegisterComponent implements OnInit {
     }
   ];
 
-  test : string[] = ['asdasdasdasdasd','12312312312312312','zxc123zxc123zxcasd123'];
-  carouselItems : Observable<Featured[]>;
+  test: string[] = ['asdasdasdasdasd', '12312312312312312', 'zxc123zxc123zxcasd123'];
+  carouselItems: Observable<Featured[]>;
   registerFormGroup: FormGroup;
   listOfCode: any[];
-  isSeller : boolean = true;
+  isSeller: boolean = true;
+  data: any;
+  accountResponse: any;
 
   constructor(private formBuilder: FormBuilder,
               private accountService: AccountService,
+              private userService: UserService,
               private authService: AuthService,
-              public router: Router) { }
+              private utilsService: UtilsService,
+              public router: Router) {}
 
   ngOnInit() {
     this.carouselItems = interval(500).pipe(
       startWith(-1),
       take(10),
       map(val => {
-        let i=0;
+        let i = 0;
         const data = this.imgags;
         return data;
       })
     );
-    
     this.registerFormGroup = this.formBuilder.group({
       email: [
         '',
@@ -130,8 +137,8 @@ export class RegisterComponent implements OnInit {
       referrerCode : [
         ''
       ],
-      sellerName:[
-        ''       
+      sellerName: [
+        ''
       ],
       contactNumber : [
         null
@@ -147,9 +154,18 @@ export class RegisterComponent implements OnInit {
           confirm_password: ['', [Validators.required]],
       }, {validator: this.passwordConfirming}),
     });
-    console.log(this.registerFormGroup);
-    this.authService.getListOfCode().valueChanges().subscribe(e => this.listOfCode = e);
-    this.registerFormGroup.get('isSeller').valueChanges.subscribe(data => { data == 1 ? this.isSeller = true : this.isSeller = false });
+    // console.log(this.registerFormGroup);
+    // this.authService.getListOfCode().valueChanges().subscribe(e => this.listOfCode = e);
+    this.registerFormGroup.get('isSeller').valueChanges.subscribe(data => { data === 1 ? this.isSeller = true : this.isSeller = false });
+    // test membercode list
+    this.utilsService.getGeneratedCode().subscribe(data => {
+      this.data = data.map(e => {
+        return {
+          id: e.payload.doc.id,
+          ...e.payload.doc.data()
+        };
+      });
+    });
   }
 
   passwordConfirming(c: AbstractControl): { invalid: boolean } {
@@ -171,45 +187,90 @@ export class RegisterComponent implements OnInit {
   }
 
   register(formData) {
-    console.log('formData', JSON.stringify(formData));
-    const req = {
-      email: formData.email,
-      code: formData.code,
-      referrerCode : formData.referrerCode,
-      password: formData.passwords.password,
-    };
+    // console.log('formData', JSON.stringify(formData));
+    // const req = {
+    //   email: formData.email,
+    //   code: formData.code,
+    //   referrerCode : formData.referrerCode,
+    //   password: formData.passwords.password,
+    // };
 
-    const result = this.listOfCode.find(obj => obj.code === req.code);
-    if (result && result.isUsed) {
-      console.log('code is already used.');
-      alert('code is already used.');
-    } else if (result && !result.isUsed) {
-        const payload = {
-          email: req.email,
-          password: req.password
-        };
-        this.tryRegister(payload);
+    // const result = this.listOfCode.find(obj => obj.code === req.code);
+    // if (result && result.isUsed) {
+    //   console.log('code is already used.');
+    //   alert('code is already used.');
+    // } else if (result && !result.isUsed) {
+    //     const payload = {
+    //       email: req.email,
+    //       password: req.password
+    //     };
+    //     this.tryRegister(payload);
         // TODO: @bryan
         // after successfully creating an account, update the validation code status 'isUsed' into true.
         // clear the form fields and redirect it into login page.
-    } else {
-      console.log('code is invalid.');
-      alert('Invalid code!');
-    }
+    // } else {
+    //   console.log('code is invalid.');
+    //   alert('Invalid code!');
+    // }
+  }
+
+  registerV2(formData) {
+    const req = {
+      email: formData.email,
+      code: formData.code,
+      referrerCode: formData.referrerCode,
+      password: formData.passwords.password,
+    };
+
+    // check member code if valid
+    this.utilsService.searchCode(req.code).subscribe(e => {
+      const responseCode = e.map(x => ({ docId: x.payload.doc.id,
+        ...x.payload.doc.data()} as Code));
+
+      console.log('search-response', JSON.stringify(responseCode));
+      if (responseCode[0]) {
+        if (responseCode[0].isUsed) {
+          alert('code is already used.');
+        } else {
+          const payload = { email: req.email, password: req.password};
+          // update member code
+          responseCode[0].isUsed = true;
+          this.utilsService.updateGeneratedCode(responseCode[0]);
+          // register via firebase
+          this.tryRegister(payload);
+        }
+      } else {
+        alert('Invalid code!');
+      }
+    });
   }
 
   // sub-routine method for registration
   tryRegister(payload) {
     this.authService.doRegister(payload)
       .then(res => {
-        console.log(res);
-        console.log('Your account has been created');
-        alert('Your account has been created');
+        console.log('Account ID', res.user.uid);
+        const userInfoPayload = {
+          uid: res.user.uid,
+          email: res.user.email,
+          personalInfo: {},
+          accountInfo: {},
+          governmenDocuments: {},
+          dateRegistered: new Date()
+        };
+
+        this.userService.saveUserInfo(userInfoPayload).then(data => {
+          console.log('account creation', data);
+        }).catch(error => {
+          console.log('error', error);
+        });
+//        alert('Your account has been created');
       }, err => {
         console.log(err);
         console.log(err.message);
         alert(err.message);
       });
+    console.log('data', this.data);
   }
 }
 

@@ -55,6 +55,7 @@ import {
 } from '@coreui/angular';
 import { UserService } from './services/user.service';
 import { NguCarousel, NguCarouselModule } from '@ngu/carousel';
+import { UtilsService } from './services/utils.service';
 
 
 
@@ -96,7 +97,7 @@ import { NguCarousel, NguCarouselModule } from '@ngu/carousel';
   providers: [{
     provide: LocationStrategy,
     useClass: HashLocationStrategy
-  }, UserService],
+  }, UserService, UtilsService],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

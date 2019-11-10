@@ -19,16 +19,14 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
 
-  constructor(public authService: AuthService, public router: Router, private fb: FormBuilder) {
+  constructor(public authService: AuthService,
+    public router: Router,
+    private fb: FormBuilder) {
     this.errorText = '';
     this.createForm();
   }
-
-  ngOnInit() {
-  //   if (this.authService.isLoggedIn) {
-  //     this._router.navigate(['/apps']);
-  //  }
-  }
+  data: any[];
+  ngOnInit() {}
 
   createForm() {
     this.loginForm = this.fb.group({

@@ -39,10 +39,7 @@ export class AccountService {
 
   savePhotoAndRegister(photo: any, data: any){
     return this.http.post(this.accountUrl + '/uploadPhoto' , photo).pipe(
-      flatMap(photoUrl=> this.completeRegister(photoUrl, data))
+      flatMap(photoUrl => this.completeRegister(photoUrl, data))
     );
   }
-  
-
-
 }
