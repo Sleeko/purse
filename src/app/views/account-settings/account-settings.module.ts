@@ -9,6 +9,10 @@ import { AccountSettingsRoutingModule } from './account-settings-routing.module'
 import {NgxMaskModule} from 'ngx-mask';
 import { BlockSpecialCharDirective } from '../../directives/block-special-char.directive';
 import { DirectivesModule } from '../../directives/directives.module';
+import {
+  MatTabsModule
+} from '@angular/material/tabs';
+
 
 
 @NgModule({
@@ -21,7 +25,8 @@ import { DirectivesModule } from '../../directives/directives.module';
     ReactiveFormsModule,
     ButtonsModule.forRoot(),
     NgxMaskModule.forRoot(),
-    DirectivesModule
+    DirectivesModule,
+    MatTabsModule
   ],
   declarations: [ AccountSettingsComponent ]
 })
