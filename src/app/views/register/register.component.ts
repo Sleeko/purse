@@ -11,6 +11,7 @@ import { UtilsService } from '../../services/utils.service';
 import { Code } from '../../model/code.model';
 import { UserInfo } from '../../model/user-info.model';
 import { UserService } from '../../services/user.service';
+import { stringify } from 'querystring';
 
 
 @Component({
@@ -106,19 +107,22 @@ export class RegisterComponent implements OnInit {
   data: any;
   accountResponse: any;
 
+  chamber: any;
   constructor(private formBuilder: FormBuilder,
               private accountService: AccountService,
               private userService: UserService,
               private authService: AuthService,
               private utilsService: UtilsService,
-              public router: Router) {}
+              public router: Router) {
+
+              }
 
   ngOnInit() {
     this.carouselItems = interval(500).pipe(
       startWith(-1),
       take(10),
       map(val => {
-        let i = 0;
+        const i = 0;
         const data = this.imgags;
         return data;
       })
@@ -131,8 +135,8 @@ export class RegisterComponent implements OnInit {
       ],
       code: [
         '',
-        //[Validators.required],
-        //this.validateCode.bind(this)
+        // [Validators.required,
+        // this.validateCode.bind(this)],
       ],
       referrerCode : [
         ''
@@ -153,19 +157,10 @@ export class RegisterComponent implements OnInit {
           password: ['', [Validators.required]],
           confirm_password: ['', [Validators.required]],
       }, {validator: this.passwordConfirming}),
+      updateOn: 'blur'
     });
     // console.log(this.registerFormGroup);
-    // this.authService.getListOfCode().valueChanges().subscribe(e => this.listOfCode = e);
-    this.registerFormGroup.get('isSeller').valueChanges.subscribe(data => { data === 1 ? this.isSeller = true : this.isSeller = false });
-    // test membercode list
-    this.utilsService.getGeneratedCode().subscribe(data => {
-      this.data = data.map(e => {
-        return {
-          id: e.payload.doc.id,
-          ...e.payload.doc.data()
-        };
-      });
-    });
+    this.registerFormGroup.get('isSeller').valueChanges.subscribe(data => { data === 1 ? this.isSeller = true : this.isSeller = false; });
   }
 
   passwordConfirming(c: AbstractControl): { invalid: boolean } {
@@ -175,9 +170,23 @@ export class RegisterComponent implements OnInit {
   }
 
   validateCode(control: AbstractControl) {
-    return this.accountService.validateCodeIfExist(control.value).subscribe(res => {
-      return res ? null : { codeValid: true };
-    });
+    // return this.accountService.validateCodeIfExist(control.value).subscribe(res => {
+    //   return res ? null : { codeValid: true };
+    // });
+
+    // TODO:
+    // @christian
+    // pre pa uncomment ako nito. for SOLID principle dapat ito nakabind instead
+    // na si registerv2 na function tightly coupled si registerV2()
+    // another note: dapat magtitrigger lang to during onBlur or lostfocus sa field
+    // as of now naka keyUp sya nagtitriggered masyadong expensive si method.
+    // - bryan
+    //
+    // console.log('validateCode:', control.value);
+    // return this.utilsService.validateMembershipCode(control.value).subscribe(res => {
+    //   console.log('firestore-response:', res);
+    //   return res.isUsed ? null : {codeValid: true};
+    // });
   }
 
   validateEmail(control: AbstractControl) {
@@ -187,33 +196,34 @@ export class RegisterComponent implements OnInit {
   }
 
   register(formData) {
-    // console.log('formData', JSON.stringify(formData));
-    // const req = {
-    //   email: formData.email,
-    //   code: formData.code,
-    //   referrerCode : formData.referrerCode,
-    //   password: formData.passwords.password,
-    // };
 
-    // const result = this.listOfCode.find(obj => obj.code === req.code);
-    // if (result && result.isUsed) {
-    //   console.log('code is already used.');
-    //   alert('code is already used.');
-    // } else if (result && !result.isUsed) {
-    //     const payload = {
-    //       email: req.email,
-    //       password: req.password
-    //     };
-    //     this.tryRegister(payload);
-        // TODO: @bryan
-        // after successfully creating an account, update the validation code status 'isUsed' into true.
-        // clear the form fields and redirect it into login page.
-    // } else {
-    //   console.log('code is invalid.');
-    //   alert('Invalid code!');
-    // }
+    console.log('formData', JSON.stringify(formData));
+    const req = {
+      email: formData.email,
+      code: formData.code,
+      referrerCode : formData.referrerCode,
+      password: formData.passwords.password,
+    };
+
+    const payload = { email: req.email, password: req.password };
+
+    const payloadMCode = {
+      docId: 'document id from utils.searchCode',
+      code: req.code,
+      isUsed: true
+    } as Code;
+
+    this.utilsService.updateGeneratedCode(payloadMCode);
+    // register via firebase. TODO: add loading screen
+    this.tryRegister(payload);
   }
 
+  /**
+   *  NOTE:
+   *  @todo removed this method once the field validator working properly
+   *  @description - this method is tightly coupled
+   *  doing all the neccessary steps to validate membershipCode and Referral Code
+   */
   registerV2(formData) {
     const req = {
       email: formData.email,
@@ -222,21 +232,24 @@ export class RegisterComponent implements OnInit {
       password: formData.passwords.password,
     };
 
-    // check member code if valid
+    // 1. check member code if valid
     this.utilsService.searchCode(req.code).subscribe(e => {
       const responseCode = e.map(x => ({ docId: x.payload.doc.id,
         ...x.payload.doc.data()} as Code));
 
       console.log('search-response', JSON.stringify(responseCode));
+      // 1.1 check response
       if (responseCode[0]) {
+        // 1.2 if already used
         if (responseCode[0].isUsed) {
           alert('code is already used.');
-        } else {
+        } else { // 1.3 if not yet used proceed to next validation: referal code
           const payload = { email: req.email, password: req.password};
-          // update member code
+          // update member code. marked it as used.
+
           responseCode[0].isUsed = true;
           this.utilsService.updateGeneratedCode(responseCode[0]);
-          // register via firebase
+          // register via firebase. TODO: add loading screen
           this.tryRegister(payload);
         }
       } else {
@@ -275,5 +288,5 @@ export class RegisterComponent implements OnInit {
 }
 
 export class Featured {
-    photoUrl : string;
+    photoUrl: string;
 }

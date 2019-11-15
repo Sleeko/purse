@@ -8,5 +8,6 @@ export class UserInfo {
     personalInfo: PersonalInfo;
     accountInfo: AccountInfo;
     governmentDocuments: GovermentDocuments;
+    role: 'member';
     dateRegistered?: Date = new Date();
 }

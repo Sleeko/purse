@@ -1,18 +1,23 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Code } from '../model/code.model';
+import { Subject, Observable } from 'rxjs';
 
 /**
  * @author Bryan
- * @description Utility Service Class for generating members code.
+ * @description Utility Service Class for membership code/upline code.
  */
 const M = 'memberCode';
 
 @Injectable()
 export class UtilsService {
+
     memberCode: any;
     constructor(private db: AngularFirestore) {}
 
+    /**
+     *  Membership Code API's segment
+     */
     generateMembersCode(code) {
         return this.db.collection('memberCode').add(code);
     }
@@ -41,6 +46,48 @@ export class UtilsService {
                 console.log('error', error);
             });
         }
-
     }
+
+    /**
+     *  Upline Code Lookup API's segment
+     */
+
+    addUplineLookUp(upline) {
+        return this.db.collection('uplineLookup').add(upline);
+    }
+
+    getUplineLookUpList() {
+        return this.db.collection('uplineLookup').snapshotChanges();
+    }
+
+    searchUpline(uplineCode) {
+        return this.db.collection('uplineLookup', ref => ref.where('uplineCode', '==', uplineCode)).snapshotChanges();
+    }
+
+    /**
+    *  Members API's service implementation segment
+    */
+    validateMembershipCode(code): Observable<any> {
+        const subj = new Subject<any>();
+        this.searchCode(code).subscribe(e => {
+        const response = e.map(obj => ({docId: obj.payload.doc.id,
+            ...obj.payload.doc.data()} as Code));
+            if (response[0]) {
+                if (response[0].isUsed) {
+                    subj.next({ message: 'code is already used.', isUsed: true, codeObj: response });
+                } else {
+                    subj.next({ message: 'code is valid.', isUsed: false, codeObj: response });
+                }
+            } else {
+                subj.next({ message: 'Invalid membership code.', isUsed: true, codeObj: response });
+            }
+        });
+
+        return subj.asObservable();
+    }
+
+    /**
+     *  Membership Code API's segment
+     */
+
 }
