@@ -55,7 +55,9 @@ import {
 } from '@coreui/angular';
 import { UserService } from './services/user.service';
 import { NguCarousel, NguCarouselModule } from '@ngu/carousel';
-import { UtilsService } from './services/utils.service';
+import { DisableFormControlDirective } from './directives/disable-form-control.directive';
+import { BlockSpecialCharDirective } from './directives/block-special-char.directive';
+import { DirectivesModule } from './directives/directives.module';
 
 
 
@@ -84,6 +86,7 @@ import { UtilsService } from './services/utils.service';
     NgxSpinnerModule,
     NguCarouselModule,
     CarouselModule,
+    DirectivesModule
   ],
   declarations: [
     AppComponent,

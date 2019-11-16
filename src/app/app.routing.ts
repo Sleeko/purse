@@ -94,12 +94,20 @@ export const routes: Routes = [
         loadChildren: () => import('./views/vouchers/vouchers.module').then(m => m.VouchersModule)
       },
       {
+        path: 'contact-us',
+        loadChildren: () => import('./views/contact-us/contact-us.module').then(m => m.ContactUsModule)
+      },
+      {
         path: 'new-page',
         loadChildren: () => import('./views/new-page/new-page.module').then(m => m.NewPageModule)
       },
       {
         path: 'quit',
         loadChildren: () => import('./views/quit/quit.module').then(m => m.QuitModule)
+      },
+      {
+        path :'seller-profile',
+        loadChildren: () => import('./views/seller-profile/seller-profile.module').then(m => m.SellerProfileModule)
       }
     ]
   },

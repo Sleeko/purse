@@ -18,7 +18,7 @@ import { Upline } from '../../model/upline.model';
 @Component({
   selector: 'app-register',
   templateUrl: 'register.component.html',
-  styles : [
+  styles: [
     ` h1{
       min-height: 200px;
       background-color: #ccc;
@@ -58,6 +58,14 @@ import { Upline } from '../../model/upline.model';
     input[type=radio] {
       height: 1.2em;
   }
+
+  input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}
 
     `
   ]
@@ -139,19 +147,19 @@ export class RegisterComponent implements OnInit {
         // [Validators.required,
         // this.validateCode.bind(this)],
       ],
-      referrerCode : [
+      referrerCode: [
         ''
       ],
       sellerName: [
         ''
       ],
-      contactNumber : [
+      contactNumber: [
         null
       ],
-      sellerUrl : [
+      sellerUrl: [
         ''
       ],
-      isSeller : [
+      isSeller: [
         1
       ],
       passwords: this.formBuilder.group({
@@ -174,9 +182,9 @@ export class RegisterComponent implements OnInit {
   }
 
   passwordConfirming(c: AbstractControl): { invalid: boolean } {
-      if (c.get('password').value !== c.get('confirm_password').value) {
-          return {invalid: true};
-      }
+    if (c.get('password').value !== c.get('confirm_password').value) {
+      return { invalid: true };
+    }
   }
 
   validateCode(control: AbstractControl) {
@@ -211,7 +219,7 @@ export class RegisterComponent implements OnInit {
     const req = {
       email: formData.email,
       code: formData.code,
-      referrerCode : formData.referrerCode,
+      referrerCode: formData.referrerCode,
       password: formData.passwords.password,
     };
 

@@ -111,6 +111,15 @@ export const navItems: NavData[] = [
     }
   },
   {
+    name: 'Contact Us',
+    url: '/contact-us',
+    icon: 'fa fa-phone fa-5x',
+    badge: {
+      variant: 'info',
+      text: ''
+    }
+  },
+  {
     name: 'Quit',
     url: '/quit',
     icon: 'fa fa-ban fa-5x',
@@ -119,6 +128,16 @@ export const navItems: NavData[] = [
       text: ''
     }
   },
+  // 
+  // { 
+  //   name: 'Seller Profile',
+  //   url: '/seller-profile',
+  //   icon: 'fa fa-ban fa-5x',
+  //   badge: {
+  //     variant : 'info',
+  //     text: ''
+  //   }
+  // },
 
 
 ];
