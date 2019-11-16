@@ -55,11 +55,11 @@ export class VouchersComponent implements OnInit {
     const requestVoucherModal = this.modalService.open(RequestVoucherComponent, { centered: true, backdrop: true });
   }
 
-  denyVoucher(voucherId){
+  denyVoucher(voucherId) {
     //TODO
   }
 
-  approveVoucher(voucherId){
+  approveVoucher(voucherId) {
     //TODO
   }
 

@@ -100,7 +100,7 @@ import { DirectivesModule } from './directives/directives.module';
   providers: [{
     provide: LocationStrategy,
     useClass: HashLocationStrategy
-  }, UserService],
+  }, UserService, UtilsService],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

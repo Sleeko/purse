@@ -3,6 +3,10 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 
+/**
+ * @author Bryan
+ */
+
 @Injectable()
 export class UserService {
 
@@ -13,7 +17,7 @@ export class UserService {
 
     getCurrentUser() {
         return new Promise<any>((resolve, reject) => {
-            const user = firebase.auth().onAuthStateChanged((user) => {
+            const userInfo = firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
                     resolve(user);
                 } else {
@@ -33,5 +37,11 @@ export class UserService {
                 resolve(res);
             }, err => reject(err));
         });
+    }
+
+
+    // CRUD Section
+    saveUserInfo(userInfo) {
+        return this.db.collection('userInfo').add(userInfo);
     }
 }

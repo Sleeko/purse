@@ -4,6 +4,6 @@ export class Member {
     'lastName': string;
     'isActive': boolean;
     'cycle': number;
-    "photoUrl": string;
-    "registered" ?: Date = new Date();
+    'photoUrl': string;
+    'registered' ?: Date = new Date();
 }

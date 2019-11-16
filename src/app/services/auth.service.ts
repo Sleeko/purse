@@ -12,11 +12,16 @@ export class AuthService {
 
   public isLoggedIn: boolean = false;
 
-  constructor(public afAuth: AngularFireAuth, public db: AngularFireDatabase) {}
+  constructor(public afAuth: AngularFireAuth,
+    public db: AngularFireDatabase,
+    private firestore: AngularFirestore) {}
+
+  getPurse() {
+    return this.firestore.collection('user-information').snapshotChanges();
+  }
 
   public isAuthenticated(): boolean {
     const userData = sessionStorage.getItem('userData');
-    console.log(userData);
     if (userData && userData.length > 0) {
       return true;
     } else {
