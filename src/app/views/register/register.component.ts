@@ -13,6 +13,8 @@ import { UserInfo } from '../../model/user-info.model';
 import { UserService } from '../../services/user.service';
 import { stringify } from 'querystring';
 import { Upline } from '../../model/upline.model';
+import { FeaturedContentService } from '../../services/featured-content.service';
+import { FeaturedContent } from '../../model/featured-content.model';
 
 
 @Component({
@@ -109,7 +111,8 @@ export class RegisterComponent implements OnInit {
   ];
 
   test: string[] = ['asdasdasdasdasd', '12312312312312312', 'zxc123zxc123zxcasd123'];
-  carouselItems: Observable<Featured[]>;
+  carouselItems: Observable<FeaturedContent[]>;
+  featuredContents : FeaturedContent[] = [];
   registerFormGroup: FormGroup;
   listOfCode: any[];
   isSeller: boolean = true;
@@ -122,7 +125,8 @@ export class RegisterComponent implements OnInit {
               private userService: UserService,
               private authService: AuthService,
               private utilsService: UtilsService,
-              public router: Router) {
+              public router: Router,
+              private featuredContentService : FeaturedContentService) {
 
               }
 
@@ -132,7 +136,7 @@ export class RegisterComponent implements OnInit {
       take(10),
       map(val => {
         const i = 0;
-        const data = this.imgags;
+        const data = this.featuredContents;
         return data;
       })
     );
@@ -144,8 +148,10 @@ export class RegisterComponent implements OnInit {
       ],
       code: [
         '',
-        // [Validators.required,
-        // this.validateCode.bind(this)],
+        {validators :[
+          ,this.validateCode.bind(this)
+        ],
+          updateOn: 'blur'}
       ],
       referrerCode: [
         ''
@@ -179,6 +185,17 @@ export class RegisterComponent implements OnInit {
 
       console.log('response-upline', JSON.stringify(response.length));
     });
+    this.getFeaturedContents();
+  }
+
+  getFeaturedContents(){
+    this.featuredContentService.getAllFeaturedContent().subscribe(e => {
+      const response = e.map(obj => ({
+        docId : obj.payload.doc.id,
+        ...obj.payload.doc.data()
+      } as FeaturedContent));
+      this.featuredContents = response;
+    });
   }
 
   passwordConfirming(c: AbstractControl): { invalid: boolean } {
@@ -200,11 +217,17 @@ export class RegisterComponent implements OnInit {
     // as of now naka keyUp sya nagtitriggered masyadong expensive si method.
     // - bryan
     //
-    // console.log('validateCode:', control.value);
-    // return this.utilsService.validateMembershipCode(control.value).subscribe(res => {
+    var isValid : boolean = false;
+    var isFinished : boolean = false;
+    // this.utilsService.validateMembershipCode(control.value).subscribe(res => {
     //   console.log('firestore-response:', res);
-    //   return res.isUsed ? null : {codeValid: true};
+    //   return res.isUsed ? { codeValid : true } : null;
     // });
+
+    // this.utilsService.validateMembershipCode(control.value).subscribe(res => {
+    //     isValid = res.isUsed;
+    // },
+    // )
   }
 
   validateEmail(control: AbstractControl) {
@@ -305,6 +328,4 @@ export class RegisterComponent implements OnInit {
   }
 }
 
-export class Featured {
-    photoUrl: string;
-}
+

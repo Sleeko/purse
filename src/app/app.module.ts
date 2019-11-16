@@ -58,6 +58,7 @@ import { NguCarousel, NguCarouselModule } from '@ngu/carousel';
 import { DisableFormControlDirective } from './directives/disable-form-control.directive';
 import { BlockSpecialCharDirective } from './directives/block-special-char.directive';
 import { DirectivesModule } from './directives/directives.module';
+import { UtilsService } from './services/utils.service';
 
 
 
