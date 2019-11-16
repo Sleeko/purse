@@ -12,6 +12,7 @@ import { Code } from '../../model/code.model';
 import { UserInfo } from '../../model/user-info.model';
 import { UserService } from '../../services/user.service';
 import { stringify } from 'querystring';
+import { Upline } from '../../model/upline.model';
 
 
 @Component({
@@ -161,6 +162,15 @@ export class RegisterComponent implements OnInit {
     });
     // console.log(this.registerFormGroup);
     this.registerFormGroup.get('isSeller').valueChanges.subscribe(data => { data === 1 ? this.isSeller = true : this.isSeller = false; });
+    // test
+    this.utilsService.searchUpline('test').subscribe(e => {
+      const response = e.map(obj => ({
+        docId: obj.payload.doc.id,
+        ...obj.payload.doc.data()
+      } as Upline));
+
+      console.log('response-upline', JSON.stringify(response.length));
+    });
   }
 
   passwordConfirming(c: AbstractControl): { invalid: boolean } {
