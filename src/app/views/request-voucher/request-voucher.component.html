@@ -11,8 +11,10 @@
                 <div class="form-group">
                     <label for="storeCode">Store Code</label>
                     <select class="form-control" formControlName="storeCode">
-                        <option *ngFor="let codes of storeCodes">{{codes}}</option>
+                        <option [ngValue]="null"></option>
+                        <option *ngFor="let store of stores">{{store.storeCode}}</option>
                     </select>
+                    <button class="btn-sm btn-primary pull-right mt-1" (click)="createNewStore()">Create new store</button>
                 </div>
                 <div class="form-group">
                     <label for="storeBranch">Store Branch</label>
@@ -26,7 +28,7 @@
         </div>
         <div class="modal-footer">
             <button class="btn btn-outline-dark" (click)="activeModal.close()">Close</button>
-            <button type="submit" class="btn btn-primary">Create Request</button>
+            <button type="submit" class="btn btn-primary" [disabled]="voucherForm.invalid">Create Request</button>
         </div>
     </form>
 </div>

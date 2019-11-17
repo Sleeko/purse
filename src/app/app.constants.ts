@@ -8,6 +8,11 @@ export class AppConstants {
   // urls
   public static get BASE_API_URL(): string { return '/compounding_api' }
 
+  //statuses
+  public static get PENDING() : string { return 'PENDING'}
+  public static get APPROVED() : string { return 'APPROVED'}
+  public static get REJECTED() : string { return 'REJECTED'}
+
   // icons
   public static get LOG_OFF_ICON(): string { return 'sign-out'; }
   public static get ADD_ICON(): string { return 'plus'; }

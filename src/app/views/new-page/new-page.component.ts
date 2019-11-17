@@ -20,7 +20,6 @@ export class NewPageComponent implements OnInit {
 
   ngOnInit() {
     this.contentForm = this.formBuilder.group({
-      image : ['', Validators.required],
       description : ['', Validators.required],
       title : ['', Validators.required]
     });
