@@ -3,9 +3,13 @@ export class PersonalInfo {
     firstName: string;
     middleName: string;
     address: string;
-    birthday: string;
+    dateOfBirth: string;
     gender: string;
     nationality: string;
+    civilStatus : string;
     contactNumber: string;
     photoUrl: string;
+    placeOfBirth: string;
+    tinNumber? : number;
+    beneficiaries? : PersonalInfo[];
 }

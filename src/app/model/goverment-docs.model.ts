@@ -1,3 +1,3 @@
 export class GovermentDocuments {
-    TINID: string;
+    tinNumber: string;
 }

@@ -16,21 +16,28 @@
                 <ng-template pTemplate="body" let-store let-i="rowIndex">
                     <tr class="text-center">
                         <td>
-                            <input type="text" class="form-control" [(ngModel)]="store.storeCode" [disabled]="!(enableStoreEdit && i == editIndex)">
+                            <input type="text" class="form-control" [(ngModel)]="store.storeCode"
+                                [disabled]="!(enableStoreEdit && i == editIndex)">
                         </td>
                         <td>
-                            <input type="text" class="form-control" [(ngModel)]="store.storeName" [disabled]="!(enableStoreEdit && i == editIndex)">
+                            <input type="text" class="form-control" [(ngModel)]="store.storeName"
+                                [disabled]="!(enableStoreEdit && i == editIndex)">
                         </td>
                         <td>
-                            <input type="text" class="form-control" [(ngModel)]="store.storeDescription" [disabled]="!(enableStoreEdit && i == editIndex)">
+                            <input type="text" class="form-control" [(ngModel)]="store.storeDescription"
+                                [disabled]="!(enableStoreEdit && i == editIndex)">
                         </td>
                         <td>
-                            <input type="text" class="form-control" [(ngModel)]="store.location" [disabled]="!(enableStoreEdit && i == editIndex)">
+                            <input type="text" class="form-control" [(ngModel)]="store.location"
+                                [disabled]="!(enableStoreEdit && i == editIndex)">
                         </td>
                         <td>
-                            <button *ngIf="!(enableStoreEdit && i == editIndex)" class="btn btn-primary mx-1" (click)="enableEdit(i)">Edit</button>
-                            <button *ngIf="(enableStoreEdit && i == editIndex)" class="btn btn-success" (click)="updateStore(store)">Save</button>
-                            <button *ngIf="(enableStoreEdit && i == editIndex)" class="btn btn-danger" (click)="cancelEdit(i)">Cancel</button>
+                            <button *ngIf="!(enableStoreEdit && i == editIndex)" class="btn btn-primary mx-1"
+                                (click)="enableEdit(i)">Edit</button>
+                            <button *ngIf="(enableStoreEdit && i == editIndex)" class="btn btn-success"
+                                (click)="updateStore(store)">Save</button>
+                            <button *ngIf="(enableStoreEdit && i == editIndex)" class="btn btn-danger"
+                                (click)="cancelEdit(i)">Cancel</button>
                         </td>
                     </tr>
                 </ng-template>
@@ -48,18 +55,34 @@
                         <div class="form-group">
                             <label for="storeCode">Store Code</label>
                             <input class="form-control" id="storeCode" formControlName="storeCode">
+                            <small class="text-danger font-weight-bold ml-1"
+                                *ngIf="(storeForm.get('storeCode').invalid && storeForm.get('storeCode').dirty)">
+                                Enter store code
+                            </small>
                         </div>
                         <div class="form-group">
                             <label for="storeName">Store Name</label>
                             <input class="form-control" id="storeName" formControlName="storeName">
+                            <small class="text-danger font-weight-bold ml-1"
+                                *ngIf="(storeForm.get('storeName').invalid && storeForm.get('storeName').dirty)">
+                                Enter store name
+                            </small>
                         </div>
                         <div class="form-group">
                             <label for="storeDescription">Store Description</label>
                             <input class="form-control" id="storeDescription" formControlName="storeDescription">
+                            <small class="text-danger font-weight-bold ml-1"
+                                *ngIf="(storeForm.get('storeDescription').invalid && storeForm.get('storeDescription').dirty)">
+                                Input store description
+                            </small>
                         </div>
                         <div class="form-group">
                             <label for="location">Location</label>
                             <input class="form-control" id="location" formControlName="location">
+                            <small class="text-danger font-weight-bold ml-1"
+                                *ngIf="(storeForm.get('location').invalid && storeForm.get('location').dirty)">
+                                Enter a location
+                            </small>
                         </div>
                     </div>
                 </div>

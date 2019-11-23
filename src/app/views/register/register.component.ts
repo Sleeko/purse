@@ -112,7 +112,7 @@ export class RegisterComponent implements OnInit {
 
   test: string[] = ['asdasdasdasdasd', '12312312312312312', 'zxc123zxc123zxcasd123'];
   carouselItems: Observable<FeaturedContent[]>;
-  featuredContents : FeaturedContent[] = [];
+  featuredContents: FeaturedContent[] = [];
   registerFormGroup: FormGroup;
   listOfCode: any[];
   isSeller: boolean = true;
@@ -121,14 +121,14 @@ export class RegisterComponent implements OnInit {
 
   chamber: any;
   constructor(private formBuilder: FormBuilder,
-              private accountService: AccountService,
-              private userService: UserService,
-              private authService: AuthService,
-              private utilsService: UtilsService,
-              public router: Router,
-              private featuredContentService : FeaturedContentService) {
+    private accountService: AccountService,
+    private userService: UserService,
+    private authService: AuthService,
+    private utilsService: UtilsService,
+    public router: Router,
+    private featuredContentService: FeaturedContentService) {
 
-              }
+  }
 
   ngOnInit() {
     this.carouselItems = interval(500).pipe(
@@ -148,10 +148,12 @@ export class RegisterComponent implements OnInit {
       ],
       code: [
         '',
-        {validators :[
-          ,this.validateCode.bind(this)
-        ],
-          updateOn: 'blur'}
+        {
+          validators: [
+            // , this.validateCode.bind(this)
+          ],
+          updateOn: 'blur'
+        }
       ],
       referrerCode: [
         ''
@@ -169,9 +171,9 @@ export class RegisterComponent implements OnInit {
         1
       ],
       passwords: this.formBuilder.group({
-          password: ['', [Validators.required]],
-          confirm_password: ['', [Validators.required]],
-      }, {validator: this.passwordConfirming}),
+        password: ['', [Validators.required]],
+        confirm_password: ['', [Validators.required]],
+      }, { validator: this.passwordConfirming }),
       updateOn: 'blur'
     });
     // console.log(this.registerFormGroup);
@@ -188,10 +190,10 @@ export class RegisterComponent implements OnInit {
     this.getFeaturedContents();
   }
 
-  getFeaturedContents(){
+  getFeaturedContents() {
     this.featuredContentService.getAllFeaturedContent().subscribe(e => {
       const response = e.map(obj => ({
-        docId : obj.payload.doc.id,
+        docId: obj.payload.doc.id,
         ...obj.payload.doc.data()
       } as FeaturedContent));
       this.featuredContents = response;
@@ -215,10 +217,10 @@ export class RegisterComponent implements OnInit {
     // na si registerv2 na function tightly coupled si registerV2()
     // another note: dapat magtitrigger lang to during onBlur or lostfocus sa field
     // as of now naka keyUp sya nagtitriggered masyadong expensive si method.
-    // - bryan
+    // - bryana
     //
-    var isValid : boolean = false;
-    var isFinished : boolean = false;
+    var isUsed: boolean = false;
+    var isFinished: boolean = false;
     // this.utilsService.validateMembershipCode(control.value).subscribe(res => {
     //   console.log('firestore-response:', res);
     //   return res.isUsed ? { codeValid : true } : null;
@@ -228,6 +230,21 @@ export class RegisterComponent implements OnInit {
     //     isValid = res.isUsed;
     // },
     // )
+    var code: Code[] = [];
+    return this.utilsService.searchCode(control.value).subscribe(e => {
+      const response = e.map(obj => ({
+        docId: obj.payload.doc.id,
+        ...obj.payload.doc.data()
+      } as Code));
+    
+    },
+      err => {
+
+      },
+      () => {
+        return isUsed ? { codeValid : true } : null
+      })
+
   }
 
   validateEmail(control: AbstractControl) {
@@ -275,8 +292,10 @@ export class RegisterComponent implements OnInit {
 
     // 1. check member code if valid
     this.utilsService.searchCode(req.code).subscribe(e => {
-      const responseCode = e.map(x => ({ docId: x.payload.doc.id,
-        ...x.payload.doc.data()} as Code));
+      const responseCode = e.map(x => ({
+        docId: x.payload.doc.id,
+        ...x.payload.doc.data()
+      } as Code));
 
       console.log('search-response', JSON.stringify(responseCode));
       // 1.1 check response
@@ -285,7 +304,7 @@ export class RegisterComponent implements OnInit {
         if (responseCode[0].isUsed) {
           alert('code is already used.');
         } else { // 1.3 if not yet used proceed to next validation: referal code
-          const payload = { email: req.email, password: req.password};
+          const payload = { email: req.email, password: req.password };
           // update member code. marked it as used.
 
           responseCode[0].isUsed = true;
@@ -318,7 +337,7 @@ export class RegisterComponent implements OnInit {
         }).catch(error => {
           console.log('error', error);
         });
-//        alert('Your account has been created');
+        //        alert('Your account has been created');
       }, err => {
         console.log(err);
         console.log(err.message);

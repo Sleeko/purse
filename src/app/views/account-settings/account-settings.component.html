@@ -3,242 +3,356 @@
         <div class="col-sm-6 col-lg-3">
             <div class="card text-center">
                 <div class="card-header">
-                    <img style="width:100%;height:300px;"
-                        src="https://scontent.fceb1-1.fna.fbcdn.net/v/t1.0-9/61174189_2228746197214132_45827000400609280_n.jpg?_nc_cat=103&_nc_oc=AQlyeErJ1CouudIgy6vvmisnzZlLbQAr46hKmM8UkrFT_k3tVfXJ-dIAPnZAPkE0aTY&_nc_ht=scontent.fceb1-1.fna&oh=38253d65a11da822f30fee3ad639ab8b&oe=5E187C32"
-                        alt="" class="card-img-top rounded-circle" style="width: 150px;height: 150px;" />
+                    <img style="width:100%;height:300px;" [src]="userInfo[0]?.personalInfo?.photoUrl" alt=""
+                        class="card-img-top rounded-circle" style="width: 150px;height: 150px;" />
                 </div>
                 <div class="card-body">
-                    <h3 class="card-title mb-4">Rob Horton</h3>
-                </div>
-            </div>
-            <div class="card mt-3">
-                <div class="card-header">
-                    <h4 class="text-center mt-1">Details</h4>
-                </div>
-                <div class="card-body">
-                    <div class="profile-head">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label>Name</label>
-                            </div>
-                            <div class="col-md-8">
-                                <p>Rob Horton</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label>Email</label>
-                            </div>
-                            <div class="col-md-8">
-                                <p>robhorton24@gmail.com</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label>Phone</label>
-                            </div>
-                            <div class="col-md-8">
-                                <p>123 456 7890</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label>Date of Birth</label>
-                            </div>
-                            <div class="col-md-8">
-                                <p>October 11, 1992</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label>Place of Birth</label>
-                            </div>
-                            <div class="col-md-8">
-                                <p>Cainta Rizal</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label>Gender</label>
-                            </div>
-                            <div class="col-md-8">
-                                <p>Male</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label>Civil Status</label>
-                            </div>
-                            <div class="col-md-8">
-                                <p>Married</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label>Nationality</label>
-                            </div>
-                            <div class="col-md-8">
-                                <p>Filipino</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label>Tin Number</label>
-                            </div>
-                            <div class="col-md-8">
-                                <p>989-217-222-000</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label>Paymaya Account</label>
-                            </div>
-                            <div class="col-md-8">
-                                <p>9892-2178-2122-0000</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label>Beneficiaries</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="offset-md-4 col-md-8">
-                                <label>Bryan Judelle Ramos</label><br />
-                                <label>Ariel Jay Ramos</label>
-                            </div>
-                        </div>
-                    </div>
+                    <h3 class="card-title mb-4">
+                        {{userInfo[0]?.personalInfo?.firstName + ' ' + userInfo[0]?.personalInfo?.lastName}}</h3>
                 </div>
             </div>
         </div>
         <div class="col-sm-6 col-lg-9">
-                <div class="card">
+            <div class="card">
+                <form class="register-form" [formGroup]="registerCompleteFormGroup"
+                    novalidate>
                     <mat-tab-group animationDuration="0ms">
                         <mat-tab label="User Information">
                             <div class="card-body">
-                                <form class="register-form" [formGroup]="registerCompleteFormGroup" (ngSubmit)="completeRegister(registerCompleteFormGroup.value)" novalidate>
-                                    
-                                    <h5 class="card-title text-center mt-4 mb-3 text-success lead font-weight-bold">Complete your Registration</h5>
-                                    
-                                    <div class="form-group">
-                                        <label>First Name</label>
-                                        <input type="text" class="form-control form-control-sm" placeholder="" formControlName="firstName" blockSpecialChar>
-                                        <small class="text-danger font-weight-bold ml-1" *ngIf="(registerCompleteFormGroup.get('firstName').invalid && registerCompleteFormGroup.get('firstName').dirty)">
-                                            Enter your first name
-                                        </small>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Middle Name</label>
-                                        <input type="text" class="form-control form-control-sm" placeholder="" formControlName="middleName" blockSpecialChar>
-                                        <small class="text-danger font-weight-bold ml-1" *ngIf="(registerCompleteFormGroup.get('middleName').invalid && registerCompleteFormGroup.get('middleName').dirty)">
-                                            Enter your middle name
-                                        </small>
-                                    </div>
-                                    <div class="form-group">
-                                      <label>Last Name</label>
-                                      <input type="text" class="form-control form-control-sm" placeholder="" formControlName="lastName" blockSpecialChar>
-                                      <small class="text-danger font-weight-bold ml-1" *ngIf="(registerCompleteFormGroup.get('lastName').invalid && registerCompleteFormGroup.get('lastName').dirty)">
-                                          Enter your last name
-                                      </small>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Address</label>
-                                        <input type="text" class="form-control form-control-sm" placeholder="" formControlName="address">
-                                        <small class="text-danger font-weight-bold ml-1" *ngIf="(registerCompleteFormGroup.get('address').invalid && registerCompleteFormGroup.get('address').dirty)">
-                                            Enter your address
-                                        </small>
-                                    </div>
-                                    <div class="form-group">
-                                      <label>Date Of Birth <small class="ml-1">(* age should be 18 years old and above)</small></label>
-                                      <input type="date" class="form-control form-control-sm" formControlName="dateOfBirth">
-                                      <small class="text-danger font-weight-bold ml-1" *ngIf="(registerCompleteFormGroup.get('dateOfBirth').invalid && registerCompleteFormGroup.get('dateOfBirth').dirty)">
+                                <h5 class="card-title text-center mt-4 mb-3 text-success lead font-weight-bold">Complete
+                                    your Registration</h5>
+                                <div class="form-group">
+                                    <label>First Name</label>
+                                    <input type="text" class="form-control form-control-sm" placeholder=""
+                                        formControlName="firstName" blockSpecialChar>
+                                    <small class="text-danger font-weight-bold ml-1"
+                                        *ngIf="(registerCompleteFormGroup.get('firstName').invalid && registerCompleteFormGroup.get('firstName').dirty)">
+                                        Enter your first name
+                                    </small>
+                                </div>
+                                <div class="form-group">
+                                    <label>Middle Name</label>
+                                    <input type="text" class="form-control form-control-sm" placeholder=""
+                                        formControlName="middleName" blockSpecialChar>
+                                    <small class="text-danger font-weight-bold ml-1"
+                                        *ngIf="(registerCompleteFormGroup.get('middleName').invalid && registerCompleteFormGroup.get('middleName').dirty)">
+                                        Enter your middle name
+                                    </small>
+                                </div>
+                                <div class="form-group">
+                                    <label>Last Name</label>
+                                    <input type="text" class="form-control form-control-sm" placeholder=""
+                                        formControlName="lastName" blockSpecialChar>
+                                    <small class="text-danger font-weight-bold ml-1"
+                                        *ngIf="(registerCompleteFormGroup.get('lastName').invalid && registerCompleteFormGroup.get('lastName').dirty)">
+                                        Enter your last name
+                                    </small>
+                                </div>
+                                <div class="form-group">
+                                    <label>Address</label>
+                                    <input type="text" class="form-control form-control-sm" placeholder=""
+                                        formControlName="address">
+                                    <small class="text-danger font-weight-bold ml-1"
+                                        *ngIf="(registerCompleteFormGroup.get('address').invalid && registerCompleteFormGroup.get('address').dirty)">
+                                        Enter your address
+                                    </small>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date Of Birth <small class="ml-1">(* age should be 18 years old and
+                                            above)</small></label>
+                                    <input type="date" class="form-control form-control-sm"
+                                        formControlName="dateOfBirth">
+                                    <small class="text-danger font-weight-bold ml-1"
+                                        *ngIf="(registerCompleteFormGroup.get('dateOfBirth').invalid && registerCompleteFormGroup.get('dateOfBirth').dirty)">
                                         You must be at least 18 years old
-                                      </small>
-                                    </div>
-                                    <br/>
-                                    <div class="form-group">
-                                      <label>Place of Birth</label>
-                                      <input type="text" class="form-control form-control-sm" placeholder="" formControlName="placeOfBirth" blockSpecialChar>
-                                      <small class="text-danger font-weight-bold ml-1" *ngIf="(registerCompleteFormGroup.get('placeOfBirth').invalid && registerCompleteFormGroup.get('placeOfBirth').dirty)">
-                                          Enter place of birth
-                                      </small>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Gender</label>
-                                        <br/>
-                                        <div class="pl-5">
-                                          <div class="form-check form-check-inline">
+                                    </small>
+                                </div>
+                                <br />
+                                <div class="form-group">
+                                    <label>Place of Birth</label>
+                                    <input type="text" class="form-control form-control-sm" placeholder=""
+                                        formControlName="placeOfBirth">
+                                    <small class="text-danger font-weight-bold ml-1"
+                                        *ngIf="(registerCompleteFormGroup.get('placeOfBirth').invalid && registerCompleteFormGroup.get('placeOfBirth').dirty)">
+                                        Enter place of birth
+                                    </small>
+                                </div>
+                                <div class="form-group">
+                                    <label>Gender</label>
+                                    <br />
+                                    <div class="pl-5">
+                                        <div class="form-check form-check-inline">
                                             <label class="form-check-label">
-                                              <input type="radio" class="form-check-input" formControlName="gender" value="Male" >Male
+                                                <input type="radio" class="form-check-input" formControlName="gender"
+                                                    value="Male">Male
                                             </label>
-                                          </div>
-                                          <div class="form-check form-check-inline">
+                                        </div>
+                                        <div class="form-check form-check-inline">
                                             <label class="form-check-label">
-                                              <input type="radio" class="form-check-input" formControlName="gender" value="Female" >Female
+                                                <input type="radio" class="form-check-input" formControlName="gender"
+                                                    value="Female">Female
                                             </label>
-                                          </div>
                                         </div>
+                                        <small class="text-danger font-weight-bold ml-1"
+                                        *ngIf="(registerCompleteFormGroup.get('gender').invalid && registerCompleteFormGroup.get('gender').dirty)">
+                                        Select your gender
+                                    </small>
                                     </div>
-                                    <div class="form-group">
-                                      <label>Civil Status</label>
-                                      <input type="text" class="form-control form-control-sm" placeholder="" formControlName="civilStatus" blockSpecialChar>
-                                      <small class="text-danger font-weight-bold ml-1" *ngIf="(registerCompleteFormGroup.get('civilStatus').invalid && registerCompleteFormGroup.get('civilStatus').dirty)">
-                                          Enter civil status
-                                      </small>
+                                </div>
+                                <div class="form-group">
+                                    <label>Civil Status</label>
+                                    <input type="text" class="form-control form-control-sm" placeholder=""
+                                        formControlName="civilStatus" blockSpecialChar>
+                                    <small class="text-danger font-weight-bold ml-1"
+                                        *ngIf="(registerCompleteFormGroup.get('civilStatus').invalid && registerCompleteFormGroup.get('civilStatus').dirty)">
+                                        Enter civil status
+                                    </small>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nationality</label>
+                                    <input type="text" class="form-control form-control-sm" placeholder=""
+                                        formControlName="nationality" blockSpecialChar>
+                                    <small class="text-danger font-weight-bold ml-1"
+                                        *ngIf="(registerCompleteFormGroup.get('nationality').invalid && registerCompleteFormGroup.get('nationality').dirty)">
+                                        Enter nationality
+                                    </small>
+                                </div>
+                                <div class="form-group">
+                                    <label>Contact Number</label>
+                                    <input type="number" min="0" class="form-control form-control-sm" placeholder=""
+                                        formControlName="contactNumber" oninput="validity.valid||(value='');">
+                                    <small class="text-danger font-weight-bold ml-1"
+                                        *ngIf="(registerCompleteFormGroup.get('contactNumber').invalid && registerCompleteFormGroup.get('contactNumber').dirty)">
+                                        Enter contact number
+                                    </small>
+                                </div>
+                                <div class="form-group">
+                                    <label>Photo</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="customFile"
+                                            accept=".png,.jpeg, .jpg" (change)="onFileChange($event)"
+                                            formControlName="photo">
+                                        <label class="custom-file-label"
+                                            for="customFile">{{photoFile==null ? 'Choose file': photoFile.name}}</label>
                                     </div>
-                                    <div class="form-group">
-                                      <label>Nationality</label>
-                                      <input type="text" class="form-control form-control-sm" placeholder="" formControlName="nationality" blockSpecialChar>
-                                      <small class="text-danger font-weight-bold ml-1" *ngIf="(registerCompleteFormGroup.get('nationality').invalid && registerCompleteFormGroup.get('nationality').dirty)">
-                                          Enter nationality
-                                      </small>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Contact Number</label>
-                                        <input type="number" min="0" class="form-control form-control-sm" placeholder="" formControlName="contactNumber" oninput="validity.valid||(value='');">
-                                        <small class="text-danger font-weight-bold ml-1" *ngIf="(registerCompleteFormGroup.get('contactNumber').invalid && registerCompleteFormGroup.get('contactNumber').dirty)">
-                                            Enter contact number
-                                        </small>
-                                      </div>
-                                    <div class="form-group">
-                                      <label>Tin Number</label>
-                                      <input type="text" class="form-control form-control-sm" placeholder="000-000-000-000" mask="000-000-000-000" formControlName="tinNumber">
-                                      <small class="text-danger font-weight-bold ml-1" *ngIf="(registerCompleteFormGroup.get('tinNumber').invalid && registerCompleteFormGroup.get('tinNumber').dirty)">
-                                          Enter tin number
-                                      </small>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Bank Account</label>
-                                        <input type="number" min="0" class="form-control form-control-sm" placeholder="" formControlName="bankAccount" oninput="validity.valid||(value='');">
-                                        <small class="text-danger font-weight-bold ml-1" *ngIf="(registerCompleteFormGroup.get('bankAccount').invalid && registerCompleteFormGroup.get('bankAccount').dirty)">
-                                            Enter bank account number
-                                        </small>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Paymaya Account</label>
-                                        <input type="text" class="form-control form-control-sm" placeholder="0000 0000 0000 0000" mask="0000 0000 0000 0000" formControlName="paymayaAccount">
-                                        <small class="text-danger font-weight-bold ml-1" *ngIf="(registerCompleteFormGroup.get('paymayaAccount').invalid && registerCompleteFormGroup.get('paymayaAccount').dirty)">
-                                            Enter paymaya account number
-                                        </small>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Photo</label>
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="customFile" accept=".png,.jpeg, .jpg" (change)="onFileChange($event)">
-                                            <label class="custom-file-label" for="customFile">{{photoFile==null ? 'Choose file': photoFile.name}}</label>
-                                        </div>
-                                    </div>
-                                    </form>
-                                    </div>
+                                    <small class="text-danger font-weight-bold ml-1"
+                                    *ngIf="(registerCompleteFormGroup.get('photo').invalid && registerCompleteFormGroup.get('photo').dirty)">
+                                    Select a photo
+                                </small>
+                                </div>
+                                <button (click)="updatePersonalInfo(registerCompleteFormGroup.value)" class="btn btn-success btn-block"
+                                [disabled]="
+                                (registerCompleteFormGroup.get('contactNumber').invalid && registerCompleteFormGroup.get('contactNumber').dirty) ||
+                                (registerCompleteFormGroup.get('nationality').invalid && registerCompleteFormGroup.get('nationality').dirty) ||
+                                (registerCompleteFormGroup.get('civilStatus').invalid && registerCompleteFormGroup.get('civilStatus').dirty) ||
+                                (registerCompleteFormGroup.get('gender').invalid && registerCompleteFormGroup.get('gender').dirty) || 
+                                (registerCompleteFormGroup.get('placeOfBirth').invalid && registerCompleteFormGroup.get('placeOfBirth').dirty) ||
+                                (registerCompleteFormGroup.get('dateOfBirth').invalid && registerCompleteFormGroup.get('dateOfBirth').dirty) ||
+                                (registerCompleteFormGroup.get('address').invalid && registerCompleteFormGroup.get('address').dirty) ||
+                                (registerCompleteFormGroup.get('lastName').invalid && registerCompleteFormGroup.get('lastName').dirty) ||
+                                (registerCompleteFormGroup.get('middleName').invalid && registerCompleteFormGroup.get('middleName').dirty) || 
+                                (registerCompleteFormGroup.get('firstName').invalid && registerCompleteFormGroup.get('firstName').dirty)
+                                "> Submit </button>
+                            </div>
                         </mat-tab>
-                        <mat-tab label="Government Documents">View 2</mat-tab>
-                        <mat-tab label="Bank Information">View 3</mat-tab>
-                      </mat-tab-group>
-                </div>
+                        <mat-tab label="Beneficiaries">
+                            <div class="form-group mt-3">
+                                <!-- <form [formGroup]="registerCompleteFormGroup"> -->
+                                <div formArrayName="beneficiaries">
+                                    <div *ngFor=" let beneficiary of registerCompleteFormGroup.get('beneficiaries')['controls']; let beneficiaryIndex = index"
+                                        [formGroupName]="beneficiaryIndex" class="px-3">
+                                        <div class="card">
+                                            <div class="card-header py-1 pt-2"><span class="mt-2">Beneficiary
+                                                    {{beneficiaryIndex + 1}}</span>
+                                                <button (click)="deleteBeneficiary(beneficiaryIndex)"
+                                                    class="btn btn-xs py-1 px-2 float-right"
+                                                    *ngIf="beneficiaryIndex!=0">x</button>
+                                            </div>
+                                            {{beneficiary.get('firstName').invalid}}
+                                            <div class="card-body p-2">
+                                                <div class="row">
+                                                    <div class="form-group col-md-4 col-sm-12">
+                                                        <label>First Name</label>
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            placeholder="" formControlName="firstName" blockSpecialChar>
+                                                        <small class="text-danger font-weight-bold ml-1"
+                                                            *ngIf="(beneficiary.get('firstName').invalid && beneficiary.get('firstName').dirty)">
+                                                            Enter your first name
+                                                        </small>
+                                                    </div>
+                                                    <div class="form-group col-md-4 col-sm-12">
+                                                        <label>Middle Name</label>
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            placeholder="" formControlName="middleName"
+                                                            blockSpecialChar>
+                                                        <small class="text-danger font-weight-bold ml-1"
+                                                            *ngIf="(beneficiary.get('middleName').invalid && beneficiary.get('middleName').dirty)">
+                                                            Enter your middle name
+                                                        </small>
+                                                    </div>
+                                                    <div class="form-group col-md-4 col-sm-12">
+                                                        <label>Last Name</label>
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            placeholder="" formControlName="lastName" blockSpecialChar>
+                                                        <small class="text-danger font-weight-bold ml-1"
+                                                            *ngIf="(beneficiary.get('lastName').invalid && beneficiary.get('lastName').dirty)">
+                                                            Enter your last name
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-md-6 col-sm-12">
+                                                        <label>Date Of Birth</label>
+                                                        <input type="date" class="form-control form-control-sm"
+                                                            placeholder="" formControlName="dateOfBirth">
+                                                        <small class="text-danger font-weight-bold ml-1"
+                                                            *ngIf="(beneficiary.get('dateOfBirth').invalid && beneficiary.get('dateOfBirth').dirty)">
+                                                            Enter your birth date
+                                                        </small>
+                                                    </div>
+                                                    <div class="form-group col-md-6 col-sm-12">
+                                                        <label>Place of Birth</label>
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            placeholder="" formControlName="placeOfBirth"
+                                                            blockSpecialChar>
+                                                        <small class="text-danger font-weight-bold ml-1"
+                                                            *ngIf="(beneficiary.get('placeOfBirth').invalid && beneficiary.get('placeOfBirth').dirty)">
+                                                            Enter your place of birth
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Address</label>
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        placeholder="" formControlName="address">
+                                                    <small class="text-danger font-weight-bold ml-1"
+                                                        *ngIf="(beneficiary.get('address').invalid && beneficiary.get('address').dirty)">
+                                                        Enter your address
+                                                    </small>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Gender</label>
+                                                    <br />
+                                                    <div class="pl-5">
+                                                        <div class="form-check form-check-inline">
+                                                            <label class="form-check-label">
+                                                                <input type="radio" class="form-check-input"
+                                                                    formControlName="gender" value="Male">Male
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <label class="form-check-label">
+                                                                <input type="radio" class="form-check-input"
+                                                                    formControlName="gender" value="Female">Female
+                                                            </label>
+                                                        </div>
+                                                        <small class="text-danger font-weight-bold ml-1"
+                                                            *ngIf="(beneficiary.get('gender').invalid && beneficiary.get('gender').dirty)">
+                                                            Select your gender
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-md-6 col-sm-12">
+                                                        <label>Civil Status</label>
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            placeholder="" formControlName="civilStatus"
+                                                            blockSpecialChar>
+                                                        <small class="text-danger font-weight-bold ml-1"
+                                                            *ngIf="(beneficiary.get('civilStatus').invalid && beneficiary.get('civilStatus').dirty)">
+                                                            Enter your civil status
+                                                        </small>
+                                                    </div>
+                                                    <div class="form-group col-md-6 col-sm-12">
+                                                        <label>Nationality</label>
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            placeholder="" formControlName="nationality"
+                                                            blockSpecialChar>
+                                                        <small class="text-danger font-weight-bold ml-1"
+                                                            *ngIf="(beneficiary.get('nationality').invalid && beneficiary.get('nationality').dirty)">
+                                                            Enter your nationality
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Contact Number</label>
+                                                    <input type="number" min="0" class="form-control form-control-sm"
+                                                        placeholder="" formControlName="contactNumber"
+                                                        oninput="validity.valid||(value='');">
+                                                    <small class="text-danger font-weight-bold ml-1"
+                                                        *ngIf="(beneficiary.get('contactNumber').invalid && beneficiary.get('contactNumber').dirty)">
+                                                        Enter your contact number
+                                                    </small>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Tin Number</label>
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        placeholder="000-000-000-000" mask="000-000-000-000"
+                                                        formControlName="tinNumber">
+                                                    <small class="text-danger font-weight-bold ml-1"
+                                                        *ngIf="(beneficiary.get('tinNumber').invalid && beneficiary.get('tinNumber').dirty)">
+                                                        Please enter valid Tin Number
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn- btn-sm btn-success float-right mr-3 mb-4" (click)="addBenefeciary()"
+                                    [disabled]="userInfo[0]?.beneficiaries?.length > 2">Add Beneficiary</button>
+                                <button class="btn- btn-sm btn-success float-right mr-3 mb-4"
+                                    (click)="updatePersonalInfo(registerCompleteFormGroup.value)" [disabled]="registerCompleteFormGroup.get('beneficiaries').invalid">Save</button>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Government Documents">
+                            <div class="m-5">
+                                <div class="form-group">
+                                    <label>Tin Number</label>
+                                    <input type="text" class="form-control form-control-sm"
+                                        placeholder="000-000-000-000" mask="000-000-000-000"
+                                        formControlName="tinNumber">
+                                    <small class="text-danger font-weight-bold ml-1"
+                                        *ngIf="(registerCompleteFormGroup.get('tinNumber').invalid && registerCompleteFormGroup.get('tinNumber').dirty)">
+                                        Enter valid tin number
+                                    </small>
+                                </div>
+                                <button class="btn- btn-sm btn-success float-right mr-3 mb-4"
+                                    (click)="updatePersonalInfo(registerCompleteFormGroup.value)"
+                                    [disabled]="registerCompleteFormGroup.get('tinNumber').invalid">Save</button>
+                            </div>
+
+                        </mat-tab>
+                        <mat-tab label="Bank Information">
+                            <div class="m-5">
+                                <div class="form-group">
+                                    <label>Bank Account</label>
+                                    <input type="number" min="0" class="form-control form-control-sm" placeholder=""
+                                        formControlName="bankAccount" oninput="validity.valid||(value='');">
+                                    <small class="text-danger font-weight-bold ml-1"
+                                        *ngIf="(registerCompleteFormGroup.get('bankAccount').invalid && registerCompleteFormGroup.get('bankAccount').dirty)">
+                                        Enter valid bank account number
+                                    </small>
+                                </div>
+                                <div class="form-group">
+                                    <label>Paymaya Account</label>
+                                    <input type="text" class="form-control form-control-sm"
+                                        placeholder="0000 0000 0000 0000" mask="0000 0000 0000 0000"
+                                        formControlName="paymayaAccount">
+                                    <small class="text-danger font-weight-bold ml-1"
+                                        *ngIf="(registerCompleteFormGroup.get('paymayaAccount').invalid && registerCompleteFormGroup.get('paymayaAccount').dirty)">
+                                        Enter valid paymaya account number
+                                    </small>
+                                </div>
+                                <button class="btn- btn-sm btn-success float-right mr-3 mb-4"
+                                    type="submit" [disabled]="registerCompleteFormGroup.get('paymayaAccount').invalid || registerCompleteFormGroup.get('bankAccount').invalid">Save</button>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                </form>
             </div>
+        </div>
     </div>
- 
+
     <!-- <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12 mx-auto">
       <div class="card card-signin mt-4 mb-3">

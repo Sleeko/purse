@@ -14,15 +14,30 @@
                         <option [ngValue]="null"></option>
                         <option *ngFor="let store of stores">{{store.storeCode}}</option>
                     </select>
-                    <button class="btn-sm btn-primary pull-right mt-1" (click)="createNewStore()">Create new store</button>
+                    <small class="text-danger font-weight-bold ml-1"
+                        *ngIf="(voucherForm.get('storeCode').invalid && voucherForm.get('storeCode').dirty)">
+                        Select store code
+                    </small>
+                    <button class="btn-sm btn-primary pull-right mt-1" (click)="createNewStore()">Create new
+                        store</button>
                 </div>
                 <div class="form-group">
                     <label for="storeBranch">Store Branch</label>
                     <input class="form-control" id="storeBranch" formControlName="storeBranch">
+                    <small class="text-danger font-weight-bold ml-1"
+                        *ngIf="(voucherForm.get('storeBranch').invalid && voucherForm.get('storeBranch').dirty)">
+                        Enter store branch
+                    </small>
                 </div>
                 <div class="form-group">
                     <label for="amount">Amount</label>
-                    <input currencyMask [options]="{ prefix: '₱ ', thousands: ',', decimal: '.' , align: 'left', allowNegative : 'false' }" class="form-control" id="amount" formControlName="amount">
+                    <input currencyMask
+                        [options]="{ prefix: '₱ ', thousands: ',', decimal: '.' , align: 'left', allowNegative : 'false' }"
+                        class="form-control" id="amount" formControlName="amount">
+                    <small class="text-danger font-weight-bold ml-1"
+                        *ngIf="(voucherForm.get('amount').invalid && voucherForm.get('amount').dirty)">
+                        Enter amount
+                    </small>
                 </div>
             </div>
         </div>

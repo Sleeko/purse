@@ -58,7 +58,7 @@
               </div>
             </div>
             <div class="form-group mt-4">
-              <button type="submit" class="btn btn-success btn-block" [disabled]="registerFormGroup?.invalid"> Register
+              <button type="submit" class="btn btn-success btn-block" [disabled]="registerFormGroup.invalid"> Register
               </button>
               <!-- <p>dasd {{registerFormGroup.controls['emailAddress'].value}}</p>
                   <p>qweqwew {{registerFormGroup | json}}</p> -->
@@ -86,13 +86,13 @@
       <div class="carousel">
         <ngu-carousel #myCarousel [inputs]="carouselConfig" [dataSource]="carouselItems | async">
           <ngu-tile *nguCarouselDef="let item; let i = index; let ani = animate">
-              <div class="card" style="width: 100%;">
+              <div class="card" style="width: 100%;height: 460px;">
                 <div class="m-2">
-                    <img [src]="item.photoUrl" class="card-img-top" style="height: 18em;">
+                    <img [src]="item.imageUrl" class="card-img-top" style="height: 18em;">
                 </div>
                   <div class="card-body">
-                    <h4>Title</h4>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <h4>{{item.title}}</h4>
+                    <p class="card-text">{{item.description}}</p>
                   </div>
                 </div>
           </ngu-tile>
