@@ -89,13 +89,13 @@ export class AccountSettingsComponent implements OnInit {
   }
 
   updatePersonalInfo(value) {
-    console.log('update')
     var userInfo = this.mapFormToUserInfo(value);
-    if (this.registerCompleteFormGroup.get('photo').dirty) {
+
+    if (this.photoFile != null || this.photoFile != undefined) {
       this.userService.uploadPhoto(this.photoFile, userInfo) ? alert('Update Successful') : null;
-      this.registerCompleteFormGroup.get('photo').markAsPristine();
     } else {
-      this.userService.updateUserInfo(userInfo).then( e => {
+      this.userService.updateUserInfo(userInfo).then(e => {
+        console.log('e ' , e);
         alert('Update Successful')
       })
     }
@@ -145,12 +145,13 @@ export class AccountSettingsComponent implements OnInit {
   }
 
   mapUserInfoToForm(userInfo: UserInfo) {
+    console.log('User Info ' , userInfo)
     this.registerCompleteFormGroup.patchValue({
       firstName: userInfo.personalInfo.firstName,
       middleName: userInfo.personalInfo.middleName,
       lastName: userInfo.personalInfo.lastName,
       address: userInfo.personalInfo.address,
-      dateOfBirth: "birthdate",
+      dateOfBirth: userInfo.personalInfo.dateOfBirth,
       placeOfBirth: userInfo.personalInfo.placeOfBirth,
       gender: userInfo.personalInfo.gender,
       civilStatus: userInfo.personalInfo.civilStatus,

@@ -168,7 +168,7 @@
                                                     class="btn btn-xs py-1 px-2 float-right"
                                                     *ngIf="beneficiaryIndex!=0">x</button>
                                             </div>
-                                            {{beneficiary.get('firstName').invalid}}
+                                            {{beneficiary.get('firstName').valid}}
                                             <div class="card-body p-2">
                                                 <div class="row">
                                                     <div class="form-group col-md-4 col-sm-12">
@@ -176,7 +176,7 @@
                                                         <input type="text" class="form-control form-control-sm"
                                                             placeholder="" formControlName="firstName" blockSpecialChar>
                                                         <small class="text-danger font-weight-bold ml-1"
-                                                            *ngIf="(beneficiary.get('firstName').invalid && beneficiary.get('firstName').dirty)">
+                                                            *ngIf="(!beneficiary.get('firstName').valid && beneficiary.get('firstName').dirty)">
                                                             Enter your first name
                                                         </small>
                                                     </div>
