@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, FormControl, ValidationErrors, AsyncValidatorFn } from '@angular/forms';
 import { AccountService } from '../../services/account.service';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { NguCarouselConfig } from '@ngu/carousel';
-import { Observable, interval, BehaviorSubject, Subject } from 'rxjs';
-import { startWith, take, map } from 'rxjs/operators';
+import { Observable, interval, BehaviorSubject, Subject, timer } from 'rxjs';
+import { startWith, take, map, debounceTime, switchMap } from 'rxjs/operators';
 import { Product } from '../../model/product.model';
 import { UtilsService } from '../../services/utils.service';
 import { Code } from '../../model/code.model';
@@ -13,7 +13,7 @@ import { UserInfo } from '../../model/user-info.model';
 import { UserService } from '../../services/user.service';
 import { stringify } from 'querystring';
 import { Upline } from '../../model/upline.model';
-
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-register',
@@ -116,12 +116,15 @@ export class RegisterComponent implements OnInit {
   data: any;
   accountResponse: any;
 
+  docId: any;
+
   chamber: any;
   constructor(private formBuilder: FormBuilder,
               private accountService: AccountService,
               private userService: UserService,
               private authService: AuthService,
               private utilsService: UtilsService,
+              public db: AngularFirestore,
               public router: Router) {
 
               }
@@ -139,16 +142,18 @@ export class RegisterComponent implements OnInit {
     this.registerFormGroup = this.formBuilder.group({
       email: [
         '',
-        //[Validators.required, Validators.email],
+        [Validators.required, Validators.email],
         //this.validateEmail.bind(this)
       ],
       code: [
         '',
-        // [Validators.required,
-        // this.validateCode.bind(this)],
+        [Validators.required],
+        [this.searchCodeValidator()]
       ],
       referrerCode: [
-        ''
+        '',
+        [Validators.required],
+        [this.searchUplineValidator()]
       ],
       sellerName: [
         ''
@@ -165,10 +170,8 @@ export class RegisterComponent implements OnInit {
       passwords: this.formBuilder.group({
           password: ['', [Validators.required]],
           confirm_password: ['', [Validators.required]],
-      }, {validator: this.passwordConfirming}),
-      updateOn: 'blur'
+      }, {validator: this.passwordConfirming})
     });
-    // console.log(this.registerFormGroup);
     this.registerFormGroup.get('isSeller').valueChanges.subscribe(data => { data === 1 ? this.isSeller = true : this.isSeller = false; });
     // test
     this.utilsService.searchUpline('test').subscribe(e => {
@@ -177,11 +180,53 @@ export class RegisterComponent implements OnInit {
         ...obj.payload.doc.data()
       } as Upline));
 
-      console.log('response-upline', JSON.stringify(response.length));
+      console.log('response-upline', JSON.stringify(response));
     });
   }
 
+  searchCodeValidator(): AsyncValidatorFn  {
+    return  (control: AbstractControl): Observable<ValidationErrors> => {
+      return this.db.collection('memberCode', ref => ref.where('code', '==', control.value))
+       .snapshotChanges().pipe(
+          debounceTime(500),
+          take(1),
+          map(res => 
+            {
+              console.log(res);
+              if(res.length>0) {
+                this.docId = res[0].payload.doc.id;
+                return null;
+              } else {
+                return { 'isUsed': true };
+              }
+            } 
+          )
+        );
+    }
+  }
+
+  searchUplineValidator() : AsyncValidatorFn  {
+    return  (control: AbstractControl): Observable<ValidationErrors> => {
+      return this.db.collection('uplineLookup', ref => ref.where('uplineCode', '==', control.value))
+       .snapshotChanges().pipe(
+          debounceTime(500),
+          take(1),
+          map(res => 
+            {
+              if(res.length<3) {
+                return null;
+              } else {
+                return { 'referrerCodeLimit': true };
+              }
+            } 
+          )
+        );
+    }
+  }
+
+
   passwordConfirming(c: AbstractControl): { invalid: boolean } {
+    console.log(c);
     if (c.get('password').value !== c.get('confirm_password').value) {
       return { invalid: true };
     }
@@ -205,6 +250,13 @@ export class RegisterComponent implements OnInit {
     //   console.log('firestore-response:', res);
     //   return res.isUsed ? null : {codeValid: true};
     // });
+    return this.utilsService.searchCode(control.value).subscribe(res => {
+      console.log('firestore-response:', res);
+      return res.length==0 ? null : {codeValid: true};
+    });
+    
+
+    
   }
 
   validateEmail(control: AbstractControl) {
@@ -225,15 +277,9 @@ export class RegisterComponent implements OnInit {
 
     const payload = { email: req.email, password: req.password };
 
-    const payloadMCode = {
-      docId: 'document id from utils.searchCode',
-      code: req.code,
-      isUsed: true
-    } as Code;
-
-    this.utilsService.updateGeneratedCode(payloadMCode);
+    
     // register via firebase. TODO: add loading screen
-    this.tryRegister(payload);
+    this.tryRegister(payload, req);
   }
 
   /**
@@ -249,6 +295,7 @@ export class RegisterComponent implements OnInit {
       referrerCode: formData.referrerCode,
       password: formData.passwords.password,
     };
+    
 
     // 1. check member code if valid
     this.utilsService.searchCode(req.code).subscribe(e => {
@@ -268,7 +315,7 @@ export class RegisterComponent implements OnInit {
           responseCode[0].isUsed = true;
           this.utilsService.updateGeneratedCode(responseCode[0]);
           // register via firebase. TODO: add loading screen
-          this.tryRegister(payload);
+          this.tryRegister(payload, req);
         }
       } else {
         alert('Invalid code!');
@@ -277,7 +324,7 @@ export class RegisterComponent implements OnInit {
   }
 
   // sub-routine method for registration
-  tryRegister(payload) {
+  tryRegister(payload, req) {
     this.authService.doRegister(payload)
       .then(res => {
         console.log('Account ID', res.user.uid);
@@ -295,12 +342,19 @@ export class RegisterComponent implements OnInit {
         }).catch(error => {
           console.log('error', error);
         });
+        const payloadMCode = {
+          docId: this.docId,
+          code: req.code,
+          isUsed: true
+        } as Code;
+    
+        this.utilsService.updateGeneratedCode(payloadMCode);
 //        alert('Your account has been created');
       }, err => {
         console.log(err);
         console.log(err.message);
         alert(err.message);
-      });
+      },);
     console.log('data', this.data);
   }
 }

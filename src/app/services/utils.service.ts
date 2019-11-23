@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Code } from '../model/code.model';
 import { Subject, Observable } from 'rxjs';
+import { debounceTime, take, map } from 'rxjs/operators';
+import { AsyncValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 
 /**
  * @author Bryan
@@ -28,6 +30,26 @@ export class UtilsService {
 
     searchCode(code) {
         return this.db.collection('memberCode', ref => ref.where('code', '==', code)).snapshotChanges();
+    }
+
+    validateCode(control: any) {
+        return this.db.collection('memberCode', ref => ref.where('code', '==', control.value))
+          .snapshotChanges().pipe(
+          debounceTime(500),
+          take(1),
+          map(res => 
+            {
+              console.log(res);
+              let docId;
+              if(res.length>0) {
+                docId = res[0].payload.doc.id;
+                return  { 'docId': docId };
+              } else {
+                return  { 'isUsed': true};
+              }
+            } 
+          )
+        )
     }
 
     updateGeneratedCode(memCode: Code) {
