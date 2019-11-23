@@ -8,7 +8,7 @@
                 </div>
                 <div class="card-body">
                     <h3 class="card-title mb-4">
-                        {{userInfo[0]?.personalInfo?.firstName + ' ' + userInfo[0]?.personalInfo?.lastName}}</h3>
+                        {{(userInfo[0]?.personalInfo?.firstName ? userInfo[0]?.personalInfo?.firstName : '')  + ' ' + (userInfo[0]?.personalInfo?.lastName ? userInfo[0]?.personalInfo?.lastName : '')}}</h3>
                 </div>
             </div>
         </div>
@@ -151,7 +151,8 @@
                                 (registerCompleteFormGroup.get('address').invalid && registerCompleteFormGroup.get('address').dirty) ||
                                 (registerCompleteFormGroup.get('lastName').invalid && registerCompleteFormGroup.get('lastName').dirty) ||
                                 (registerCompleteFormGroup.get('middleName').invalid && registerCompleteFormGroup.get('middleName').dirty) || 
-                                (registerCompleteFormGroup.get('firstName').invalid && registerCompleteFormGroup.get('firstName').dirty)
+                                (registerCompleteFormGroup.get('firstName').invalid && registerCompleteFormGroup.get('firstName').dirty) ||
+                                (registerCompleteFormGroup.get('photo').invalid && registerCompleteFormGroup.get('photo').dirty)
                                 "> Submit </button>
                             </div>
                         </mat-tab>
@@ -168,7 +169,7 @@
                                                     class="btn btn-xs py-1 px-2 float-right"
                                                     *ngIf="beneficiaryIndex!=0">x</button>
                                             </div>
-                                            {{beneficiary.get('firstName').valid}}
+                                            <!-- {{beneficiary.get('firstName').valid}} -->
                                             <div class="card-body p-2">
                                                 <div class="row">
                                                     <div class="form-group col-md-4 col-sm-12">
