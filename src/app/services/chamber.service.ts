@@ -5,41 +5,13 @@ import { Observable, Subject } from 'rxjs';
 /**
  * @author Bryan Judelle Ramos
  */
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class ChamberService {
 
     chamber: any;
     virtualChamber$;
-    chamberSubject = new Subject<any>();
-    constructor(private db: AngularFirestore) {
-        // 1.) get all data from firestore
-        this.fetchVirtualChamberDataAPI().subscribe(data =>  {
-            const r = data.map(e => ({
-                id: e.payload.doc.id,
-                ...e.payload.doc.data()
-            }));
-            this.chamberSubject.next(r);
-        });
-        // 4.)
-        this.initData();
-    }
+    constructor(private db: AngularFirestore) {}
 
-    // 3.) initialize data and passed it to class property
-    initData() {
-        this.parseAsObservable().subscribe(obj => this.chamber = obj);
-    }
-
-    // 2.) subroutine for getting the data
-    parseAsObservable() {
-        return this.chamberSubject.asObservable();
-    }
-
-    // 5.) final output data
-    getChamber() {
-        return this.chamber;
-    }
 
     /**
      * @member fetchVirtualChamberData
@@ -49,15 +21,33 @@ export class ChamberService {
         return this.db.collection('virtualChamber').snapshotChanges();
     }
 
-    getVirtualChamberData() {
-        this.fetchVirtualChamberDataAPI().subscribe(data => {
-            const dataMap = data.map(e => ({id: e.payload.doc.id,
-                ...e.payload.doc.data()}));
+    generateGenesisChamber(docId: string) {
+        if (!docId) {
+            docId = 'LVL_P300'
+        }
+        let genesisChamber = {members: []};
 
-            console.log('dataMap', dataMap);
-        });
-
-        return this.chamber;
+        for (let i = 0; i <= 10; i++) {
+            const obj = {cycleId: 0,memberList: []}
+            obj.cycleId = i;
+            genesisChamber.members.push(obj);
+        }
+        console.log("genesisChamber", JSON.stringify(genesisChamber));
+        return this.db.collection('virtualChamber').doc(docId).set(genesisChamber);
     }
 
+    updateVirtualChamber(docId: string, chamberPayload) {
+        if (!docId) {
+            docId = 'LVL_P300'
+        }
+        let genesisChamber = {members: chamberPayload};
+
+        console.log("updatedChamber", JSON.stringify(genesisChamber));
+        this.db.collection('virtualChamber').doc(docId).set(genesisChamber);
+    }
+
+
+    updateChamber(data) {
+        this.db.doc('virtualChamber/' + 'LVL_P300').update(Object.assign({},data));
+    }
 }

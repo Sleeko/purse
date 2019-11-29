@@ -59,6 +59,7 @@ import { DisableFormControlDirective } from './directives/disable-form-control.d
 import { BlockSpecialCharDirective } from './directives/block-special-char.directive';
 import { DirectivesModule } from './directives/directives.module';
 import { UtilsService } from './services/utils.service';
+import { ChamberService } from './services/chamber.service';
 
 
 
@@ -101,7 +102,7 @@ import { UtilsService } from './services/utils.service';
   providers: [{
     provide: LocationStrategy,
     useClass: HashLocationStrategy
-  }, UserService, UtilsService],
+  }, UserService, UtilsService, ChamberService],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }
