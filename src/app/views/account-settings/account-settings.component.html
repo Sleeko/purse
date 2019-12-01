@@ -119,7 +119,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Contact Number</label>
-                                <input type="text" class="form-control form-control-sm" appPhoneMask placeholder="+63(000) 000-0000" maxlength="16"
+                                <input type="text" class="form-control form-control-sm" placeholder="000-000-0000" mask="000-000-0000" prefix="+63-"
                                     formControlName="contactNumber">
                                 <small class="text-danger font-weight-bold ml-1"
                                     *ngIf="(personalInfoForm.get('contactNumber').invalid && personalInfoForm.get('contactNumber').dirty)">
@@ -142,7 +142,7 @@
                             </div>
                             <button type="submit"
                                 class="btn btn-success btn-block" [disabled]="
-                                personalInfoForm.invalid && personalInfoForm.get('photo').dirty
+                                personalInfoForm.invalid || (photoFile == null && personalInfoForm.get('photo').dirty)
                                 "> Submit </button>
                         </div>
                     </form>
@@ -164,11 +164,10 @@
                                                 <div class="row">
                                                     <div class="form-group col-md-4 col-sm-12">
                                                         <label>First Name</label>
-                                                        {{beneficiariesForm.get('beneficiaries')['controls'][beneficiaryIndex].controls.firstName.status}}
                                                         <input type="text" class="form-control form-control-sm"
                                                             placeholder="" formControlName="firstName" blockSpecialChar>
                                                         <small class="text-danger font-weight-bold ml-1"
-                                                            *ngIf="(beneficiary.controls.firstName.invalid && beneficiary.get('firstName').dirty)">
+                                                            *ngIf="((beneficiary.controls.firstName.value == null || beneficiary.controls.firstName.value == '') && beneficiary.get('firstName').dirty)">
                                                             Enter your first name
                                                         </small>
                                                     </div>
@@ -178,7 +177,7 @@
                                                             placeholder="" formControlName="middleName"
                                                             blockSpecialChar>
                                                         <small class="text-danger font-weight-bold ml-1"
-                                                            *ngIf="(beneficiary.get('middleName').invalid && beneficiary.get('middleName').dirty)">
+                                                            *ngIf="((beneficiary.controls.middleName.value == null || beneficiary.controls.middleName.value == '') && beneficiary.get('middleName').dirty)">
                                                             Enter your middle name
                                                         </small>
                                                     </div>
@@ -187,7 +186,7 @@
                                                         <input type="text" class="form-control form-control-sm"
                                                             placeholder="" formControlName="lastName" blockSpecialChar>
                                                         <small class="text-danger font-weight-bold ml-1"
-                                                            *ngIf="(beneficiary.get('lastName').invalid && beneficiary.get('lastName').dirty)">
+                                                            *ngIf="((beneficiary.controls.lastName.value == null || beneficiary.controls.lastName.value == '') && beneficiary.get('lastName').dirty)">
                                                             Enter your last name
                                                         </small>
                                                     </div>
@@ -198,8 +197,8 @@
                                                         <input type="date" class="form-control form-control-sm"
                                                             placeholder="" formControlName="dateOfBirth">
                                                         <small class="text-danger font-weight-bold ml-1"
-                                                            *ngIf="(beneficiary.get('dateOfBirth').invalid && beneficiary.get('dateOfBirth').dirty)">
-                                                            Enter your birth date
+                                                            *ngIf="((beneficiary.controls.dateOfBirth.value == null || beneficiary.controls.dateOfBirth.value == '' || beneficiary.controls.dateOfBirth.errors?.ageInvalid) && beneficiary.get('dateOfBirth').dirty)">
+                                                            Enter your birth date. Must be 18 years old above.
                                                         </small>
                                                     </div>
                                                     <div class="form-group col-md-6 col-sm-12">
@@ -208,7 +207,7 @@
                                                             placeholder="" formControlName="placeOfBirth"
                                                             blockSpecialChar>
                                                         <small class="text-danger font-weight-bold ml-1"
-                                                            *ngIf="(beneficiary.get('placeOfBirth').invalid && beneficiary.get('placeOfBirth').dirty)">
+                                                            *ngIf="((beneficiary.controls.placeOfBirth.value == null || beneficiary.controls.placeOfBirth.value == '') && beneficiary.get('placeOfBirth').dirty)">
                                                             Enter your place of birth
                                                         </small>
                                                     </div>
@@ -218,7 +217,7 @@
                                                     <input type="text" class="form-control form-control-sm"
                                                         placeholder="" formControlName="address">
                                                     <small class="text-danger font-weight-bold ml-1"
-                                                        *ngIf="(beneficiary.get('address').invalid && beneficiary.get('address').dirty)">
+                                                        *ngIf="((beneficiary.controls.address.value == null || beneficiary.controls.address.value == '') && beneficiary.get('address').dirty)">
                                                         Enter your address
                                                     </small>
                                                 </div>
@@ -239,7 +238,7 @@
                                                             </label>
                                                         </div>
                                                         <small class="text-danger font-weight-bold ml-1"
-                                                            *ngIf="(beneficiary.get('gender').invalid && beneficiary.get('gender').dirty)">
+                                                            *ngIf="((beneficiary.controls.gender.value == null || beneficiary.controls.gender.value == '') && beneficiary.get('gender').dirty)">
                                                             Select your gender
                                                         </small>
                                                     </div>
@@ -251,7 +250,7 @@
                                                             placeholder="" formControlName="civilStatus"
                                                             blockSpecialChar>
                                                         <small class="text-danger font-weight-bold ml-1"
-                                                            *ngIf="(beneficiary.get('civilStatus').invalid && beneficiary.get('civilStatus').dirty)">
+                                                            *ngIf="((beneficiary.controls.civilStatus.value == null || beneficiary.controls.civilStatus.value == '') && beneficiary.get('civilStatus').dirty)">
                                                             Enter your civil status
                                                         </small>
                                                     </div>
@@ -261,7 +260,7 @@
                                                             placeholder="" formControlName="nationality"
                                                             blockSpecialChar>
                                                         <small class="text-danger font-weight-bold ml-1"
-                                                            *ngIf="(beneficiary.get('nationality').invalid && beneficiary.get('nationality').dirty)">
+                                                            *ngIf="((beneficiary.controls.nationality.value == null || beneficiary.controls.nationality.value == '') && beneficiary.get('nationality').dirty)">
                                                             Enter your nationality
                                                         </small>
                                                     </div>
@@ -269,10 +268,10 @@
                                                 <div class="form-group">
                                                     <label>Contact Number</label>
                                                     <input type="text" class="form-control form-control-sm"
-                                                        placeholder="" formControlName="contactNumber" appPhoneMask placeholder="+63(000) 000-0000" maxlength="16"
+                                                        placeholder="" formControlName="contactNumber" placeholder="000-000-0000" mask="000-000-0000" prefix="+63-"
                                                         oninput="validity.valid||(value='');">
                                                     <small class="text-danger font-weight-bold ml-1"
-                                                        *ngIf="(beneficiary.get('contactNumber').invalid && beneficiary.get('contactNumber').dirty)">
+                                                        *ngIf="((beneficiary.controls.contactNumber.value == null || beneficiary.controls.contactNumber.value == '') && beneficiary.get('contactNumber').dirty)">
                                                         Enter your contact number
                                                     </small>
                                                 </div>
@@ -282,7 +281,7 @@
                                                         placeholder="000-000-000-000" mask="000-000-000-000"
                                                         formControlName="tinNumber">
                                                     <small class="text-danger font-weight-bold ml-1"
-                                                        *ngIf="(beneficiary.get('tinNumber').invalid && beneficiary.get('tinNumber').dirty)">
+                                                        *ngIf="((beneficiary.controls.tinNumber.value == null || beneficiary.controls.tinNumber.value == '') && beneficiary.get('tinNumber').dirty)">
                                                         Please enter valid Tin Number
                                                     </small>
                                                 </div>
@@ -293,7 +292,7 @@
                                 <button class="btn- btn-sm btn-success float-right mr-3 mb-4" (click)="addBenefeciary()"
                                     [disabled]="userInfo[0]?.beneficiaries?.length > 2">Add Beneficiary</button>
                                 <button class="btn- btn-sm btn-success float-right mr-3 mb-4" (click)="updateUserInfo()"
-                                    [disabled]="beneficiariesForm.invalid">Save</button>
+                                    [disabled]="isInvalidBeneficiary">Save</button>
                             </div>
                         </form>
                     </mat-tab>

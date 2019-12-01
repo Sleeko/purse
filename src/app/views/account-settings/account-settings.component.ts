@@ -13,6 +13,8 @@ import { FirebaseUserModel } from '../../model/user.model';
 import { UserInfo } from '../../model/user-info.model';
 import { DatePipe } from '@angular/common';
 import { Timestamp } from 'rxjs/internal/operators/timestamp';
+import { AccountInfo } from '../../model/account-info.model';
+import { GovermentDocuments } from '../../model/goverment-docs.model';
 
 @Component({
   templateUrl: 'account-settings.component.html',
@@ -27,6 +29,7 @@ export class AccountSettingsComponent implements OnInit {
   bankForm: FormGroup;
   photoFile: any;
   userInfo: UserInfo[] = [];
+  isInvalidBeneficiary: boolean = false;
 
   constructor(private formBuilder: FormBuilder,
     private accountService: AccountService,
@@ -40,25 +43,6 @@ export class AccountSettingsComponent implements OnInit {
     this.getCurrentUser();
     let nowDate = new Date().toISOString().split('T')[0];
     console.log(nowDate);
-    // this.registerCompleteFormGroup = this.formBuilder.group({
-    //   firstName: ['', [Validators.required]],
-    //   middleName: ['', [Validators.required]],
-    //   lastName: ['', [Validators.required]],
-    //   address: ['', [Validators.required]],
-    //   dateOfBirth: [nowDate, [Validators.required, CustomValidators.ageValidator]],
-    //   placeOfBirth: [null, [Validators.required]],
-    //   gender: [null, [Validators.required]],
-    //   civilStatus: ['', [Validators.required]],
-    //   nationality: ['', [Validators.required]],
-    //   contactNumber: ['', [Validators.required]],
-    //   tinNumber: [null, [Validators.required]],
-    //   bankAccount: [null, [Validators.required]],
-    //   emailAddress: [null],
-    //   photo: [null, [Validators.required]],
-    //   paymayaAccount: [null, [Validators.required]],
-    //   beneficiaries: this.formBuilder.array([this.beneficiaries])
-    // });
-
     this.personalInfoForm = this.formBuilder.group({
       firstName: ['', [Validators.required]],
       middleName: ['', [Validators.required]],
@@ -69,17 +53,33 @@ export class AccountSettingsComponent implements OnInit {
       gender: [null, [Validators.required]],
       civilStatus: ['', [Validators.required]],
       nationality: ['', [Validators.required]],
-      contactNumber: ['', [Validators.required, Validators.maxLength(16), Validators.minLength(16)]],
-      photo : ['', Validators.required]
+      contactNumber: ['', [Validators.required, Validators.maxLength(10), Validators.minLength(10)]],
+      photo: ['']
     })
 
     this.buildBankForm();
     this.buildGovernmentForm();
     this.buildBeneficiariesForm();
+    this.checkBeneficiaryValidity();
+
+  }
+
+  checkBeneficiaryValidity() {
+    var beneficariesData: PersonalInfo[] = [];
 
     this.beneficiariesForm.valueChanges.subscribe(data => {
-      console.log('bene ' , this.beneficiariesForm.get('beneficiaries')['controls'][0].controls.firstName)
-
+      beneficariesData = this.beneficiariesForm.get('beneficiaries').value
+      this.isInvalidBeneficiary = beneficariesData.some(ben => {
+        let birthDate = new Date(ben.dateOfBirth);
+        let age = moment().diff(birthDate, 'years');
+        return ben.address == null || ben.address == "" || ben.civilStatus == null
+          || ben.civilStatus == "" || ben.contactNumber == null || ben.contactNumber == ""
+          || ben.dateOfBirth == null || ben.dateOfBirth == "" || ben.firstName == null
+          || ben.firstName == "" || ben.gender == null || ben.gender == ""
+          || ben.lastName == null || ben.lastName == "" || ben.middleName == null
+          || ben.middleName == "" || ben.nationality == null || ben.nationality == ""
+          || ben.placeOfBirth == null || ben.placeOfBirth == "" || ben.tinNumber == null || age < 18
+      })
     })
   }
 
@@ -107,7 +107,7 @@ export class AccountSettingsComponent implements OnInit {
       middleName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
       address: ['', [Validators.required]],
-      dateOfBirth: [nowDate, [Validators.required]],
+      dateOfBirth: [nowDate, [Validators.required, CustomValidators.ageValidator]],
       placeOfBirth: [null, [Validators.required]],
       gender: [null, [Validators.required]],
       civilStatus: ['', [Validators.required]],
@@ -125,8 +125,8 @@ export class AccountSettingsComponent implements OnInit {
 
   buildBankForm() {
     this.bankForm = this.formBuilder.group({
-      bankAccountNumber: ['', Validators.required],
-      paymayaAccountNumber: ['', Validators.required]
+      bankAccountNumber: [null, Validators.required],
+      paymayaAccountNumber: [null, Validators.required]
     })
   }
 
@@ -144,15 +144,18 @@ export class AccountSettingsComponent implements OnInit {
   }
 
   mapFormToUserInfo() {
-    var userInfo: UserInfo = this.userInfo[0];
+    var userInfo: UserInfo = new UserInfo();
+    userInfo = this.userInfo[0] ? this.userInfo[0] : new UserInfo();
     var personalInfo: PersonalInfo = this.personalInfoForm.getRawValue();
-    personalInfo.photoUrl = this.userInfo[0].personalInfo.photoUrl;
+    personalInfo.photoUrl = userInfo.personalInfo ? userInfo.personalInfo.photoUrl : null;
     var beneficiaries: PersonalInfo[] = this.beneficiariesForm.get('beneficiaries').value;
-    userInfo.personalInfo = personalInfo;
-    userInfo.accountInfo = this.bankForm.getRawValue();
+    var accountInfo : AccountInfo = this.bankForm.getRawValue();
+    var governmentDocuments : GovermentDocuments = this.governmentForm.getRawValue();
+    userInfo.personalInfo = typeof personalInfo.lastName === "undefined" ? null : personalInfo;
     userInfo.beneficiaries = beneficiaries;
-    userInfo.governmentDocuments = this.governmentForm.getRawValue();
-    if (beneficiaries[0].firstName == "" || beneficiaries[0].lastName == ""){
+    userInfo.accountInfo = typeof accountInfo.bankAccountNumber === "undefined" ? null : accountInfo
+    userInfo.governmentDocuments = typeof governmentDocuments.tinNumber === "undefined" ? null : governmentDocuments;
+    if (beneficiaries[0].firstName == "" || beneficiaries[0].lastName == "") {
       userInfo.beneficiaries = null
     } 
     return userInfo;
@@ -178,40 +181,40 @@ export class AccountSettingsComponent implements OnInit {
     });
   }
 
-   mapUserInfoToForm(userInfo: UserInfo) {
+  mapUserInfoToForm(userInfo: UserInfo) {
     console.log('User Info ', userInfo)
-      this.personalInfoForm.patchValue({
-        firstName: userInfo.personalInfo.firstName,
-        middleName: userInfo.personalInfo.middleName,
-        lastName: userInfo.personalInfo.lastName,
-        address: userInfo.personalInfo.address,
-        dateOfBirth: userInfo.personalInfo.dateOfBirth,
-        placeOfBirth: userInfo.personalInfo.placeOfBirth,
-        gender: userInfo.personalInfo.gender,
-        civilStatus: userInfo.personalInfo.civilStatus,
-        nationality: userInfo.personalInfo.nationality,
-        contactNumber: userInfo.personalInfo.contactNumber,
-      });
+    this.personalInfoForm.patchValue({
+      firstName: userInfo.personalInfo.firstName,
+      middleName: userInfo.personalInfo.middleName,
+      lastName: userInfo.personalInfo.lastName,
+      address: userInfo.personalInfo.address,
+      dateOfBirth: userInfo.personalInfo.dateOfBirth,
+      placeOfBirth: userInfo.personalInfo.placeOfBirth,
+      gender: userInfo.personalInfo.gender,
+      civilStatus: userInfo.personalInfo.civilStatus,
+      nationality: userInfo.personalInfo.nationality,
+      contactNumber: userInfo.personalInfo.contactNumber,
+    });
 
-      this.governmentForm.patchValue({
-        tinNumber: userInfo.governmentDocuments.tinNumber
-      });
+    this.governmentForm.patchValue({
+      tinNumber: userInfo.governmentDocuments.tinNumber
+    });
 
-      let array: PersonalInfo[] = userInfo.beneficiaries;
-      let beneficiaries = <FormArray>this.beneficiariesForm.controls['beneficiaries'];
+    let array: PersonalInfo[] = userInfo.beneficiaries;
+    let beneficiaries = <FormArray>this.beneficiariesForm.controls['beneficiaries'];
 
-      if(array){
-        array.forEach(beneficiary => {
-          beneficiaries.push(this.formBuilder.group(beneficiary));
-        })
-        beneficiaries.removeAt(0);
-      }
-
-      this.bankForm.patchValue({
-        bankAccountNumber: userInfo.accountInfo.bankAccountNumber,
-        paymayaAccountNumber: userInfo.accountInfo.paymayaAccountNumber
+    if (array) {
+      array.forEach(beneficiary => {
+        beneficiaries.push(this.formBuilder.group(beneficiary));
       })
-    
+      beneficiaries.removeAt(0);
+    }
+
+    this.bankForm.patchValue({
+      bankAccountNumber: userInfo.accountInfo.bankAccountNumber,
+      paymayaAccountNumber: userInfo.accountInfo.paymayaAccountNumber
+    })
+
 
 
   }
@@ -231,7 +234,7 @@ export class AccountSettingsComponent implements OnInit {
     this.personalInfoForm.controls['photo'].setValue(this.photoFile ? this.photoFile.name : ''); // <-- Set Value for Validation
   }
 
- 
+
   completeRegister(value: any) {
 
     var personalInfo: PersonalInfo;

@@ -6,10 +6,10 @@ export class UserInfo {
     docId : string;
     uid: string;
     email: string;
-    personalInfo: PersonalInfo;
+    personalInfo: PersonalInfo = new PersonalInfo();
     beneficiaries : PersonalInfo[];
-    accountInfo: AccountInfo;
-    governmentDocuments: GovermentDocuments;
+    accountInfo: AccountInfo = new AccountInfo();
+    governmentDocuments: GovermentDocuments = new GovermentDocuments();
     role: string;
     dateRegistered?: Date = new Date();
 }
