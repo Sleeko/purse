@@ -47,7 +47,7 @@ export class ChamberService {
     }
 
 
-    updateChamber(data) {
-        this.db.doc('virtualChamber/' + 'LVL_P300').update(Object.assign({},data));
+    updateChamber(docId, data) {
+        this.db.doc('virtualChamber/' + docId).update(Object.assign({},data));
     }
 }
