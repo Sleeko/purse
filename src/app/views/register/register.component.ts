@@ -110,24 +110,15 @@ export class RegisterComponent implements OnInit {
   registerFormGroup: FormGroup;
   listOfCode: any[];
   isSeller: boolean = true;
-  data: any;
-  accountResponse: any;
-
   docId: any;
-
-  chamber: any;
-
-  chamber_length: number = 1;
-  chamberSubj;
+  CHAMBER_SIZE: number = 10;
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
               private authService: AuthService,
               private utilsService: UtilsService,
               private chamberService: ChamberService,
               public db: AngularFirestore,
-              public router: Router) {
-                this.chamberSubj = new Subject<any>();
-              }
+              public router: Router) {}
 
   ngOnInit() {
     this.carouselItems = interval(500).pipe(
@@ -384,7 +375,7 @@ export class RegisterComponent implements OnInit {
    */
   processRecurChamber(chamberObj, cycleTo, memberObj) {
     if (chamberObj[cycleTo].cycleId > 0) { // not applicable for inactive chamber
-      if (chamberObj[cycleTo].memberList.length >= this.chamber_length) { // chamber max limit? do the thing
+      if (chamberObj[cycleTo].memberList.length >= this.CHAMBER_SIZE) { // chamber max limit? do the thing
         let recurPop = chamberObj[cycleTo].memberList.shift(); // pop the first item in the queue
         recurPop.currentCycle = String(cycleTo); // update the currentCycle in the member object
         chamberObj[cycleTo].memberList.push(memberObj); // push member in the designated chamnber
