@@ -10,6 +10,6 @@ export class UserInfo {
     beneficiaries : PersonalInfo[];
     accountInfo: AccountInfo;
     governmentDocuments: GovermentDocuments;
-    role: 'member';
+    role: string;
     dateRegistered?: Date = new Date();
 }

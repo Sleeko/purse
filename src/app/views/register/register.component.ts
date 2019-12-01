@@ -1,20 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, FormControl } from '@angular/forms';
-import { AccountService } from '../../services/account.service';
+import { FormBuilder, FormGroup, Validators, AbstractControl, FormControl, ValidationErrors, AsyncValidatorFn } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { NguCarouselConfig } from '@ngu/carousel';
-import { Observable, interval, BehaviorSubject, Subject } from 'rxjs';
-import { startWith, take, map } from 'rxjs/operators';
-import { Product } from '../../model/product.model';
+import { Observable, interval, Subject } from 'rxjs';
+import { startWith, take, map, debounceTime } from 'rxjs/operators';
 import { UtilsService } from '../../services/utils.service';
 import { Code } from '../../model/code.model';
-import { UserInfo } from '../../model/user-info.model';
 import { UserService } from '../../services/user.service';
-import { stringify } from 'querystring';
-import { Upline } from '../../model/upline.model';
-import { FeaturedContentService } from '../../services/featured-content.service';
-import { FeaturedContent } from '../../model/featured-content.model';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { ChamberService } from '../../services/chamber.service';
+import { VirtualChamber } from '../../model/virtual-chamber.model';
+import { ChamberMember } from '../../model/chamber-member.model';
+import { UserInfo } from '../../model/user-info.model';
+import * as firebase from 'firebase/app';
 
 
 @Component({
@@ -111,24 +110,28 @@ export class RegisterComponent implements OnInit {
   ];
 
   test: string[] = ['asdasdasdasdasd', '12312312312312312', 'zxc123zxc123zxcasd123'];
-  carouselItems: Observable<FeaturedContent[]>;
-  featuredContents: FeaturedContent[] = [];
+  carouselItems: Observable<Featured[]>;
   registerFormGroup: FormGroup;
   listOfCode: any[];
   isSeller: boolean = true;
   data: any;
   accountResponse: any;
 
-  chamber: any;
-  constructor(private formBuilder: FormBuilder,
-    private accountService: AccountService,
-    private userService: UserService,
-    private authService: AuthService,
-    private utilsService: UtilsService,
-    public router: Router,
-    private featuredContentService: FeaturedContentService) {
+  docId: any;
 
-  }
+  chamber: any;
+
+  chamber_length: number = 1;
+  chamberSubj;
+  constructor(private formBuilder: FormBuilder,
+              private userService: UserService,
+              private authService: AuthService,
+              private utilsService: UtilsService,
+              private chamberService: ChamberService,
+              public db: AngularFirestore,
+              public router: Router) {
+                this.chamberSubj = new Subject<any>();
+              }
 
   ngOnInit() {
     this.carouselItems = interval(500).pipe(
@@ -136,27 +139,25 @@ export class RegisterComponent implements OnInit {
       take(10),
       map(val => {
         const i = 0;
-        const data = this.featuredContents;
+        const data = this.imgags;
         return data;
       })
     );
     this.registerFormGroup = this.formBuilder.group({
       email: [
         '',
-        //[Validators.required, Validators.email],
+        [Validators.required, Validators.email],
         //this.validateEmail.bind(this)
       ],
       code: [
         '',
-        {
-          validators: [
-            // , this.validateCode.bind(this)
-          ],
-          updateOn: 'blur'
-        }
+        [Validators.required],
+        [this.searchCodeValidator()]
       ],
       referrerCode: [
-        ''
+        '',
+        [Validators.required],
+        [this.searchUplineValidator()]
       ],
       sellerName: [
         ''
@@ -171,88 +172,78 @@ export class RegisterComponent implements OnInit {
         1
       ],
       passwords: this.formBuilder.group({
-        password: ['', [Validators.required]],
-        confirm_password: ['', [Validators.required]],
-      }, { validator: this.passwordConfirming }),
-      updateOn: 'blur'
+          password: ['', [Validators.required]],
+          confirm_password: ['', [Validators.required]],
+      }, {validator: this.passwordConfirming})
     });
-    // console.log(this.registerFormGroup);
     this.registerFormGroup.get('isSeller').valueChanges.subscribe(data => { data === 1 ? this.isSeller = true : this.isSeller = false; });
-    // test
-    this.utilsService.searchUpline('test').subscribe(e => {
-      const response = e.map(obj => ({
-        docId: obj.payload.doc.id,
-        ...obj.payload.doc.data()
-      } as Upline));
-
-      console.log('response-upline', JSON.stringify(response.length));
-    });
-    this.getFeaturedContents();
+    // this.chamberService.generateGenesisChamber("LVL_P300").then(e => {
+    //   console.log('success', e);
+    // }).catch(e => {
+    //   console.log('error', e);
+    // })
+    // this.processChamberCycle('test', 'NEW').subscribe(res => {
+    //   console.log('subj-observable', JSON.stringify(res));
+    //    this.chamberService.updateVirtualChamber('LVL_P300', chamberObj).then(res => {
+    //     console.log("updating chamber..", res);
+    //  }).catch(err => {
+    //    console.log('error updating chamber:',err)
+    //  })
+    // });
+    
+  
   }
 
-  getFeaturedContents() {
-    this.featuredContentService.getAllFeaturedContent().subscribe(e => {
-      const response = e.map(obj => ({
-        docId: obj.payload.doc.id,
-        ...obj.payload.doc.data()
-      } as FeaturedContent));
-      this.featuredContents = response;
-    });
+  searchCodeValidator(): AsyncValidatorFn  {
+    return  (control: AbstractControl): Observable<ValidationErrors> => {
+      return this.db.collection('memberCode', ref => ref.where('code', '==', control.value))
+       .snapshotChanges().pipe(
+          debounceTime(500),
+          take(1),
+          map(res => {
+              if (res.length > 0) {
+                this.docId = res[0].payload.doc.id;
+                return null;
+              } else {
+                return { 'isUsed': true };
+              }
+            } 
+          )
+        );
+    }
+  }
+
+  searchUplineValidator() : AsyncValidatorFn  {
+    return  (control: AbstractControl): Observable<ValidationErrors> => {
+      return this.db.collection('uplineLookup', ref => ref.where('uplineCode', '==', control.value))
+       .snapshotChanges().pipe(
+          debounceTime(500),
+          take(1),
+          map(res => {
+              if( res.length < 3) {
+                if ((res.length + 1) === 3) {
+                  //this.processChamberCycle(control.value, 'MOVE');
+                }
+                return null;
+              } else {
+                return { 'referrerCodeLimit': true };
+              }
+          })
+        );
+    }
   }
 
   passwordConfirming(c: AbstractControl): { invalid: boolean } {
+    console.log(c);
     if (c.get('password').value !== c.get('confirm_password').value) {
       return { invalid: true };
     }
   }
 
-  validateCode(control: AbstractControl) {
-    // return this.accountService.validateCodeIfExist(control.value).subscribe(res => {
-    //   return res ? null : { codeValid: true };
-    // });
-
-    // TODO:
-    // @christian
-    // pre pa uncomment ako nito. for SOLID principle dapat ito nakabind instead
-    // na si registerv2 na function tightly coupled si registerV2()
-    // another note: dapat magtitrigger lang to during onBlur or lostfocus sa field
-    // as of now naka keyUp sya nagtitriggered masyadong expensive si method.
-    // - bryana
-    //
-    var isUsed: boolean = false;
-    var isFinished: boolean = false;
-    // this.utilsService.validateMembershipCode(control.value).subscribe(res => {
-    //   console.log('firestore-response:', res);
-    //   return res.isUsed ? { codeValid : true } : null;
-    // });
-
-    // this.utilsService.validateMembershipCode(control.value).subscribe(res => {
-    //     isValid = res.isUsed;
-    // },
-    // )
-    var code: Code[] = [];
-    return this.utilsService.searchCode(control.value).subscribe(e => {
-      const response = e.map(obj => ({
-        docId: obj.payload.doc.id,
-        ...obj.payload.doc.data()
-      } as Code));
-    
-    },
-      err => {
-
-      },
-      () => {
-        return isUsed ? { codeValid : true } : null
-      })
-
-  }
-
-  validateEmail(control: AbstractControl) {
-    return this.accountService.validateEmailNotTaken(control.value).subscribe(res => {
-      return res ? null : { emailTaken: true };
-    });
-  }
-
+  /**
+   * 
+   * 
+   */
   register(formData) {
 
     console.log('formData', JSON.stringify(formData));
@@ -264,62 +255,11 @@ export class RegisterComponent implements OnInit {
     };
 
     const payload = { email: req.email, password: req.password };
-
-    const payloadMCode = {
-      docId: 'document id from utils.searchCode',
-      code: req.code,
-      isUsed: true
-    } as Code;
-
-    this.utilsService.updateGeneratedCode(payloadMCode);
-    // register via firebase. TODO: add loading screen
-    this.tryRegister(payload);
-  }
-
-  /**
-   *  NOTE:
-   *  @todo removed this method once the field validator working properly
-   *  @description - this method is tightly coupled
-   *  doing all the neccessary steps to validate membershipCode and Referral Code
-   */
-  registerV2(formData) {
-    const req = {
-      email: formData.email,
-      code: formData.code,
-      referrerCode: formData.referrerCode,
-      password: formData.passwords.password,
-    };
-
-    // 1. check member code if valid
-    this.utilsService.searchCode(req.code).subscribe(e => {
-      const responseCode = e.map(x => ({
-        docId: x.payload.doc.id,
-        ...x.payload.doc.data()
-      } as Code));
-
-      console.log('search-response', JSON.stringify(responseCode));
-      // 1.1 check response
-      if (responseCode[0]) {
-        // 1.2 if already used
-        if (responseCode[0].isUsed) {
-          alert('code is already used.');
-        } else { // 1.3 if not yet used proceed to next validation: referal code
-          const payload = { email: req.email, password: req.password };
-          // update member code. marked it as used.
-
-          responseCode[0].isUsed = true;
-          this.utilsService.updateGeneratedCode(responseCode[0]);
-          // register via firebase. TODO: add loading screen
-          this.tryRegister(payload);
-        }
-      } else {
-        alert('Invalid code!');
-      }
-    });
+    this.tryRegister(payload, req);
   }
 
   // sub-routine method for registration
-  tryRegister(payload) {
+  tryRegister(payload, req) {
     this.authService.doRegister(payload)
       .then(res => {
         console.log('Account ID', res.user.uid);
@@ -328,23 +268,131 @@ export class RegisterComponent implements OnInit {
           email: res.user.email,
           personalInfo: {},
           accountInfo: {},
-          governmenDocuments: {},
-          dateRegistered: new Date()
+          governmentDocuments: {},
+          dateRegistered: firebase.firestore.FieldValue.serverTimestamp(),
+          role: 'member'
         };
 
+        // const userInfo = new UserInfo();
+        // userInfo.uid = res.user.uid;
+        // userInfo.email = res.user.email;
+        // userInfo.dateRegistered = new Date();
+        // userInfo.role = 'member';
+        // saving uer data
         this.userService.saveUserInfo(userInfoPayload).then(data => {
           console.log('account creation', data);
+          // payload for upline lookup
+          const uplinePayload = {
+            memberId: userInfoPayload.uid,
+            uplineCode: req.referrerCode,
+            dateRegistered: new Date()
+          };
+
+          // add to upline lookup
+          this.utilsService.addUplineLookUp(uplinePayload).then(e => {
+            console.log('add upline lookup', JSON.stringify(e));
+          }).catch(err => {
+            console.log('add upline lookup error', JSON.stringify(err));
+          });
+
+          // activate chamber
+          this.processChamberCycle(userInfoPayload.uid, 'NEW').subscribe(res => {
+            console.log('subj-observable', JSON.stringify(res));
+             //this.chamberService.updateVirtualChamber('LVL_P300', res);
+             this.chamberService.updateChamber(res);
+          });
+
         }).catch(error => {
           console.log('error', error);
         });
-        //        alert('Your account has been created');
+
+        const payloadMCode = {
+          docId: this.docId,
+          code: req.code,
+          isUsed: true
+        } as Code;
+    
+        this.utilsService.updateGeneratedCode(payloadMCode);
       }, err => {
         console.log(err);
         console.log(err.message);
         alert(err.message);
-      });
+      },);
     console.log('data', this.data);
   }
+
+  processChamberCycle(memberCode, activity) {
+    const subj = new Subject<any>();
+    this.chamberService.fetchVirtualChamberDataAPI().subscribe(data => {
+      let r = data.map(e => ({
+                id: e.payload.doc.id,
+                ...e.payload.doc.data()
+            }) as VirtualChamber);
+            console.log("fetch", JSON.stringify(r));
+      let chamberObj = r[0].members; // main chamber object
+
+     switch (activity) {
+        case 'NEW':
+          chamberObj[0].memberList.push({uid: memberCode, currentCycle: "INACTIVE"});
+          console.log('entered new case');
+          break;
+
+        case 'MOVE':
+            console.log('entered move case');
+          let memberCycleObj = this.getMemberCycleChamber(memberCode, chamberObj);
+          if (memberCycleObj) {
+            let cycleMember = this.getMember(memberCode, memberCycleObj);
+            if (memberCycleObj.cycleId === 0) {
+              const activeCycle = memberCycleObj.cycleId + 1;
+              memberCycleObj.memberList.splice(memberCycleObj.memberList.findIndex(i => i.uid === memberCode), 1);
+              cycleMember.currentCycle = String(activeCycle);
+              this.processRecurChamber(chamberObj, activeCycle, cycleMember);
+            } else {
+              this.processRecurChamber(chamberObj, memberCycleObj.cycleId, cycleMember);
+            }
+          }
+        break;
+     }
+
+     console.log('chamberObject', JSON.stringify(chamberObj));
+     subj.next(chamberObj);
+
+    });
+
+    return subj.asObservable();
+  }
+
+  getMemberCycleChamber(memberCode, chamberObj) {
+    const objIdx = chamberObj.findIndex(i => {
+      let qryRes : any = i.memberList.find(e => e.uid === memberCode);
+      if (qryRes) return chamberObj.indexOf(qryRes);
+    }); // fetching the position of member in the chamber cycle (member code)
+    let memberObj = chamberObj[objIdx]; // return memberObj if found thus undefined if not
+    console.log('member-obj',memberObj);
+    return memberObj;
+  }
+
+  getMember(memberCode, chamberCycleObj) {
+    return chamberCycleObj.memberList.find(i => i.uid === memberCode);
+  }
+
+  processRecurChamber(chamberObj, cycleTo, memberObj) {
+    if (chamberObj[cycleTo].cycleId > 0) { // not applicable for inactive chamber
+      if (chamberObj[cycleTo].memberList.length >= this.chamber_length) {
+        let recurPop = chamberObj[cycleTo].memberList.shift();
+        recurPop.currentCycle = String(cycleTo);
+        chamberObj[cycleTo].memberList.push(memberObj);
+        let recurCycle = cycleTo + 1; // we can do this way instead of ++cycleTo
+        this.processRecurChamber(chamberObj, recurCycle, recurPop); // let's do it again
+      } 
+      else {
+        chamberObj[cycleTo].memberList.push(memberObj);
+      }
+    }
+  }
+
 }
 
-
+export class Featured {
+    photoUrl: string;
+}

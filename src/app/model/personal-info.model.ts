@@ -8,7 +8,8 @@ export class PersonalInfo {
     nationality: string;
     civilStatus : string;
     contactNumber: string;
-    photoUrl: string;
+    photo: string;
+    photoUrl : string;
     placeOfBirth: string;
     tinNumber? : number;
     beneficiaries? : PersonalInfo[];
