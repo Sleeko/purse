@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BlockSpecialCharDirective } from './block-special-char.directive';
 import { DisableFormControlDirective } from './disable-form-control.directive';
+import { PhoneMaskDirective } from './phone-mask.directive';
 
 
 
@@ -9,11 +10,13 @@ import { DisableFormControlDirective } from './disable-form-control.directive';
     ],
     declarations: [
         BlockSpecialCharDirective,
-        DisableFormControlDirective
+        DisableFormControlDirective,
+        PhoneMaskDirective
     ],
     exports: [
         BlockSpecialCharDirective,
-        DisableFormControlDirective
+        DisableFormControlDirective,
+        PhoneMaskDirective
     ]
 })
 export class DirectivesModule { }

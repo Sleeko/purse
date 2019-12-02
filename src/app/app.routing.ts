@@ -10,6 +10,7 @@ import { RegisterComponent } from './views/register/register.component';
 import { AuthGuard } from './guards/auth.guard';
 import { ForgotComponent } from './views/forgot/forgot.component';
 import { NewPageModule } from './views/new-page/new-page.module';
+import { CreateStoreComponent } from './views/create-store/create-store.component';
 
 export const routes: Routes = [
   {
@@ -52,6 +53,14 @@ export const routes: Routes = [
       title: 'Forgot Password Page'
     }
   },
+  {
+    path: 'create-store',
+    component: CreateStoreComponent,
+    data : {
+      title : 'Create New Store'
+    } 
+  },
+
   {
     path: '',
     canActivate: [AuthGuard],

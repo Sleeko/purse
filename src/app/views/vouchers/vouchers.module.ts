@@ -8,6 +8,7 @@ import { TableModule } from 'primeng/table';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { RequestVoucherComponent } from '../request-voucher/request-voucher.component';
 import { RequestVoucherModule } from '../request-voucher/request-voucher.module';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 
 
 @NgModule({
@@ -19,7 +20,11 @@ import { RequestVoucherModule } from '../request-voucher/request-voucher.module'
     TableModule,
     NgbModule,
     RequestVoucherModule,
+
   ],
-  entryComponents : [RequestVoucherComponent]
+  entryComponents : [RequestVoucherComponent],
+  providers: [
+    Ng4LoadingSpinnerService
+  ]
 })
 export class VouchersModule { }

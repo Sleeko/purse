@@ -4,6 +4,7 @@ export class FirebaseUserModel {
     name: string;
     provider: string;
     role: string;
+    email : string;
 
     constructor() {
         this.uid = '';

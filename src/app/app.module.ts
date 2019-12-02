@@ -59,6 +59,7 @@ import { DisableFormControlDirective } from './directives/disable-form-control.d
 import { BlockSpecialCharDirective } from './directives/block-special-char.directive';
 import { DirectivesModule } from './directives/directives.module';
 import { UtilsService } from './services/utils.service';
+import { CreateStoreModule } from './views/create-store/create-store.module';
 import { ChamberService } from './services/chamber.service';
 
 
@@ -88,7 +89,8 @@ import { ChamberService } from './services/chamber.service';
     NgxSpinnerModule,
     NguCarouselModule,
     CarouselModule,
-    DirectivesModule
+    DirectivesModule,
+    CreateStoreModule,
   ],
   declarations: [
     AppComponent,

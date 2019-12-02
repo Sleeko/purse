@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
-
+import { PersonalInfo } from '../model/personal-info.model';
+import { UserInfo } from '../model/user-info.model';
+import 'firebase/storage'
 /**
  * @author Bryan
  */
@@ -10,10 +12,40 @@ import * as firebase from 'firebase/app';
 @Injectable()
 export class UserService {
 
+    
+  private basePath : string = '/userInfo';
+
     constructor(
         public db: AngularFirestore,
         public afAuth: AngularFireAuth
     ) {}
+
+    uploadPhoto(photo : File, userInfo : UserInfo){
+        var isFinished : boolean = false;
+        let storageRef = firebase.storage().ref();
+        let uploadTask = storageRef.child(`${this.basePath}/${photo.name}`).put(photo);
+        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+          (snapshot) =>  {
+            // upload in progress
+          },
+          (error) => {
+            // upload failed
+            console.log(error)
+          },
+          () => {
+            // upload success
+            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadUrl) {
+                userInfo.personalInfo.photoUrl = downloadUrl;
+              
+            }).then(data => {
+               var update =  this.updateUserInfo(userInfo);
+               isFinished = true;
+            });
+          }
+        );
+          return isFinished;
+      }
+    
 
     getCurrentUser() {
         return new Promise<any>((resolve, reject) => {
@@ -25,6 +57,15 @@ export class UserService {
                 }
             });
         });
+    }
+
+    getUserDetails(email : string){
+        return this.db.collection('/userInfo', ref => ref.where('email','==', email)).snapshotChanges();
+    }
+
+    updateUserInfo(info : UserInfo){
+        console.log('updateUserInfo')
+        return this.db.doc('/userInfo/' + info.docId ).update(Object.assign({},info));
     }
 
     updateCurrentUser(value) {

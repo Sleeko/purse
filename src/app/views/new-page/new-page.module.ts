@@ -14,6 +14,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     ReactiveFormsModule,
     FormsModule,
     CommonModule,
+  ],
+  providers : [
   ]
 })
 export class NewPageModule { }
