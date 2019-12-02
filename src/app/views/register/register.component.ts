@@ -112,13 +112,15 @@ export class RegisterComponent implements OnInit {
   isSeller: boolean = true;
   docId: any;
   CHAMBER_SIZE: number = 10;
+  CONFIG_CHAMBER_SIZE: any;
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
               private authService: AuthService,
               private utilsService: UtilsService,
               private chamberService: ChamberService,
               public db: AngularFirestore,
-              public router: Router) {}
+              public router: Router) {
+              }
 
   ngOnInit() {
     this.carouselItems = interval(500).pipe(
@@ -166,6 +168,15 @@ export class RegisterComponent implements OnInit {
     this.registerFormGroup.get('isSeller').valueChanges.subscribe(data => { data === 1 ? this.isSeller = true : this.isSeller = false; });
   }
 
+  // WARNING!!! for development purposes. clear virtual chamber data 
+  generateNewChamber() {
+    this.chamberService.generateGenesisChamber('LVL_P300').then(e => {
+      console.log('error', e);
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+
   searchCodeValidator(): AsyncValidatorFn  {
     return  (control: AbstractControl): Observable<ValidationErrors> => {
       return this.db.collection('memberCode', ref => ref.where('code', '==', control.value))
@@ -194,7 +205,7 @@ export class RegisterComponent implements OnInit {
           map(res => {
               if( res.length < 3) {
                 if ((res.length + 1) === 3) {
-                  this.processChamberCycle(control.value, 'MOVE').subscribe(res => {
+                  this.processChamberCycle(control.value, 'MOVE').pipe(take(1)).subscribe(res => {
                     this.chamberService.updateChamber('LVL_P300',res);
                   });
                 }
@@ -208,7 +219,6 @@ export class RegisterComponent implements OnInit {
   }
 
   passwordConfirming(c: AbstractControl): { invalid: boolean } {
-    console.log(c);
     if (c.get('password').value !== c.get('confirm_password').value) {
       return { invalid: true };
     }
@@ -275,8 +285,9 @@ export class RegisterComponent implements OnInit {
           /**
            * chamber service call
            */
-          this.processChamberCycle(userInfoPayload.uid, 'NEW').subscribe(res => {
-            this.chamberService.updateChamber('LVL_P300',res);
+          this.processChamberCycle(userInfoPayload.uid, 'NEW').pipe(take(1)).subscribe(res => {
+            const vChamberPayload = {members: res};
+            this.chamberService.updateChamber('LVL_P300',vChamberPayload);
           });
 
         }).catch(error => {

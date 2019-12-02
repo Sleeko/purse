@@ -23,7 +23,7 @@ export class ChamberService {
 
     generateGenesisChamber(docId: string) {
         if (!docId) {
-            docId = 'LVL_P300'
+            docId = "LVL_P300";
         }
         let genesisChamber = {members: []};
 
@@ -48,6 +48,6 @@ export class ChamberService {
 
 
     updateChamber(docId, data) {
-        this.db.doc('virtualChamber/' + docId).update(Object.assign({},data));
+        this.db.doc('virtualChamber/' + docId).update(Object.assign({}, data));
     }
 }
