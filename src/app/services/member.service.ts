@@ -38,15 +38,23 @@ export class MemberService {
       .snapshotChanges()
       .subscribe(data => {
         const virtualChamber = data.map(e => ({ id: e.payload.doc.id, ...e.payload.doc.data() }) as VirtualChamber); 
-        const chamberObj : any = virtualChamber[0].members
-        const objId = chamberObj.findIndex(i => {
+        const vChamber = virtualChamber.find(i => {
+          const idx = i.members.some(x => {
+              let srcQry = x.memberList.find(e => e.uid === uid);
+              if (srcQry) return x;
+          });
+          return idx ? idx : null;
+        });
+        let chamberObj = vChamber.members;
+
+         const objId = chamberObj.findIndex(i => {
           let qry : any = i.memberList.find(e => e.uid === uid);
           if (qry) return chamberObj.indexOf(qry);
         });
         
         let cycleChamberObj = chamberObj[objId];
-        const memberCycleObj = cycleChamberObj.memberList.find(i => i.uid === uid);
-        const responseObj = {level: virtualChamber[0].id, memberCycle: memberCycleObj };
+        const memberCycleObj : any = cycleChamberObj.memberList.find(i => i.uid === uid);
+        const responseObj = {level: memberCycleObj.currentLvl, memberCycle: memberCycleObj };
         member$.next(responseObj);
       });
     return member$.asObservable();

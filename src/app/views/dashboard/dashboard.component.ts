@@ -5,6 +5,7 @@ import { MemberService } from '../../services/member.service';
 import { Member } from '../../model/member.model';
 import { DatePipe } from '@angular/common';
 import { interval } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
   templateUrl: 'dashboard.component.html',
@@ -29,8 +30,9 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.memberService.searchMemberCycle('H2WSM1').subscribe(e => {
-        console.log('member', JSON.stringify(e));
+    const secondsCounter = interval(2000);
+    secondsCounter.pipe(take(1)).subscribe(e => {
+      this.memberService.searchMemberCycle(this.code).subscribe(e => {
         const d : any= {
             level: e.level,
             firstName: 'bjmramos@gmail.com',
@@ -42,6 +44,7 @@ export class DashboardComponent implements OnInit {
         }
         this.members.push(d);
     })
+    });
   }
 
 
