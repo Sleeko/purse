@@ -70,6 +70,17 @@ export class UtilsService {
         }
     }
 
+    getMemberCodeListImpl() {
+        let memberCode$ = new Subject<any>();
+        this.getGeneratedCode()
+            .subscribe(data => {
+                const listOfCode = data.map(e => ({ id: e.payload.doc.id, 
+                    ...e.payload.doc.data() })); 
+                memberCode$.next(listOfCode);
+        });
+        return memberCode$.asObservable();
+    }
+
     /**
      *  Upline Code Lookup API's segment
      */

@@ -1,11 +1,11 @@
-import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities';
-import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
-import { NguCarouselConfig, NguCarouselStore, NguCarousel } from '@ngu/carousel';
-import { Component, Input, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
-import { Observable, interval } from 'rxjs';
-import { startWith, take, map } from 'rxjs/operators';
-import { slider } from './admin-dashboard.animation'
-import { Product } from '../../model/product.model';
+
+import { Component, OnInit} from '@angular/core';
+import { UtilsService } from '../../services/utils.service';
+
+export class CodeDTO {
+  code: string;
+  isUsed: boolean;
+}
 
 @Component({
   templateUrl: 'admin-dashboard.component.html',
@@ -50,11 +50,15 @@ import { Product } from '../../model/product.model';
 })
 export class AdminDashboardComponent implements OnInit {
   currDate: Date = new Date();
+  memberCode: CodeDTO [] = [];
 
+  constructor(private utilsService: UtilsService) {}
 
   ngOnInit(): void {
-   
+   this.utilsService.getMemberCodeListImpl().subscribe(res => {
+    this.memberCode = res.map(e => ({code: e.code, isUsed: e.isUsed}));
+   });
    
   }
-     // carou
+
 }

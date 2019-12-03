@@ -8,12 +8,14 @@ import { AdminDashboardComponent } from './admin-dashboard.component';
 import { AdminDashboardRoutingModule } from './admin-dashboard-routing.module';
 import { NguCarouselModule } from '@ngu/carousel';
 import { CommonModule } from '@angular/common';
+import { TableModule } from 'primeng/table';
 
 
 @NgModule({
   imports: [
     FormsModule,
     AdminDashboardRoutingModule,
+    TableModule,
     ChartsModule,
     BsDropdownModule,
     ButtonsModule.forRoot(),

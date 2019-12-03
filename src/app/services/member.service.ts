@@ -21,7 +21,7 @@ export class MemberService {
       .snapshotChanges()
       .subscribe(data => {
         const virtualChamber = data.map(e => ({ id: e.payload.doc.id, ...e.payload.doc.data() }) as VirtualChamber); 
-        const chamberObj = virtualChamber[0].members
+        const chamberObj : any = virtualChamber[0].members
         const objId = chamberObj.findIndex(i => {
           let qry : any = i.memberList.find(e => e.uid === uid);
           if (qry) return chamberObj.indexOf(qry);
