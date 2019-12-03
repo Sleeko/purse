@@ -1,5 +1,5 @@
 <div class="container animated fadeIn">
-    <button *ngIf="!isAdmin" class="mb-1 btn btn-primary btn-right" (click)="requestVoucher()">Request Voucher</button>
+    <button class="mb-1 btn btn-primary btn-right" (click)="requestVoucher()">Request Voucher</button>
     <div>
         <p-table [value]="vouchers">
             <ng-template pTemplate="header">

@@ -12,6 +12,7 @@ import { AppConstants } from '../../app.constants';
 import { UserService } from '../../services/user.service';
 import { User } from 'firebase';
 import { FirebaseUserModel } from '../../model/user.model';
+import { UserInfo } from '../../model/user-info.model';
 
 @Component({
   selector: 'app-request-voucher',
@@ -22,7 +23,7 @@ export class RequestVoucherComponent implements OnInit {
 
   voucherForm : FormGroup;
   stores : Store[] = [];
-  currentUser = new FirebaseUserModel();
+  currentUser = new UserInfo();
   
   constructor(
     private modalService : NgbModal,
@@ -41,14 +42,24 @@ export class RequestVoucherComponent implements OnInit {
     this.getCurrentUser();
   }
 
+  /**
+   * Gets the current logged in user in the app
+   */
   getCurrentUser(){
     this.userService.getCurrentUser().then(res => {
-      this.currentUser.name = res.displayName;
-      this.currentUser.email = res.email;
-      console.log(this.currentUser)
+      this.userService.getUserDetails(res.email).subscribe(e => {
+        const response = e.map(obj => ({
+          docId : obj.payload.doc.id,
+          ...obj.payload.doc.data()
+        } as UserInfo))
+        this.currentUser = response[0];
+      })
     })
   }
 
+  /**
+   * Build the Voucher Form
+   */
   initVoucherForm(){
     this.voucherForm = this.formBuilder.group({
       storeCode : [null, Validators.required],
@@ -57,6 +68,9 @@ export class RequestVoucherComponent implements OnInit {
     });
   }
 
+  /**
+   * Fetches all the Store Codes in the database.
+   */
   getStoreCodes(){
     this.storeService.getAllStores().subscribe(e => {
       const response = e.map(obj => ({
@@ -67,16 +81,23 @@ export class RequestVoucherComponent implements OnInit {
     });
   }
 
+  /**
+   * Creates and saves the voucher that is PENDING in the database.
+   * @param voucher 
+   */
   createRequest(voucher : Voucher){
     this.spinner.show();
     var voucherToSave : Voucher = voucher;
     voucherToSave.status = AppConstants.PENDING;
-    voucherToSave.name = this.currentUser.name;
+    voucherToSave.name = this.currentUser.personalInfo ? this.currentUser.personalInfo.firstName + ' ' +this.currentUser.personalInfo.lastName : null;
     this.voucherService.saveNewVoucher(voucher).then(data => {
       this.activeModal.close();
     })
   }
 
+  /**
+   * Navigate to create store page. 
+   */
   createNewStore(){
     this.activeModal.close();
     this.router.navigate(['create-store']);

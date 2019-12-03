@@ -33,7 +33,9 @@ export class FeaturedContentService {
           content.imageName = image.name
           
         }).then(data => {
-            this.saveNewFeaturedContent(content);
+            this.saveNewFeaturedContent(content).then(res => {
+              alert('Content saved')
+            })
         });
       }
     );

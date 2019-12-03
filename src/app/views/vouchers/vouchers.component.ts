@@ -6,6 +6,8 @@ import { VoucherService } from '../../services/voucher.service';
 import { AppConstants } from '../../app.constants';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
+import { UserService } from '../../services/user.service';
+import { UserInfo } from '../../model/user-info.model';
 
 @Component({
   selector: 'app-vouchers',
@@ -16,20 +18,41 @@ export class VouchersComponent implements OnInit {
 
   vouchers: Voucher[] = [];
 
-  currentUser;
+  currentUser : UserInfo = new UserInfo();
 
   //change this while role is not implemented
-  isAdmin : boolean = false;
+  isAdmin : boolean = false; 
 
   constructor(
     private modalService: NgbModal,
     private voucherService : VoucherService,
+    private userService : UserService
   ) { }
 
   ngOnInit() {
     this.getAllPendingVouchers();
+    this.getCurrentUser();
   }
 
+  /**
+   * Gets current logged in User in app.
+   */
+  getCurrentUser(){
+    this.userService.getCurrentUser().then(res => {
+      this.userService.getUserDetails(res.email).subscribe(e => {
+        const response = e.map(obj => ({
+          docId : obj.payload.doc.id,
+          ...obj.payload.doc.data()
+        } as UserInfo))
+        this.currentUser = response[0];
+        this.isAdmin = this.currentUser.role == AppConstants.ADMIN ? true : false;
+      })
+    })
+  }
+
+  /**
+   * Gets all PENDING status vouchers from database.
+   */
   getAllPendingVouchers(){
     this.voucherService.getAllPendingVouchers().subscribe(e=> {
       const response = e.map(obj => ({
@@ -41,10 +64,16 @@ export class VouchersComponent implements OnInit {
     });
   }
 
+  /**
+   * Initialize the modal to create a new request voucher.
+   */
   requestVoucher() {
     const requestVoucherModal = this.modalService.open(RequestVoucherComponent, { centered: true, backdrop: true });
   }
 
+  /**
+   * Sets the status of a Voucher to REJECTED in the database.
+   */
   denyVoucher(voucher : Voucher) {
     var voucherToDeny : Voucher = voucher;
     voucherToDeny.status = AppConstants.REJECTED;
@@ -53,6 +82,10 @@ export class VouchersComponent implements OnInit {
     })
   }
 
+  /**
+   * Sets the status of a Voucher to APPROVED in the database.
+   * @param voucher 
+   */
   approveVoucher(voucher : Voucher) {
     var voucherToApprove : Voucher = voucher;
     
