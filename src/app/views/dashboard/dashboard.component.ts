@@ -12,99 +12,32 @@ import { DatePipe } from '@angular/common';
 export class DashboardComponent implements OnInit {
 
   code: string = 'AYko988H';
-  members: Member [] = [
-    {
-        'level': 'A',
-        'firstName': 'Ariel Jay',
-        'lastName': 'Fuentes',
-        'isActive': true,
-        'cycle': 3,
-        'photoUrl': 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-        'registered': new Date()
-    },
-    {
-        'level': 'B',
-        'firstName': 'BryanJudelle',
-        'lastName': 'Ramos',
-        'isActive': true,
-        'cycle': 2,
-        'photoUrl': 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-        'registered': new Date()
-    },
-    {
-        'level': 'C',
-        'firstName': 'Robert',
-        'lastName': 'Horton',
-        'isActive': false,
-        'cycle': 2,
-        'photoUrl': 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-        'registered': new Date()
-    },
-    {
-        'level': 'D',
-        'firstName': 'Ariel Jay',
-        'lastName': 'Fuentes',
-        'isActive': false,
-        'cycle': 1,
-        'photoUrl': 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-        'registered': new Date()
-    },
-    {
-        'level': 'E',
-        'firstName': 'Ariel Jay',
-        'lastName': 'Fuentes',
-        'isActive': false,
-        'cycle': 1,
-        'photoUrl': 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-        'registered': new Date()
-    },
-    {
-        'level': 'F',
-        'firstName': 'Ariel Jay',
-        'lastName': 'Fuentes',
-        'isActive': false,
-        'cycle': 1,
-        'photoUrl': 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-        'registered': new Date()
-    },
-    {
-        'level': 'A',
-        'firstName': 'Ariel Jay',
-        'lastName': 'Fuentes',
-        'isActive': false,
-        'cycle': 1,
-        'photoUrl': 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-        'registered': new Date()
-    },
-    {
-        'level': 'A',
-        'firstName': 'Ariel Jay',
-        'lastName': 'Fuentes',
-        'isActive': false,
-        'cycle': 1,
-        'photoUrl': 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-        'registered': new Date()
-    },
-    {
-        'level': 'A',
-        'firstName': 'Ariel Jay',
-        'lastName': 'Fuentes',
-        'isActive': false,
-        'cycle': 1,
-        'photoUrl': 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-        'registered': new Date()
-    },
-  ];
+  members: Member [] = [];
 
   member: Member;
 
   //change this one to TRUE to reveal the SELLER PROFILE component.
   isSeller : boolean = false;
 
-  constructor(private memberService: MemberService) { }
+  constructor(private memberService: MemberService) { 
+    const userInfoSession : any = JSON.parse(sessionStorage.getItem('userInfo'));
+    this.code = userInfoSession.uid;
+  }
 
   ngOnInit(): void {
-    
+    this.memberService.searchMemberCycle('H2WSM1').subscribe(e => {
+        console.log('member', JSON.stringify(e));
+        const d : any= {
+            level: e.level,
+            firstName: 'bjmramos@gmail.com',
+            lastName: '',
+            isActive: e.memberCycle.currentCycle === "INACTIVE" ? "INACTIVE" : "ACTIVE",
+            cycle: e.memberCycle.currentCycle === "INACTIVE" ? "0" : e.memberCycle.currentCycle, 
+            photoUrl: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
+            registered: new Date()
+        }
+        this.members.push(d);
+    })
   }
 
 
