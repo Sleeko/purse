@@ -16,31 +16,31 @@ export class PurseComponent implements OnInit {
   LVL_MAP: any = [
     {
       LVL: "LVL_P300",
-      amount: 300
+      amount: 300 * 3
     },
     {
       LVL: "LVL_P500",
-      amount: 500
+      amount: 500 * 3
     },
     {
       LVL: "LVL_P1K",
-      amount: 1000
+      amount: 1000 * 3
     },
     {
       LVL: "LVL_P5K",
-      amount: 5000
+      amount: 5000 * 3
     },
     {
       LVL: "LVL_P10K",
-      amount: 10000
+      amount: 10000 * 3
     },
     {
       LVL: "LVL_P20K",
-      amount: 20000
+      amount: 20000 * 3
     },
     {
       LVL: "LVL_P30K",
-      amount: 30000
+      amount: 30000 * 3
     }
   ];
   constructor(private memberService: MemberService) {}
