@@ -38,6 +38,7 @@ export class DefaultLayoutComponent implements OnDestroy, OnInit {
 
   ngOnDestroy(): void {
     this.changes.disconnect();
+    this.navItemsFiltered = [];
   }
 
   ngOnInit(){
@@ -66,13 +67,26 @@ export class DefaultLayoutComponent implements OnDestroy, OnInit {
     }
   }
 
+  cloneObject(object){
+    return JSON.parse(JSON.stringify(object));
+  }
+
   removeNonAdminTabs(role){
-    var navItemsArray = navItems;
+    var navItemsArray = this.cloneObject(navItems);
  
-    if(role != AppConstants.ADMIN){
+    if(role == AppConstants.MEMBER){
      navItemsArray.splice(navItemsArray.findIndex(nav => nav.name == "New Page"),1);
      navItemsArray.splice(navItemsArray.findIndex(nav => nav.name == "Admin Dashboard"),1);
+    } else if(role == AppConstants.SELLER){
+      navItemsArray = null;
+    } else if(role == AppConstants.ADMIN){
+      navItemsArray.splice(navItemsArray.findIndex(nav => nav.name == "Home"),1);
+      navItemsArray.splice(navItemsArray.findIndex(nav => nav.name == "Purse"),1);
+      navItemsArray.splice(navItemsArray.findIndex(nav => nav.name == "Terms and Conditions"),1);
+      navItemsArray.splice(navItemsArray.findIndex(nav => nav.name == "Quit"),1);
     }
+
+
     this.navItemsFiltered = navItemsArray;
    }
 

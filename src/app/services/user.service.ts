@@ -63,6 +63,10 @@ export class UserService {
         return this.db.collection('/userInfo', ref => ref.where('email','==', email)).snapshotChanges();
     }
 
+    getUserDetailsByAuthId(id : string){
+        return this.db.collection('/userInfo', ref => ref.where('authId','==', id)).snapshotChanges();
+    }
+
     updateUserInfo(info : UserInfo){
         console.log('updateUserInfo')
         return this.db.doc('/userInfo/' + info.docId ).update(Object.assign({},info));
