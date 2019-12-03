@@ -125,7 +125,7 @@ export class AccountSettingsComponent implements OnInit {
       gender: [null, [Validators.required]],
       civilStatus: ['', [Validators.required]],
       nationality: ['', [Validators.required]],
-      contactNumber: ['', [Validators.required, Validators.maxLength(16), Validators.minLength(16)]],
+      contactNumber: ['', [Validators.required, Validators.maxLength(10), Validators.minLength(10)]],
       tinNumber: [null, [Validators.required]],
     });
   }

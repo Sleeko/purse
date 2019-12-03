@@ -86,8 +86,9 @@ export class RegisterComponent implements OnInit {
   featuredContents : FeaturedContent[] = [];
   carouselItems: Observable<FeaturedContent[]>;
   registerFormGroup: FormGroup;
+  sellerFormGroup: FormGroup;
   listOfCode: any[];
-  isSeller: boolean = true;
+  isSeller = 1;
   docId: any;
   CHAMBER_SIZE: number = 10;
   CONFIG_CHAMBER_SIZE: any;
@@ -111,6 +112,7 @@ export class RegisterComponent implements OnInit {
         return data;
       })
     );
+    this.buildSellerForm();
     this.getFeaturedContents();
     this.registerFormGroup = this.formBuilder.group({
       email: [
@@ -137,16 +139,26 @@ export class RegisterComponent implements OnInit {
       sellerUrl: [
         ''
       ],
-      isSeller: [
-        1
-      ],
       passwords: this.formBuilder.group({
           password: ['', [Validators.required]],
           confirm_password: ['', [Validators.required]],
       }, {validator: this.passwordConfirming})
     });
-    this.registerFormGroup.get('isSeller').valueChanges.subscribe(data => { data === 1 ? this.isSeller = true : this.isSeller = false; });
   }
+
+
+  buildSellerForm(){
+    this.sellerFormGroup = this.formBuilder.group({
+      sellerName : ['', [Validators.required]],
+      contactNumber : ['',[Validators.required,Validators.maxLength(10), Validators.minLength(10)]],
+      sellerUrl : ['',[Validators.required]],
+      email : ['' ,[Validators.required, Validators.email]],
+      passwords : this.formBuilder.group({
+        password: ['', [Validators.required]],
+        confirm_password: ['', [Validators.required]],
+    }, {validator: this.passwordConfirming})
+  })
+}
 
   /**
    * 

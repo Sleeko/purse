@@ -61,6 +61,7 @@ import { DirectivesModule } from './directives/directives.module';
 import { UtilsService } from './services/utils.service';
 import { CreateStoreModule } from './views/create-store/create-store.module';
 import { ChamberService } from './services/chamber.service';
+import { NgxMaskModule } from 'ngx-mask';
 
 
 
@@ -76,6 +77,7 @@ import { ChamberService } from './services/chamber.service';
     AppSidebarModule,
     PerfectScrollbarModule,
     BsDropdownModule.forRoot(),
+    NgxMaskModule.forRoot(),
     TabsModule.forRoot(),
     CommonModule,
     HttpClientModule,
