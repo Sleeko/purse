@@ -3,8 +3,8 @@
     <div class="col-sm-6 col-lg-3">
       <div class="card text-white bg-info">
         <div class="card-body pb-0">
-          <div class="text-value">{{userCounter.membersCount}}</div>
-          <div>Members</div>
+          <div class="text-value">{{userCounter.profit | currency:'PHP':'symbol-narrow':'0.2-2'}}</div>
+          <div>Company Gross Profit</div>
           <div></div>
         </div>
       </div>
@@ -12,8 +12,8 @@
     <div class="col-sm-6 col-lg-3">
       <div class="card text-white bg-primary">
         <div class="card-body pb-0">
-          <div class="text-value">{{userCounter.profit | currency:'PHP':'symbol-narrow':'0.2-2'}}</div>
-          <div>Company Gross Profit</div>
+          <div class="text-value">{{userCounter.membersCount}}</div>
+          <div>Members</div>
           <div></div>
         </div>
         
