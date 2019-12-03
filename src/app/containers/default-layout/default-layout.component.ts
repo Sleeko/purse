@@ -53,8 +53,17 @@ export class DefaultLayoutComponent implements OnDestroy, OnInit {
         } as UserInfo))
         this.currentUser = response[0];
         this.removeNonAdminTabs(this.currentUser.role)
+        this.redirectUserToAccountSettings(this.currentUser);
       })
     })
+  }
+
+  redirectUserToAccountSettings(user : UserInfo){
+    if(user.personalInfo){
+      if(user.personalInfo.firstName == null || user.personalInfo.firstName == "" || user.personalInfo.lastName == null || user.personalInfo.lastName == ""){
+        this.accountSettings();
+      } 
+    }
   }
 
   removeNonAdminTabs(role){
