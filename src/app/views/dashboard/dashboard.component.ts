@@ -4,6 +4,7 @@ import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { MemberService } from '../../services/member.service';
 import { Member } from '../../model/member.model';
 import { DatePipe } from '@angular/common';
+import { interval } from 'rxjs';
 
 @Component({
   templateUrl: 'dashboard.component.html',
@@ -20,8 +21,11 @@ export class DashboardComponent implements OnInit {
   isSeller : boolean = false;
 
   constructor(private memberService: MemberService) { 
-    const userInfoSession : any = JSON.parse(sessionStorage.getItem('userInfo'));
-    this.code = userInfoSession.uid;
+    const secondsCounter = interval(2000);
+    secondsCounter.subscribe(e => {
+      const userInfoSession : any = JSON.parse(sessionStorage.getItem('userInfo'));
+      this.code = userInfoSession.uid;
+    });
   }
 
   ngOnInit(): void {
