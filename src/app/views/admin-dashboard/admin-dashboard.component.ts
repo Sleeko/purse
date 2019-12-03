@@ -4,7 +4,7 @@ import { UtilsService } from '../../services/utils.service';
 import { MemberService } from '../../services/member.service';
 import { UserInfo } from '../../model/user-info.model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CreateUserComponent, SampleUser } from '../create-user/create-user.component';
+import { CreateUserComponent, AdminUser } from '../create-user/create-user.component';
 
 export class CodeDTO {
   code: string;
@@ -63,18 +63,7 @@ export class AdminDashboardComponent implements OnInit {
     profit: 0
   };
 
-  users : SampleUser[] = [
-    {
-    username : 'test',
-    password : 'test',
-    role : 'admin'
-  },
-  {
-    username : 'test2',
-    password : 'test2',
-    role : 'member'
-  }
-]
+  adminUsers : AdminUser[] = [];
 
   constructor(private utilsService: UtilsService,
     private memberService: MemberService,
@@ -87,7 +76,18 @@ export class AdminDashboardComponent implements OnInit {
    
    this.memberService.getUserInfoCount().subscribe(res => {
      this.userCounter = res;
-   })
+   });
+
+   this.memberService.getAdminMember().subscribe(res => {
+      res.forEach(element => {
+        const admin = {
+          email: element.email,
+          role: element.role
+        };
+        this.adminUsers.push(admin);
+      });
+   });
+
 
   }
 

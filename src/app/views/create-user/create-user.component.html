@@ -5,16 +5,18 @@
     </button>
 </div>
 <div>
-    <form [formGroup]="userForm" (ngSubmit)="createNewUser(userForm.value)">
+    <form [formGroup]="userForm" (ngSubmit)="createAdminUser(userForm.value)">
         <div class="modal-body">
             <div>
                 <div class="form-group">
-                    <label for="username">Username</label>
-                    <input class="form-control" id="username" formControlName="username">
-                    <small class="text-danger font-weight-bold ml-1"
-                        *ngIf="(userForm.get('username').invalid && userForm.get('username').dirty)">
-                    Enter username
-                    </small>
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control" placeholder="" formControlName="email">
+                    <small class="text-danger"
+                        *ngIf="userForm.controls['email'].dirty && userForm.controls['email'].errors?.required">Enter
+                        email address</small>
+                    <small class="text-danger"
+                        *ngIf="userForm.controls['email'].dirty && userForm.controls['email'].errors?.email">Enter
+                        a valid email address</small>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>

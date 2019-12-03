@@ -218,18 +218,16 @@
             Admin Users
             </div>
           <div class="card-body">
-              <p-table [value]="users" [paginator]="true" [rows]="25" [scrollable]="true">
+              <p-table [value]="adminUsers" [paginator]="true" [rows]="25" [scrollable]="true">
                   <ng-template pTemplate="header">
                       <tr class="dash-header">
-                          <th>Username</th>
-                          <th>Password</th>
+                          <th>Email</th>
                           <th>Role</th>
                       </tr>
                   </ng-template>
                   <ng-template pTemplate="body" let-rowData>
                     <tr>
-                      <td>{{rowData.username}}</td>
-                      <td>{{rowData.password}}</td>
+                      <td>{{rowData.email}}</td>
                       <td>{{rowData.role | uppercase}}</td>
                     </tr>
                   </ng-template>

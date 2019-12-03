@@ -15,6 +15,22 @@ export class MemberService {
     return await sessionStorage.getItem('userInfo');
   }
 
+  getAdminMember() {
+    const admin$ = new Subject<any>();
+    this.db.collection('userInfo')
+      .snapshotChanges()
+      .subscribe(data => {
+        const rawList : any = data.map(e => ({ id: e.payload.doc.id, ...e.payload.doc.data() })); 
+        const adminList = rawList.map(o => {
+          if (['admin','staff','dept_head'].indexOf(o.role) > -1) {
+            return o;
+          };
+        }).filter(x => x);
+        admin$.next(adminList);
+      });
+    return admin$;
+  }
+
   // optimized later
   searchMemberCycle(uid) {
     const member$ = new Subject<any>();
