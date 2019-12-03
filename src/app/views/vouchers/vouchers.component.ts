@@ -6,6 +6,8 @@ import { VoucherService } from '../../services/voucher.service';
 import { AppConstants } from '../../app.constants';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
+import { UserService } from '../../services/user.service';
+import { UserInfo } from '../../model/user-info.model';
 
 @Component({
   selector: 'app-vouchers',
@@ -16,18 +18,33 @@ export class VouchersComponent implements OnInit {
 
   vouchers: Voucher[] = [];
 
-  currentUser;
+  currentUser : UserInfo = new UserInfo();
 
   //change this while role is not implemented
-  isAdmin : boolean = false;
+  isAdmin : boolean = false; 
 
   constructor(
     private modalService: NgbModal,
     private voucherService : VoucherService,
+    private userService : UserService
   ) { }
 
   ngOnInit() {
     this.getAllPendingVouchers();
+    this.getCurrentUser();
+  }
+  
+  getCurrentUser(){
+    this.userService.getCurrentUser().then(res => {
+      this.userService.getUserDetails(res.email).subscribe(e => {
+        const response = e.map(obj => ({
+          docId : obj.payload.doc.id,
+          ...obj.payload.doc.data()
+        } as UserInfo))
+        this.currentUser = response[0];
+        this.isAdmin = this.currentUser.role == AppConstants.ADMIN ? true : false;
+      })
+    })
   }
 
   getAllPendingVouchers(){

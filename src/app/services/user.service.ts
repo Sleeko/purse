@@ -24,18 +24,18 @@ export class UserService {
         var isFinished : boolean = false;
         let storageRef = firebase.storage().ref();
         let uploadTask = storageRef.child(`${this.basePath}/${photo.name}`).put(photo);
-        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+        return new Promise<any>((resolve, reject) => {
+        const res = uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
           (snapshot) =>  {
             // upload in progress
           },
           (error) => {
             // upload failed
-            console.log(error)
           },
           () => {
             // upload success
-            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadUrl) {
-                userInfo.personalInfo.photoUrl = downloadUrl;
+                uploadTask.snapshot.ref.getDownloadURL().then(function(downloadUrl) {
+                    resolve(userInfo.personalInfo.photoUrl = downloadUrl);
               
             }).then(data => {
                var update =  this.updateUserInfo(userInfo);
@@ -43,8 +43,8 @@ export class UserService {
             });
           }
         );
-          return isFinished;
-      }
+      })
+    }
     
 
     getCurrentUser() {

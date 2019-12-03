@@ -8,6 +8,12 @@ export class AppConstants {
   // urls
   public static get BASE_API_URL(): string { return '/compounding_api' }
 
+  //roles
+  public static get SELLER() : string { return 'seller'}
+  public static get MEMBER() : string { return 'member'}
+  public static get ADMIN() : string { return 'admin'}
+
+
   //statuses
   public static get PENDING() : string { return 'PENDING'}
   public static get APPROVED() : string { return 'APPROVED'}

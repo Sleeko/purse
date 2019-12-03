@@ -12,6 +12,7 @@ import { AppConstants } from '../../app.constants';
 import { UserService } from '../../services/user.service';
 import { User } from 'firebase';
 import { FirebaseUserModel } from '../../model/user.model';
+import { UserInfo } from '../../model/user-info.model';
 
 @Component({
   selector: 'app-request-voucher',
@@ -22,7 +23,7 @@ export class RequestVoucherComponent implements OnInit {
 
   voucherForm : FormGroup;
   stores : Store[] = [];
-  currentUser = new FirebaseUserModel();
+  currentUser = new UserInfo();
   
   constructor(
     private modalService : NgbModal,
@@ -43,9 +44,13 @@ export class RequestVoucherComponent implements OnInit {
 
   getCurrentUser(){
     this.userService.getCurrentUser().then(res => {
-      this.currentUser.name = res.displayName;
-      this.currentUser.email = res.email;
-      console.log(this.currentUser)
+      this.userService.getUserDetails(res.email).subscribe(e => {
+        const response = e.map(obj => ({
+          docId : obj.payload.doc.id,
+          ...obj.payload.doc.data()
+        } as UserInfo))
+        this.currentUser = response[0];
+      })
     })
   }
 
@@ -71,7 +76,7 @@ export class RequestVoucherComponent implements OnInit {
     this.spinner.show();
     var voucherToSave : Voucher = voucher;
     voucherToSave.status = AppConstants.PENDING;
-    voucherToSave.name = this.currentUser.name;
+    voucherToSave.name = this.currentUser.personalInfo ? this.currentUser.personalInfo.firstName + ' ' +this.currentUser.personalInfo.lastName : null;
     this.voucherService.saveNewVoucher(voucher).then(data => {
       this.activeModal.close();
     })

@@ -134,10 +134,11 @@ export class AccountSettingsComponent implements OnInit {
     var userInfo = this.mapFormToUserInfo();
 
     if (this.photoFile != null || this.photoFile != undefined) {
-      this.userService.uploadPhoto(this.photoFile, userInfo) ? alert('Update Successful') : null;
+    this.userService.uploadPhoto(this.photoFile, userInfo).then(res => {
+      alert('Update Successful')
+    })
     } else {
       this.userService.updateUserInfo(userInfo).then(e => {
-        console.log('e ', e);
         alert('Update Successful')
       })
     }
