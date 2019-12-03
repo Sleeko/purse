@@ -249,6 +249,19 @@ export class RegisterComponent implements OnInit {
     this.tryRegister(payload, req);
   }
 
+  registerSeller(formData) {
+    const req = {
+      sellerName: formData.sellerName,
+      contactNumber: formData.contactNumber,
+      sellerUrl: formData.sellerUrl,
+      email: formData.email,
+      password: formData.passwords.password
+    };
+
+    const payload = { email: req.email, password: req.password };
+    this.doRegisterSeller(req,payload);
+  }
+
   /**
    * @author Bryan
    * @method tryRegister service implementation of registration, it served as the business functionality
@@ -313,6 +326,36 @@ export class RegisterComponent implements OnInit {
         console.log(err.message);
         alert(err.message);
       });
+  }
+
+  doRegisterSeller(reqObj, authObj) {
+    this.authService.doRegister(authObj)
+    .then(res => {
+      console.log('Account ID', res.user.uid);
+      const userInfoPayload = {
+        authId: res.user.uid,
+        uid: Math.random().toString(36).substring(6).toUpperCase(),
+        email: res.user.email,
+        personalInfo: {},
+        accountInfo: {},
+        governmentDocuments: {},
+        sellerInfo: reqObj,
+        dateRegistered: new Date(),
+        role: 'seller'
+      };
+
+      // saving seller data
+      this.userService.saveUserInfo(userInfoPayload).then(data => {
+        console.log('account creation', data);
+      }).catch(error => {
+        console.log('error', error);
+      });
+
+      alert('Your seller account was successfully created!.')
+    }, err => {
+      console.log(err.message);
+      alert(err.message);
+    });
   }
 
 

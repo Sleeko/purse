@@ -23,7 +23,7 @@
               </div>
             </div>
           <div *ngIf="isSeller">
-            <form class="register-form" [formGroup]="sellerFormGroup" (ngSubmit)="register(sellerFormGroup.value)"
+            <form class="register-form" [formGroup]="sellerFormGroup" (ngSubmit)="registerSeller(sellerFormGroup.value)"
               novalidate>
               <div class="form-group">
                 <label>Seller Name</label>
