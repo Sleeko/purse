@@ -38,6 +38,7 @@ export class AuthService {
           const userInfo = {
               authId: response[0].authId,
               uid: response[0].uid,
+              personalInfo: response[0].personalInfo,
               email: response[0].email,
               role: response[0].role
           };

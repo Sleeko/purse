@@ -35,7 +35,8 @@
                             </div>
                         </td>
                         <td>{{rowData.level}}</td>
-                        <td>{{rowData.isActive}}</td>
+                        <!-- <td>{{rowData.isActive}}</td> -->
+                        <td><span [ngClass]="(rowData.isActive) ? 'badge badge-success':'badge badge-warning'">{{rowData.isActive ? 'ACTIVE' : 'INACTIVE'}}</span></td>
                         <td>{{rowData.cycle}}</td>
                     </tr>
                 </ng-template>

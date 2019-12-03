@@ -13,19 +13,20 @@ import { take } from 'rxjs/operators';
 })
 export class DashboardComponent implements OnInit {
 
-  code: string = 'AYko988H';
+  code: string = 'REF_CODE';
   members: Member [] = [];
 
   member: Member;
 
   //change this one to TRUE to reveal the SELLER PROFILE component.
   isSeller : boolean = false;
-
+  personalInfo: any;
   constructor(private memberService: MemberService) { 
     const secondsCounter = interval(2000);
     secondsCounter.subscribe(e => {
       const userInfoSession : any = JSON.parse(sessionStorage.getItem('userInfo'));
       this.code = userInfoSession.uid;
+      this.personalInfo = userInfoSession.personalInfo;
     });
   }
 
@@ -33,10 +34,11 @@ export class DashboardComponent implements OnInit {
     const secondsCounter = interval(2000);
     secondsCounter.pipe(take(1)).subscribe(e => {
       this.memberService.searchMemberCycle(this.code).subscribe(e => {
+        console.log('e', JSON.stringify(e));
         const d : any= {
             level: e.level,
-            firstName: 'bjmramos@gmail.com',
-            lastName: '',
+            firstName: this.nullChecker(this.personalInfo.firstName),
+            lastName: this.nullChecker(this.personalInfo.lastName),
             isActive: e.memberCycle.currentCycle === "INACTIVE" ? "INACTIVE" : "ACTIVE",
             cycle: e.memberCycle.currentCycle === "INACTIVE" ? "0" : e.memberCycle.currentCycle, 
             photoUrl: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
@@ -47,6 +49,8 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-
+  nullChecker(value) {
+    return value ? value : 'N/A';
+  }
 
 }

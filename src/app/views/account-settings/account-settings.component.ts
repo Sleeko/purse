@@ -230,7 +230,7 @@ export class AccountSettingsComponent implements OnInit {
     });
 
     this.governmentForm.patchValue({
-      tinNumber: userInfo.governmentDocuments.tinNumber
+      tinNumber: userInfo.governmentDocuments ? userInfo.governmentDocuments.tinNumber : "000000000000"
     });
 
     let array: PersonalInfo[] = userInfo.beneficiaries;

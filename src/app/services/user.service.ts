@@ -69,7 +69,7 @@ export class UserService {
 
     updateUserInfo(info : UserInfo){
         console.log('updateUserInfo')
-        return this.db.doc('/userInfo/' + info.docId ).update(Object.assign({},info));
+        return this.db.doc('userInfo/' + info.docId ).update(Object.assign({},info));
     }
 
     updateCurrentUser(value) {

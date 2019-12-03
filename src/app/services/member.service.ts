@@ -37,7 +37,7 @@ export class MemberService {
     this.db.collection('virtualChamber')
       .snapshotChanges()
       .subscribe(data => {
-        const virtualChamber = data.map(e => ({ id: e.payload.doc.id, ...e.payload.doc.data() }) as VirtualChamber); 
+        const virtualChamber : any = data.map(e => ({ id: e.payload.doc.id, ...e.payload.doc.data() }) as VirtualChamber); 
         const vChamber = virtualChamber.find(i => {
           const idx = i.members.some(x => {
               let srcQry = x.memberList.find(e => e.uid === uid);
