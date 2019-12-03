@@ -9,6 +9,9 @@ import { AdminDashboardRoutingModule } from './admin-dashboard-routing.module';
 import { NguCarouselModule } from '@ngu/carousel';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
+import { CreateUserComponent } from '../create-user/create-user.component';
+import { CreateUserModule } from '../create-user/create-user.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -21,8 +24,13 @@ import { TableModule } from 'primeng/table';
     ButtonsModule.forRoot(),
     NguCarouselModule,
     FormsModule,
-    CommonModule
+    CommonModule,
+    NgbModule,
+    CreateUserModule
   ],
-  declarations: [ AdminDashboardComponent ]
+  declarations: [ AdminDashboardComponent ],
+  entryComponents: [
+    CreateUserComponent
+  ]
 })
 export class AdminDashboardModule { }

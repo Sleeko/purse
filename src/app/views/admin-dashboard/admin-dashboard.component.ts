@@ -2,6 +2,9 @@
 import { Component, OnInit} from '@angular/core';
 import { UtilsService } from '../../services/utils.service';
 import { MemberService } from '../../services/member.service';
+import { UserInfo } from '../../model/user-info.model';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CreateUserComponent, SampleUser } from '../create-user/create-user.component';
 
 export class CodeDTO {
   code: string;
@@ -52,6 +55,7 @@ export class CodeDTO {
 export class AdminDashboardComponent implements OnInit {
   currDate: Date = new Date();
   memberCode: CodeDTO [] = [];
+  userInfo : UserInfo[] = [];
   userCounter: any = {
     membersCount: 0,
     inactiveMembers: 0,
@@ -59,8 +63,22 @@ export class AdminDashboardComponent implements OnInit {
     profit: 0
   };
 
+  users : SampleUser[] = [
+    {
+    username : 'test',
+    password : 'test',
+    role : 'admin'
+  },
+  {
+    username : 'test2',
+    password : 'test2',
+    role : 'member'
+  }
+]
+
   constructor(private utilsService: UtilsService,
-    private memberService: MemberService) {}
+    private memberService: MemberService,
+    private modalService : NgbModal) {}
 
   ngOnInit(): void {
    this.utilsService.getMemberCodeListImpl().subscribe(res => {
@@ -71,7 +89,10 @@ export class AdminDashboardComponent implements OnInit {
      this.userCounter = res;
    })
 
+  }
 
+  createUser(){
+    const userModal = this.modalService.open(CreateUserComponent, {backdrop: true, centered: true})
   }
 
 }

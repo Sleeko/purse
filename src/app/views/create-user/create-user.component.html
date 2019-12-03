@@ -1,0 +1,45 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Create User</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.close()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div>
+    <form [formGroup]="userForm" (ngSubmit)="createNewUser(userForm.value)">
+        <div class="modal-body">
+            <div>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input class="form-control" id="username" formControlName="username">
+                    <small class="text-danger font-weight-bold ml-1"
+                        *ngIf="(userForm.get('username').invalid && userForm.get('username').dirty)">
+                    Enter username
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" formControlName="password">
+                    <small class="text-danger font-weight-bold ml-1"
+                        *ngIf="(userForm.get('password').invalid && userForm.get('password').dirty)">
+                    Enter password
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <select class="form-control" formControlName="role">
+                        <option [ngValue]="null"></option>
+                        <option *ngFor="let role of roles">{{role}}</option>
+                    </select>                    
+                    <small class="text-danger font-weight-bold ml-1"
+                        *ngIf="(userForm.get('role').invalid && userForm.get('role').dirty)">
+                        Select Role
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline-dark" (click)="activeModal.close()">Close</button>
+            <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">Create Request</button>
+        </div>
+    </form>
+</div>
