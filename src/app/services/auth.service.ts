@@ -3,7 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { FirebaseUserModel } from '../model/user.model';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -21,9 +21,10 @@ export class AuthService {
   }
 
   public isAuthenticated(): boolean {
-    const userData = sessionStorage.getItem('userData');
+    const userData : any = sessionStorage.getItem('userData');
     if (userData && userData.length > 0) {
-      return true;
+      const d = JSON.parse(userData);
+      return d.isLoggedIn ? true : false;
     } else {
       return false;
     }
@@ -31,8 +32,8 @@ export class AuthService {
 
   public async login(postData) {
     const loginApiResponce = {
-      name: postData.name,
       uid: postData.uid,
+      isLoggedIn: postData.isLoggedIn
     };
     await sessionStorage.setItem('userData', JSON.stringify(loginApiResponce));
     return false;
@@ -42,14 +43,6 @@ export class AuthService {
     await sessionStorage.removeItem('userData');
     await sessionStorage.clear();
     return true;
-  }
-
-  /**
-   * NOTE: there's always a better way.
-   * Not yet optimized, plan to migrate it into AngularFireStore.
-   */
-  getListOfCode() {
-    return this.db.list('/validationCode');
   }
 
   doRegister(value) {
@@ -82,16 +75,14 @@ export class AuthService {
   }
 
   getCurrentUser() {
-    const user = new FirebaseUserModel();
+    const user$ = new Subject<any>();
     this.afAuth.authState.subscribe((auth) => {
       if (auth && auth.uid) {
-        user.uid = auth.uid;
-        user.name = auth.displayName;
-        this.isLoggedIn = true;
+        const userData = { uid: auth.uid, isLoggedIn: true};
+        user$.next(userData);
       }
     });
-
-    return user;
+    return user$.asObservable();
   }
 
 }
