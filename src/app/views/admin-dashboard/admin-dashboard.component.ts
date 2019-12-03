@@ -1,6 +1,7 @@
 
 import { Component, OnInit} from '@angular/core';
 import { UtilsService } from '../../services/utils.service';
+import { MemberService } from '../../services/member.service';
 
 export class CodeDTO {
   code: string;
@@ -51,14 +52,26 @@ export class CodeDTO {
 export class AdminDashboardComponent implements OnInit {
   currDate: Date = new Date();
   memberCode: CodeDTO [] = [];
+  userCounter: any = {
+    membersCount: 0,
+    inactiveMembers: 0,
+    activeMembers: 0,
+    profit: 0
+  };
 
-  constructor(private utilsService: UtilsService) {}
+  constructor(private utilsService: UtilsService,
+    private memberService: MemberService) {}
 
   ngOnInit(): void {
    this.utilsService.getMemberCodeListImpl().subscribe(res => {
     this.memberCode = res.map(e => ({code: e.code, isUsed: e.isUsed}));
    });
    
+   this.memberService.getUserInfoCount().subscribe(res => {
+     this.userCounter = res;
+   })
+
+
   }
 
 }

@@ -3,7 +3,7 @@
     <div class="col-sm-6 col-lg-3">
       <div class="card text-white bg-info">
         <div class="card-body pb-0">
-          <div class="text-value">300</div>
+          <div class="text-value">{{userCounter.membersCount}}</div>
           <div>Members</div>
           <div></div>
         </div>
@@ -12,17 +12,17 @@
     <div class="col-sm-6 col-lg-3">
       <div class="card text-white bg-primary">
         <div class="card-body pb-0">
-          <div class="text-value">9.823</div>
-          <div>Sellers</div>
+          <div class="text-value">{{userCounter.profit | currency:'PHP':'symbol-narrow':'0.2-2'}}</div>
+          <div>Company Gross Profit</div>
           <div></div>
         </div>
         
       </div>
     </div><!--/.col-->
     <div class="col-sm-6 col-lg-3">
-      <div class="card text-white bg-warning">
+      <div class="card text-white bg-success">
         <div class="card-body pb-0">
-          <div class="text-value">9.823</div>
+          <div class="text-value">{{userCounter.activeMembers}}</div>
           <div>Active Members</div>
           <div></div>
         </div>
@@ -31,8 +31,8 @@
     <div class="col-sm-6 col-lg-3">
       <div class="card text-white bg-danger">
         <div class="card-body pb-0">
-          <div class="text-value">9.823</div>
-          <div>Inactive Members Count</div>
+          <div class="text-value">{{userCounter.inactiveMembers}}</div>
+          <div>Inactive Members</div>
           <div></div>
         </div>
       </div>
