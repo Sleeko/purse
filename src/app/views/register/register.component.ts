@@ -206,7 +206,8 @@ export class RegisterComponent implements OnInit {
               if( res.length < 3) {
                 if ((res.length + 1) === 3) {
                   this.processChamberCycle(control.value, 'MOVE').pipe(take(1)).subscribe(res => {
-                    this.chamberService.updateChamber('LVL_P300',res);
+                    const vChamberPayload = {members: res};
+                    this.chamberService.updateChamber('LVL_P300',vChamberPayload);
                   });
                 }
                 return null;
