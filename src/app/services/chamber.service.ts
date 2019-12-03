@@ -50,4 +50,14 @@ export class ChamberService {
     updateChamber(docId, data) {
         this.db.doc('virtualChamber/' + docId).update(Object.assign({}, data));
     }
+
+    updateExitChamber(docId, data) {
+        this.db.doc('exitChamber/' + docId).update(Object.assign({}, data));
+    }
+
+    searchVirtualChamber(docId) {
+        return this.db.collection('virtualChamber').doc(docId).snapshotChanges();
+    }
+
+
 }

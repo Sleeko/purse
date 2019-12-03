@@ -90,7 +90,7 @@ export class RegisterComponent implements OnInit {
   listOfCode: any[];
   isSeller = 1;
   docId: any;
-  CHAMBER_SIZE: number = 10;
+  CHAMBER_SIZE: number = 1;
   CONFIG_CHAMBER_SIZE: any;
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
@@ -144,6 +144,7 @@ export class RegisterComponent implements OnInit {
           confirm_password: ['', [Validators.required]],
       }, {validator: this.passwordConfirming})
     });
+
   }
 
 
@@ -176,7 +177,7 @@ export class RegisterComponent implements OnInit {
 
   // WARNING!!! for development purposes. clear virtual chamber data 
   generateNewChamber() {
-    this.chamberService.generateGenesisChamber('LVL_P300').then(e => {
+    this.chamberService.generateGenesisChamber('LVL_P30K').then(e => {
       console.log('error', e);
     }).catch(err => {
       console.log(err);
@@ -372,29 +373,47 @@ export class RegisterComponent implements OnInit {
     
     this.chamberService.fetchVirtualChamberDataAPI().subscribe(data => {
       let r = data.map(e => ({ id: e.payload.doc.id, ...e.payload.doc.data() }) as VirtualChamber);    
-      let chamberObj = r[0].members;
+      //let chamberObj = r[0].members;
+      // new implementation for multi-virtual user-chamber compound search
+      const vChamber = r.find(i => {
+        const idx = i.members.some(x => {
+            let srcQry = x.memberList.find(e => e.uid === memberCode);
+            if (srcQry) return x;
+        });
+        return idx ? idx : null;
+      });
+      
+      let chamberObj = null;
 
-     switch (activity) {
-      case 'NEW':
-        chamberObj[0].memberList.push({uid: memberCode, currentCycle: "INACTIVE"});
-        break;
+      if (vChamber) { // nullity check
+         chamberObj = vChamber.members;
+      } else {
+        const defaultChamber = r.find(i => i.id === 'LVL_P300');
+        chamberObj = defaultChamber.members;
+      }
 
-      case 'MOVE':
-        let memberCycleObj = this.getMemberCycleChamber(memberCode, chamberObj);
-        if (memberCycleObj) {
-          let cycleMember = this.getMember(memberCode, memberCycleObj);
-          if (memberCycleObj.cycleId === 0) {
-            const activeCycle = memberCycleObj.cycleId + 1;
-            memberCycleObj.memberList.splice(memberCycleObj.memberList.findIndex(i => i.uid === memberCode), 1);
-            cycleMember.currentCycle = String(activeCycle);
-            this.processRecurChamber(chamberObj, activeCycle, cycleMember);
-          } else {
-            this.processRecurChamber(chamberObj, memberCycleObj.cycleId, cycleMember);
+      switch (activity) {
+        case 'NEW':
+          chamberObj[0].memberList.push({uid: memberCode, currentLvl:"LVL_P300",currentCycle: "INACTIVE"});
+          break;
+
+        case 'MOVE':
+          let memberCycleObj = this.getMemberCycleChamber(memberCode, chamberObj);
+          if (memberCycleObj) {
+            let cycleMember = this.getMember(memberCode, memberCycleObj);
+            if (memberCycleObj.cycleId === 0) {
+              const activeCycle = memberCycleObj.cycleId + 1;
+              memberCycleObj.memberList.splice(memberCycleObj.memberList.findIndex(i => i.uid === memberCode), 1);
+              cycleMember.currentCycle = String(activeCycle);
+              this.processRecurChamber(chamberObj, activeCycle, cycleMember);
+            } else {
+              this.processRecurChamber(chamberObj, memberCycleObj.cycleId, cycleMember);
+            }
           }
-        }
-      break;
-     }
-     subj.next(chamberObj);
+        break;
+      }
+      subj.next(chamberObj); 
+      
     });
     return subj.asObservable();
   }
@@ -426,7 +445,7 @@ export class RegisterComponent implements OnInit {
 
   /**
    * @author Bryan
-   * @method processRecurChamber this recursive method, process and handles 
+   * @method processRecurChamber this recursive method process and handles 
    *                             all the movement in the virtual chamber, it move every member 
    *                             in the cycle 1 to 10 accordingly
    * @param chamberObj virtual chamber object
@@ -439,14 +458,56 @@ export class RegisterComponent implements OnInit {
       if (chamberObj[cycleTo].memberList.length >= this.CHAMBER_SIZE) { // chamber max limit? do the thing
         let recurPop = chamberObj[cycleTo].memberList.shift(); // pop the first item in the queue
         recurPop.currentCycle = String(cycleTo); // update the currentCycle in the member object
-        chamberObj[cycleTo].memberList.push(memberObj); // push member in the designated chamnber
+        chamberObj[cycleTo].memberList.push(memberObj); // push member in the designated chamber
         let recurCycle = cycleTo + 1; // we can do this way instead of ++cycleTo \_('_')_/
         this.processRecurChamber(chamberObj, recurCycle, recurPop); // let's do it again
       } 
+      else if (chamberObj[cycleTo].cycleId >= 10 && chamberObj[cycleTo].memberList.length >= this.CHAMBER_SIZE ) {
+        const vChamber = [
+          'LVL_P300', 'LVL_P500', 'LVL_P1K', 'LVL_P5K',
+          'LVL_P10K', 'LVL_P20K', 'LVL_P30K', 'LVL_EXIT'
+        ];
+
+        const currLvl = memberObj.currentLvl;
+        const index = vChamber.indexOf(currLvl) > -1 ? vChamber.indexOf(currLvl) : 0;
+
+        let recurPop = chamberObj[cycleTo].memberList.shift(); // pop the first item in the queue
+        recurPop.currentCycle = String(1); // update the currentCycle in the member object
+        recurPop.currentLvl = vChamber[index+1]; //update currentLvl
+        
+        if (vChamber[index+1] === 'LVL_EXIT') {
+          this.transferExitChamber(recurPop);
+        } else {
+          this.transferLevelUpChamber(vChamber[index + 1], recurPop).pipe(
+            take(1)
+          ).subscribe(res => {
+            const vChamberPayload = {members: res};
+            this.chamberService.updateChamber(recurPop.currentLvl, vChamberPayload);
+          });
+        }
+      }
       else { // nah? just push the member
         chamberObj[cycleTo].memberList.push(memberObj); 
       }
     }
+  }
+
+  transferLevelUpChamber(levelId, memberObj) {
+    const transferSubj$ = new Subject<any>();
+    this.chamberService.searchVirtualChamber(levelId).subscribe(data => {
+      console.log('transfer',JSON.stringify(data.payload.data()));
+      const lvlChamberObj : any = data.payload.data();
+      let chamberObj = lvlChamberObj.members;
+
+      this.processRecurChamber(chamberObj, 1, memberObj);
+      transferSubj$.next(chamberObj);
+    });
+
+    return transferSubj$.asObservable();
+  }
+
+  transferExitChamber(memberObj) {
+    this.chamberService.updateExitChamber('LVL_EXIT', memberObj);
   }
 }
 
