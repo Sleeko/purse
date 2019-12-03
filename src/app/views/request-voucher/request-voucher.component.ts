@@ -42,6 +42,9 @@ export class RequestVoucherComponent implements OnInit {
     this.getCurrentUser();
   }
 
+  /**
+   * Gets the current logged in user in the app
+   */
   getCurrentUser(){
     this.userService.getCurrentUser().then(res => {
       this.userService.getUserDetails(res.email).subscribe(e => {
@@ -54,6 +57,9 @@ export class RequestVoucherComponent implements OnInit {
     })
   }
 
+  /**
+   * Build the Voucher Form
+   */
   initVoucherForm(){
     this.voucherForm = this.formBuilder.group({
       storeCode : [null, Validators.required],
@@ -62,6 +68,9 @@ export class RequestVoucherComponent implements OnInit {
     });
   }
 
+  /**
+   * Fetches all the Store Codes in the database.
+   */
   getStoreCodes(){
     this.storeService.getAllStores().subscribe(e => {
       const response = e.map(obj => ({
@@ -72,6 +81,10 @@ export class RequestVoucherComponent implements OnInit {
     });
   }
 
+  /**
+   * Creates and saves the voucher that is PENDING in the database.
+   * @param voucher 
+   */
   createRequest(voucher : Voucher){
     this.spinner.show();
     var voucherToSave : Voucher = voucher;
@@ -82,6 +95,9 @@ export class RequestVoucherComponent implements OnInit {
     })
   }
 
+  /**
+   * Navigate to create store page. 
+   */
   createNewStore(){
     this.activeModal.close();
     this.router.navigate(['create-store']);

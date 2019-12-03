@@ -64,6 +64,10 @@ export class AccountSettingsComponent implements OnInit {
 
   }
 
+
+  /**
+   * Checks the beneficiary FormArray if the values are not valid. 
+   */
   checkBeneficiaryValidity() {
     var beneficariesData: PersonalInfo[] = [];
 
@@ -84,7 +88,9 @@ export class AccountSettingsComponent implements OnInit {
   }
 
 
-
+  /**
+   * Build Beneficiary FormArray
+   */
   buildBeneficiariesForm() {
     this.beneficiariesForm = this.formBuilder.group({
       beneficiaries: this.formBuilder.array([this.beneficiaries()]),
@@ -96,10 +102,17 @@ export class AccountSettingsComponent implements OnInit {
     return <FormArray>this.beneficiariesForm.controls.beneficiaries;
   }
 
+  /**
+   * Remove 1 entry of Beneficiary Form in UI.
+   * @param index Index of the array to be removed.
+   */
   removeBene(index: number) {
     this.getBene.removeAt(index);
   }
 
+  /**
+   * Build single beneficiary form.
+   */
   beneficiaries() {
     let nowDate = new Date().toISOString().split('T')[0];
     return this.formBuilder.group({
@@ -117,12 +130,18 @@ export class AccountSettingsComponent implements OnInit {
     });
   }
 
+  /**
+   * Build GovernmentDocument Form.
+   */
   buildGovernmentForm() {
     this.governmentForm = this.formBuilder.group({
       tinNumber: ['', Validators.required]
     })
   }
 
+  /**
+   * Build AccountInfo Form.
+   */
   buildBankForm() {
     this.bankForm = this.formBuilder.group({
       bankAccountNumber: [null, Validators.required],
@@ -130,6 +149,9 @@ export class AccountSettingsComponent implements OnInit {
     })
   }
 
+  /**
+   * Gets current changes from the UI and saves the changes to database.
+   */
   updateUserInfo() {
     var userInfo = this.mapFormToUserInfo();
 
@@ -144,6 +166,9 @@ export class AccountSettingsComponent implements OnInit {
     }
   }
 
+  /**
+   * Maps the data from the Reactive Form to Object Models.
+   */
   mapFormToUserInfo() {
     var userInfo: UserInfo = new UserInfo();
     userInfo = this.userInfo[0] ? this.userInfo[0] : new UserInfo();
@@ -162,6 +187,9 @@ export class AccountSettingsComponent implements OnInit {
     return userInfo;
   }
 
+  /**
+   * Gets current logged in user in the app.
+   */
   getCurrentUser() {
     this.userService.getCurrentUser().then(res => {
       var test = this.userService.getUserDetails(res.email).subscribe(e => {
@@ -182,6 +210,10 @@ export class AccountSettingsComponent implements OnInit {
     });
   }
 
+  /**
+   * Maps Objects to Reactive Form.
+   * @param userInfo 
+   */
   mapUserInfoToForm(userInfo: UserInfo) {
     console.log('User Info ', userInfo)
     this.personalInfoForm.patchValue({
@@ -220,15 +252,25 @@ export class AccountSettingsComponent implements OnInit {
 
   }
 
-
+  /**
+   * Adds another Beneficiary Form entry in UI
+   */
   addBenefeciary() {
     (this.beneficiariesForm.get('beneficiaries') as FormArray).push(this.beneficiaries());
   }
-
+  
+  /**
+   * Removes one Beneficiary Form in the UI.
+   * @param index 
+   */
   deleteBeneficiary(index) {
     (this.beneficiariesForm.get('beneficiaries') as FormArray).removeAt(index);
   }
 
+  /**
+   * Gets the image file from the UI.
+   * @param $event 
+   */
   onFileChange($event) {
     this.photoFile = $event.target.files[0]; // <--- File Object for future use.
     console.log(this.photoFile);
