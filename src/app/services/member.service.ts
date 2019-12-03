@@ -56,20 +56,29 @@ export class MemberService {
     const countObj = new Subject<any>();
     this.db.collection('virtualChamber')
       .snapshotChanges()
-      .pipe(take(1))
+      .pipe(take(7))
       .subscribe(data => {
         const virtualChamber = data.map(e => ({ 
           id: e.payload.doc.id, 
           ...e.payload.doc.data() 
         }) as VirtualChamber);
-        
-        const activeMemberCounter = virtualChamber[0].members.reduce( (total = 0, i) => {
+
+        const activeMemberCounter = virtualChamber.reduce((s, e) => {
+          return s + e.members.reduce((t, i) => {
+            if (i.cycleId > 0) {
+              return t + i.memberList.length;
+            } else {
+              return t + 0;
+            }
+          }, 0);
+        }, 0);
+
+        const defaultChamber = virtualChamber.find(i => i.id === 'LVL_P300');
+        const inactiveMemberCounter = defaultChamber.members.reduce( (total = 0, i) => {
           if (i.cycleId !== 0) {
             return total + i.memberList.length
           }
         }, 0);
-
-        const inactiveMemberCounter = virtualChamber[0].members[0].memberList.length;
 
         const resObj = {
           membersCount: activeMemberCounter + inactiveMemberCounter,

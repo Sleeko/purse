@@ -372,7 +372,7 @@ export class RegisterComponent implements OnInit {
     const subj = new Subject<any>();
     
     this.chamberService.fetchVirtualChamberDataAPI().subscribe(data => {
-      let r = data.map(e => ({ id: e.payload.doc.id, ...e.payload.doc.data() }) as VirtualChamber);    
+      let r : any = data.map(e => ({ id: e.payload.doc.id, ...e.payload.doc.data() }) as VirtualChamber);    
       //let chamberObj = r[0].members;
       // new implementation for multi-virtual user-chamber compound search
       const vChamber = r.find(i => {
