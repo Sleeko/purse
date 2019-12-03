@@ -41,6 +41,9 @@ export class CreateStoreComponent implements OnInit {
     this.getAllStores();
   }
 
+  /**
+   * Gets all Store in database.
+   */
   getAllStores(){
     this.storeService.getAllStores().subscribe(e => {
       const response = e.map(obj => ({
@@ -51,20 +54,36 @@ export class CreateStoreComponent implements OnInit {
     })
   }
 
+  /**
+   * Creates a new entry for Store.
+   * @param store 
+   */
   createNewStore(store : Store){
     this.storeService.createNewStore(store);
   }
 
+  /**
+   * Enables the edit feature of a store row.
+   * @param index 
+   */
   enableEdit(index : number){
     this.enableStoreEdit = true;
     this.editIndex = index;
   }
 
+  /**
+   * Disables the edit feature of a store row.
+   * @param index 
+   */
   cancelEdit(index : number){
     this.enableStoreEdit = false;
     this.editIndex = null;
   }
 
+  /**
+   * Updates the current Store changed by the user.
+   * @param store 
+   */
   updateStore(store : Store){
     this.storeService.updateStore(store).then(data => {
       this.enableStoreEdit = false;

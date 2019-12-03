@@ -11,6 +11,8 @@ import { UserService } from '../../services/user.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ChamberService } from '../../services/chamber.service';
 import { VirtualChamber } from '../../model/virtual-chamber.model';
+import { FeaturedContentService } from '../../services/featured-content.service';
+import { FeaturedContent } from '../../model/featured-content.model';
 
 @Component({
   selector: 'app-register',
@@ -81,32 +83,8 @@ export class RegisterComponent implements OnInit {
     animation: 'lazy'
   };
 
-  imgags: any[] = [
-    {
-      photoUrl: "https://picsum.photos/id/237/200/322"
-    },
-    {
-      photoUrl: "https://picsum.photos/id/222/200/312"
-    },
-    {
-      photoUrl: "https://picsum.photos/id/236/200/324"
-    },
-    {
-      photoUrl: "https://picsum.photos/id/235/200/342"
-    },
-    {
-      photoUrl: "https://picsum.photos/id/234/200/325"
-    },
-    {
-      photoUrl: "https://picsum.photos/id/324/200/352"
-    },
-    {
-      photoUrl: "https://picsum.photos/id/232/200/315"
-    }
-  ];
-
-  test: string[] = ['asdasdasdasdasd', '12312312312312312', 'zxc123zxc123zxcasd123'];
-  carouselItems: Observable<Featured[]>;
+  featuredContents : FeaturedContent[] = [];
+  carouselItems: Observable<FeaturedContent[]>;
   registerFormGroup: FormGroup;
   listOfCode: any[];
   isSeller: boolean = true;
@@ -119,6 +97,7 @@ export class RegisterComponent implements OnInit {
               private utilsService: UtilsService,
               private chamberService: ChamberService,
               public db: AngularFirestore,
+              private featuredContentService : FeaturedContentService,
               public router: Router) {
               }
 
@@ -128,10 +107,11 @@ export class RegisterComponent implements OnInit {
       take(10),
       map(val => {
         const i = 0;
-        const data = this.imgags;
+        const data = this.featuredContents;
         return data;
       })
     );
+    this.getFeaturedContents();
     this.registerFormGroup = this.formBuilder.group({
       email: [
         '',
@@ -167,6 +147,20 @@ export class RegisterComponent implements OnInit {
     });
     this.registerFormGroup.get('isSeller').valueChanges.subscribe(data => { data === 1 ? this.isSeller = true : this.isSeller = false; });
   }
+
+  /**
+   * 
+   */
+  getFeaturedContents(){
+    this.featuredContentService.getAllFeaturedContent().subscribe(e => {
+      const response = e.map(obj => ({
+        docId : obj.payload.doc.id,
+        ...obj.payload.doc.data()
+      } as FeaturedContent));
+      this.featuredContents = response;
+    });
+  }
+
 
   // WARNING!!! for development purposes. clear virtual chamber data 
   generateNewChamber() {
@@ -260,7 +254,7 @@ export class RegisterComponent implements OnInit {
           email: res.user.email,
           personalInfo: {},
           accountInfo: {},
-          governmenDocuments: {},
+          governmentDocuments: {},
           dateRegistered: new Date(),
           role: 'member'
         };
