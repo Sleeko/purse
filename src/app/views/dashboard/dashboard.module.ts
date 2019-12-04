@@ -10,9 +10,9 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import {TableModule} from 'primeng/table';
 import {CommonModule} from "@angular/common";
-import { SellerProfileModule } from '../seller-profile/seller-profile.module';
 import { SellerProfileComponent } from '../seller-profile/seller-profile.component';
 import { TabMenuModule } from 'primeng/tabmenu';
+import { SellerProfileModule } from '../seller-profile/seller-profile.module';
 
 
 @NgModule({
@@ -26,8 +26,10 @@ import { TabMenuModule } from 'primeng/tabmenu';
     ButtonsModule.forRoot(),
     CommonModule,
     ReactiveFormsModule,
-    TabMenuModule
+    TabMenuModule,
+    SellerProfileModule
   ],
-  declarations: [ DashboardComponent, SellerProfileComponent ]
+  declarations: [ DashboardComponent ],
+  exports:[SellerProfileComponent],
 })
 export class DashboardModule { }

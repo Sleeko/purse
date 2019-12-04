@@ -24,7 +24,7 @@ export class CreateUserComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private formBuilder : FormBuilder,
-    private activeModal : NgbActiveModal
+    public activeModal : NgbActiveModal
   ) { }
 
   ngOnInit() {

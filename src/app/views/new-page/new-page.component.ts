@@ -10,8 +10,8 @@ import { FeaturedContentService } from '../../services/featured-content.service'
 })
 export class NewPageComponent implements OnInit {
 
-  private contentForm : FormGroup;
-  private image : File;
+   contentForm : FormGroup;
+   image : File;
 
   constructor(
     private formBuilder : FormBuilder,

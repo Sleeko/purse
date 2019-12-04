@@ -27,7 +27,7 @@ export class CreateStoreComponent implements OnInit {
     private spinner : NgxSpinnerService,
     private storeService : StoreService,
     private messageService : MessageService,
-    private router : Router
+    public router : Router
   ) { }
 
 
