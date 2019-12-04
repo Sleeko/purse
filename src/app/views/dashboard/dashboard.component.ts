@@ -4,6 +4,8 @@ import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { MemberService } from '../../services/member.service';
 import { Member } from '../../model/member.model';
 import { DatePipe } from '@angular/common';
+import { interval } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
   templateUrl: 'dashboard.component.html',
@@ -11,109 +13,44 @@ import { DatePipe } from '@angular/common';
 })
 export class DashboardComponent implements OnInit {
 
-  code: string = 'AYko988H';
-  members: Member [] = [
-    {
-        'level': 'A',
-        'firstName': 'Ariel Jay',
-        'lastName': 'Fuentes',
-        'isActive': true,
-        'cycle': 3,
-        'photoUrl': 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-        'registered': new Date()
-    },
-    {
-        'level': 'B',
-        'firstName': 'BryanJudelle',
-        'lastName': 'Ramos',
-        'isActive': true,
-        'cycle': 2,
-        'photoUrl': 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-        'registered': new Date()
-    },
-    {
-        'level': 'C',
-        'firstName': 'Robert',
-        'lastName': 'Horton',
-        'isActive': false,
-        'cycle': 2,
-        'photoUrl': 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-        'registered': new Date()
-    },
-    {
-        'level': 'D',
-        'firstName': 'Ariel Jay',
-        'lastName': 'Fuentes',
-        'isActive': false,
-        'cycle': 1,
-        'photoUrl': 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-        'registered': new Date()
-    },
-    {
-        'level': 'E',
-        'firstName': 'Ariel Jay',
-        'lastName': 'Fuentes',
-        'isActive': false,
-        'cycle': 1,
-        'photoUrl': 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-        'registered': new Date()
-    },
-    {
-        'level': 'F',
-        'firstName': 'Ariel Jay',
-        'lastName': 'Fuentes',
-        'isActive': false,
-        'cycle': 1,
-        'photoUrl': 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-        'registered': new Date()
-    },
-    {
-        'level': 'A',
-        'firstName': 'Ariel Jay',
-        'lastName': 'Fuentes',
-        'isActive': false,
-        'cycle': 1,
-        'photoUrl': 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-        'registered': new Date()
-    },
-    {
-        'level': 'A',
-        'firstName': 'Ariel Jay',
-        'lastName': 'Fuentes',
-        'isActive': false,
-        'cycle': 1,
-        'photoUrl': 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-        'registered': new Date()
-    },
-    {
-        'level': 'A',
-        'firstName': 'Ariel Jay',
-        'lastName': 'Fuentes',
-        'isActive': false,
-        'cycle': 1,
-        'photoUrl': 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-        'registered': new Date()
-    },
-  ];
+  code: string = 'REF_CODE';
+  members: Member [] = [];
 
   member: Member;
 
-  constructor(private memberService: MemberService) { }
-
-  ngOnInit(): void {
-    this.memberService.getMembers().subscribe(
-      data => {
-        this.members = data;
-        console.log(data);
-      },
-      err => {
-        //alert('error')
-      },
-      () => {
-
-      });
+  //change this one to TRUE to reveal the SELLER PROFILE component.
+  isSeller : boolean = false;
+  personalInfo: any;
+  constructor(private memberService: MemberService) { 
+    const secondsCounter = interval(2000);
+    secondsCounter.subscribe(e => {
+      const userInfoSession : any = JSON.parse(sessionStorage.getItem('userInfo'));
+      this.code = userInfoSession.uid;
+      this.personalInfo = userInfoSession.personalInfo;
+    });
   }
 
+  ngOnInit(): void {
+    const secondsCounter = interval(2000);
+    secondsCounter.pipe(take(1)).subscribe(e => {
+      this.memberService.searchMemberCycle(this.code).subscribe(e => {
+        console.log('e', JSON.stringify(e));
+        const d : any= {
+            level: e.level,
+            firstName: this.nullChecker(this.personalInfo.firstName),
+            lastName: this.nullChecker(this.personalInfo.lastName),
+            isActive: e.memberCycle.currentCycle === "INACTIVE" ? "INACTIVE" : "ACTIVE",
+            cycle: e.memberCycle.currentCycle === "INACTIVE" ? "0" : e.memberCycle.currentCycle, 
+            photoUrl: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
+            registered: new Date()
+        }
+        this.members.push(d);
+    })
+    });
+  }
 
+  nullChecker(value) {
+    return value ? value : 'N/A';
+  }
 
 }

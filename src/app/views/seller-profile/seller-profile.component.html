@@ -1,0 +1,46 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-sm-6 col-lg-3" [formGroup]="sellerProfileForm">
+            <div class="card text-center">
+                <div class="card-header">
+                    <img src="https://picsum.photos/id/232/300/300" class="card-img-top rounded-circle" alt="..."
+                        style="width: 150px;height: 150px;">
+                </div>
+                <div class="card-body">
+                    <h3>{{sellerProfileForm.get('sellerName').value}}</h3>
+                    <p class="card-text">High School Teacher</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mt-2">Details</h4>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Contact Number</label>
+                        <input class="form-control" type="number" formControlName="contactNumber" oninput="validity.valid||(value='');">
+                    </div>
+                    <div class="form-group">
+                        <label>Facebook/Website URL</label>
+                        <input class="form-control" type="text" formControlName="sellerUrl">
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="float-right mb-2">
+                        <button *ngIf="sellerProfileEditDisabled" class="btn btn-outline-dark"
+                            (click)="editSellerProfile()">Edit</button>
+                        <button *ngIf="!sellerProfileEditDisabled" class="btn btn-outline-dark"
+                            (click)="saveSellerProfile()">Save</button>
+                        <button *ngIf="!sellerProfileEditDisabled" class="btn btn-outline-dark"
+                            (click)="cancelEdit()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-9">
+            <div class="card">
+                <p-tabMenu [model]="items" [activeItem]="items[0]"></p-tabMenu>
+            </div>
+        </div>
+    </div>
+</div>

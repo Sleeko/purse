@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
@@ -27,6 +27,9 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ChartsModule } from 'ng2-charts';
 import { HttpClientModule } from '@angular/common/http';
+import { NgxSpinnerModule } from "ngx-spinner";
+import {CarouselModule} from 'primeng/carousel';
+
 
 import { AppComponent } from './app.component';
 
@@ -51,6 +54,14 @@ import {
   AppSidebarModule,
 } from '@coreui/angular';
 import { UserService } from './services/user.service';
+import { NguCarousel, NguCarouselModule } from '@ngu/carousel';
+import { DisableFormControlDirective } from './directives/disable-form-control.directive';
+import { BlockSpecialCharDirective } from './directives/block-special-char.directive';
+import { DirectivesModule } from './directives/directives.module';
+import { UtilsService } from './services/utils.service';
+import { CreateStoreModule } from './views/create-store/create-store.module';
+import { ChamberService } from './services/chamber.service';
+import { NgxMaskModule } from 'ngx-mask';
 
 
 
@@ -66,6 +77,7 @@ import { UserService } from './services/user.service';
     AppSidebarModule,
     PerfectScrollbarModule,
     BsDropdownModule.forRoot(),
+    NgxMaskModule.forRoot(),
     TabsModule.forRoot(),
     CommonModule,
     HttpClientModule,
@@ -75,7 +87,12 @@ import { UserService } from './services/user.service';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireDatabaseModule,
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    NgxSpinnerModule,
+    NguCarouselModule,
+    CarouselModule,
+    DirectivesModule,
+    CreateStoreModule,
   ],
   declarations: [
     AppComponent,
@@ -84,12 +101,12 @@ import { UserService } from './services/user.service';
     P500Component,
     LoginComponent,
     RegisterComponent,
-    ForgotComponent
+    ForgotComponent,
   ],
   providers: [{
     provide: LocationStrategy,
     useClass: HashLocationStrategy
-  }, UserService],
+  }, UserService, UtilsService, ChamberService],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

@@ -2,33 +2,32 @@ import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { take } from 'rxjs/operators';
+import { UserService } from '../../services/user.service';
+import { UserInfo } from '../../model/user-info.model';
+import { AppConstants } from '../../app.constants';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit {
-  postData = {
-    email: 'aadsd',
-    password: 'dsd'
-  };
 
   email: string;
   password: string;
   public errorText: string;
-
+  currentUser: UserInfo = new UserInfo();
   loginForm: FormGroup;
 
-  constructor(public authService: AuthService, public router: Router, private fb: FormBuilder) {
+  constructor(public authService: AuthService,
+    public router: Router,
+    private userService: UserService,
+    private fb: FormBuilder) {
     this.errorText = '';
     this.createForm();
   }
-
-  ngOnInit() {
-  //   if (this.authService.isLoggedIn) {
-  //     this._router.navigate(['/apps']);
-  //  }
-  }
+  data: any[];
+  ngOnInit() { }
 
   createForm() {
     this.loginForm = this.fb.group({
@@ -37,25 +36,34 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  loginAction() {
-    if (this.postData.email && this.postData.password) {
-      if (this.authService.login(this.postData)) {
-        this.router.navigate(['/dashboard']);
-      }
-    } else {
-      this.errorText = 'Please give valid data';
+  navigateUserByRole(user: UserInfo) {
+    if (user.role == AppConstants.ADMIN) {
+      this.router.navigate(['/admin-dashboard']);
+    } else if (user.role == AppConstants.MEMBER) {
+      this.router.navigate(['/dashboard']);
+    } else if (user.role == AppConstants.SELLER) {
+      this.router.navigate(['/account-settings']);
     }
   }
 
   tryLogin(value) {
     this.authService.doLogin(value)
       .then(res => {
-        if (this.authService.login(this.authService.getCurrentUser())) {
-          this.router.navigate(['/dashboard']);
-        }
-      }, err => {
-        console.log(err);
-        alert(err.message);
-      });
-  }
+        this.authService.getCurrentUser().pipe(take(1)).subscribe(resObj => {
+          if (this.authService.login(resObj)) {
+            this.userService.getUserDetailsByAuthId(resObj.uid).subscribe(e => {
+              const response = e.map(obj => ({
+                docId: obj.payload.doc.id,
+                ...obj.payload.doc.data()
+              } as UserInfo))
+              this.currentUser = response[0];
+              this.navigateUserByRole(this.currentUser)
+            });
+          }
+        });
+        }, err => {
+          console.log(err);
+          alert(err.message);
+        });
+      }
 }

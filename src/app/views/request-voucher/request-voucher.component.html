@@ -1,0 +1,49 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Request Voucher</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.close()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div>
+    <form [formGroup]="voucherForm" (ngSubmit)="createRequest(voucherForm.value)">
+        <div class="modal-body">
+            <div>
+                <div class="form-group">
+                    <label for="storeCode">Store Code</label>
+                    <select class="form-control" formControlName="storeCode">
+                        <option [ngValue]="null"></option>
+                        <option *ngFor="let store of stores">{{store.storeCode}}</option>
+                    </select>
+                    <small class="text-danger font-weight-bold ml-1"
+                        *ngIf="(voucherForm.get('storeCode').invalid && voucherForm.get('storeCode').dirty)">
+                        Select store code
+                    </small>
+                    <button *ngIf="currentUser?.role == 'admin'" class="btn-sm btn-primary pull-right mt-1" (click)="createNewStore()">Create new
+                        store</button>
+                </div>
+                <div class="form-group">
+                    <label for="storeBranch">Store Branch</label>
+                    <input class="form-control" id="storeBranch" formControlName="storeBranch">
+                    <small class="text-danger font-weight-bold ml-1"
+                        *ngIf="(voucherForm.get('storeBranch').invalid && voucherForm.get('storeBranch').dirty)">
+                        Enter store branch
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <input currencyMask
+                        [options]="{ prefix: '₱ ', thousands: ',', decimal: '.' , align: 'left', allowNegative : 'false' }"
+                        class="form-control" id="amount" formControlName="amount">
+                    <small class="text-danger font-weight-bold ml-1"
+                        *ngIf="(voucherForm.get('amount').invalid && voucherForm.get('amount').dirty)">
+                        Enter amount
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline-dark" (click)="activeModal.close()">Close</button>
+            <button type="submit" class="btn btn-primary" [disabled]="voucherForm.invalid">Create Request</button>
+        </div>
+    </form>
+</div>

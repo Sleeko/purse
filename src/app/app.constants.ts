@@ -8,6 +8,17 @@ export class AppConstants {
   // urls
   public static get BASE_API_URL(): string { return '/compounding_api' }
 
+  //roles
+  public static get SELLER() : string { return 'seller'}
+  public static get MEMBER() : string { return 'member'}
+  public static get ADMIN() : string { return 'admin'}
+
+
+  //statuses
+  public static get PENDING() : string { return 'PENDING'}
+  public static get APPROVED() : string { return 'APPROVED'}
+  public static get REJECTED() : string { return 'REJECTED'}
+
   // icons
   public static get LOG_OFF_ICON(): string { return 'sign-out'; }
   public static get ADD_ICON(): string { return 'plus'; }
@@ -30,6 +41,7 @@ export class AppConstants {
   public static get SEARCH_BUTTON(): string { return 'searchBtn'; }
   public static get CLEAR_BUTTON(): string { return 'clearBtn'; }
 
+
   // variables
   public static get SESSION_TIMEOUT_THRESHOLD(): number { return 300; }
   public static get UNITS(): any { return [ 'g', 'ml', 'tablets', 'capsules', 'troches', 'suppositories', 'lollipops', 'treats', 'other' ]}
@@ -37,4 +49,9 @@ export class AppConstants {
   public static get STRENGTH_PERCENT(): string { return '%'; }
   public static get STRENGTH_MG(): string { return 'mg'; }
   public static get STRENGTH_RATIO(): string { return ':'; }
+  public static get YES() : string { return 'Yes';}
+  public static get NO() : string { return 'No';}
+
+  public static get CHAMBER_CAPACITY() : number { return 10; }
+
 }

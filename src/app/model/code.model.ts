@@ -1,4 +1,6 @@
-export class Code {
-    'code': string;
-    'isUsed': boolean;
+
+export interface Code {
+    docId: string;
+    code: string;
+    isUsed: boolean;
 }

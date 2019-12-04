@@ -67,23 +67,40 @@ export const navItems: NavData[] = [
     }
   },
   {
-    name: 'Account Settings',
-    url: '/account-settings',
-    icon: 'fa fa-user-o fa-5x',
+    name: 'Vouchers',
+    url: '/vouchers',
+    icon: 'fa fa-clipboard fa-5x',
     badge: {
       variant: 'info',
       text: ''
     }
   },
+  // {
+  //   name: 'Account Settings',
+  //   url: '/account-settings',
+  //   icon: 'fa fa-user-o fa-5x',
+  //   badge: {
+  //     variant: 'info',
+  //     text: ''
+  //   }
+  // },
   {
-    name: 'FAQ',
-    url: '/faq',
-    icon: 'fa fa-question-circle fa-5x',
+    name: 'New Page',
+    url: '/new-page',
+    icon: 'fa fa-sticky-note fa-5x',
     badge: {
       variant: 'info',
       text: ''
     }
-  },
+  },  // {
+  //   name: 'FAQ',
+  //   url: '/faq',
+  //   icon: 'fa fa-question-circle fa-5x',
+  //   badge: {
+  //     variant: 'info',
+  //     text: ''
+  //   }
+  // },
   {
     name: 'Terms and Conditions',
     url: '/terms-and-conditions',
@@ -92,6 +109,35 @@ export const navItems: NavData[] = [
       variant: 'info',
       text: ''
     }
-  }
+  },
+  {
+    name: 'Contact Us',
+    url: '/contact-us',
+    icon: 'fa fa-phone fa-5x',
+    badge: {
+      variant: 'info',
+      text: ''
+    }
+  },
+  {
+    name: 'Quit',
+    url: '/quit',
+    icon: 'fa fa-ban fa-5x',
+    badge: {
+      variant : 'info',
+      text: ''
+    }
+  },
+  // 
+  // { 
+  //   name: 'Seller Profile',
+  //   url: '/seller-profile',
+  //   icon: 'fa fa-ban fa-5x',
+  //   badge: {
+  //     variant : 'info',
+  //     text: ''
+  //   }
+  // },
+
 
 ];

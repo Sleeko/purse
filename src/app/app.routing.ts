@@ -9,6 +9,8 @@ import { LoginComponent } from './views/login/login.component';
 import { RegisterComponent } from './views/register/register.component';
 import { AuthGuard } from './guards/auth.guard';
 import { ForgotComponent } from './views/forgot/forgot.component';
+import { NewPageModule } from './views/new-page/new-page.module';
+import { CreateStoreComponent } from './views/create-store/create-store.component';
 
 export const routes: Routes = [
   {
@@ -52,6 +54,14 @@ export const routes: Routes = [
     }
   },
   {
+    path: 'create-store',
+    component: CreateStoreComponent,
+    data : {
+      title : 'Create New Store'
+    } 
+  },
+
+  {
     path: '',
     canActivate: [AuthGuard],
     component: DefaultLayoutComponent,
@@ -87,6 +97,26 @@ export const routes: Routes = [
       {
         path: 'terms-and-conditions',
         loadChildren: () => import('./views/terms-and-conditions/terms-and-conditions.module').then(m => m.TermsAndConditionsModule)
+      },
+      {
+        path: 'vouchers',
+        loadChildren: () => import('./views/vouchers/vouchers.module').then(m => m.VouchersModule)
+      },
+      {
+        path: 'contact-us',
+        loadChildren: () => import('./views/contact-us/contact-us.module').then(m => m.ContactUsModule)
+      },
+      {
+        path: 'new-page',
+        loadChildren: () => import('./views/new-page/new-page.module').then(m => m.NewPageModule)
+      },
+      {
+        path: 'quit',
+        loadChildren: () => import('./views/quit/quit.module').then(m => m.QuitModule)
+      },
+      {
+        path :'seller-profile',
+        loadChildren: () => import('./views/seller-profile/seller-profile.module').then(m => m.SellerProfileModule)
       }
     ]
   },
