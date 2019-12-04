@@ -17,5 +17,7 @@ import {MenuItem} from 'primeng/api';
     ReactiveFormsModule,
     TabMenuModule,
   ],
+  exports:[SellerProfileComponent],
+
 })
 export class SellerProfileModule { }

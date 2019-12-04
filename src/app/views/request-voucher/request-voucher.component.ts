@@ -27,7 +27,7 @@ export class RequestVoucherComponent implements OnInit {
   
   constructor(
     private modalService : NgbModal,
-    private activeModal : NgbActiveModal,
+    public activeModal : NgbActiveModal,
     private formBuilder : FormBuilder,
     private spinner : NgxSpinnerService,
     private storeService : StoreService,

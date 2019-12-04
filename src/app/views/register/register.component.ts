@@ -90,7 +90,7 @@ export class RegisterComponent implements OnInit {
   listOfCode: any[];
   isSeller = 1;
   docId: any;
-  CHAMBER_SIZE: number = 1;
+  CHAMBER_SIZE: number = 10;
   CONFIG_CHAMBER_SIZE: any;
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,

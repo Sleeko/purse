@@ -9,9 +9,9 @@ import { MenuItem } from 'primeng/api';
 })
 export class SellerProfileComponent implements OnInit {
 
-  private items : MenuItem[];
-  private sellerProfileForm : FormGroup;
-  private sellerProfileEditDisabled : boolean = true;
+  items : MenuItem[];
+  sellerProfileForm : FormGroup;
+  sellerProfileEditDisabled : boolean = true;
 
   constructor(
     private formBuilder: FormBuilder
