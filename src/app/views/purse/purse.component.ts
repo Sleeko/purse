@@ -57,7 +57,7 @@ export class PurseComponent implements OnInit {
       const levelVar : any = this.LVL_MAP.find(i => i.LVL === e.level);
       console.log('levelVar', JSON.stringify(levelVar));
       this.layAwayPurse = (levelVar.amount) * 0.25 * Number(this.cycleMultiplier);
-      this.reEntryPurse = levelVar.amount;
+      this.reEntryPurse = levelVar.amount / 3;
       this.cashPurse = ((levelVar.amount) * 0.20  + ( 6 + 4 ) )* this.cycleMultiplier;
       this.levelUpPurse = (levelVar.amount) * 0.06;
     });
