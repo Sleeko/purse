@@ -56,6 +56,7 @@ export class AdminDashboardComponent implements OnInit {
   currDate: Date = new Date();
   memberCode: CodeDTO [] = [];
   userInfo : UserInfo[] = [];
+  memberList: any[] = [];
   userCounter: any = {
     membersCount: 0,
     inactiveMembers: 0,
@@ -63,7 +64,19 @@ export class AdminDashboardComponent implements OnInit {
     profit: 0
   };
 
+  virtualChamberStatus : any = [{
+    id: 'LVL',
+    count: 0,
+    capacity: 100,
+    usage: 0
+  }]
+
   adminUsers : AdminUser[] = [];
+
+  numUsers: number = 0;
+  numMembers: number = 0;
+  numSellers: number = 0;
+  numAdmin: number = 0;
 
   constructor(private utilsService: UtilsService,
     private memberService: MemberService,
@@ -88,6 +101,18 @@ export class AdminDashboardComponent implements OnInit {
       });
    });
 
+   this.memberService.getVirtualChamberStatus().subscribe(e => {
+      this.virtualChamberStatus =  e;
+   });
+
+   this.memberService.getMembers().subscribe(e=> {
+     this.memberList = e;
+     this.numMembers = e.filter(i => i.role === 'member').length;
+     this.numSellers = e.filter(i => i.role === 'seller').length;
+     this.numAdmin = e.filter(i => i.role === 'admin' || i.role === "staff").length;
+     this.numUsers = Object.keys(e).length;
+
+   })
 
   }
 

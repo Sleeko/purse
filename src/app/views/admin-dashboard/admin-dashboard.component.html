@@ -49,39 +49,11 @@
     </div>
     <div class="card-footer">
       <div class="row text-center">
-        <div class="col-sm-12 col-md mb-sm-2 mb-0">
-          <div class="text-muted">ALPHA-01</div>
-          <strong>29.703 Members (40%)</strong>
+        <div class="col-sm-12 col-md mb-sm-2 mb-0" *ngFor="let vc of virtualChamberStatus">
+          <div class="text-muted"> <strong>{{vc.id}}</strong></div>
+          <div class="small"><strong>{{vc.count}}/{{vc.capacity}} Members ({{vc.usage}}%)</strong></div>
           <div class="progress progress-xs mt-2">
-            <div class="progress-bar bg-success" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md mb-sm-2 mb-0">
-          <div class="text-muted">BRAVO-01</div>
-          <strong>24.093 Members (20%)</strong>
-          <div class="progress progress-xs mt-2">
-            <div class="progress-bar bg-info" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md mb-sm-2 mb-0">
-          <div class="text-muted">LEVEL A: PHP 300.00</div>
-          <strong>78.706 Members (60%)</strong>
-          <div class="progress progress-xs mt-2">
-            <div class="progress-bar bg-warning" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md mb-sm-2 mb-0">
-          <div class="text-muted">LEVEL B: PHP 500.00</div>
-          <strong>5.123 Users (5%)</strong>
-          <div class="progress progress-xs mt-2">
-            <div class="progress-bar bg-danger" role="progressbar" style="width: 5%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md mb-sm-2 mb-0">
-          <div class="text-muted">LEVEL H: INACTIVE</div>
-          <strong>40.15% Members (40%)</strong>
-          <div class="progress progress-xs mt-2">
-            <div class="progress-bar" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress-bar bg-success" role="progressbar" [ngStyle]="{'width':vc.usage/vc.capacity|percent:'1.0-1'}" [attr.aria-valuenow]="vc.usage" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
         </div>
       </div>
@@ -101,16 +73,16 @@
               <div class="row">
                 <div class="col-sm-6">
                   <div class="callout callout-info">
-                    <small class="text-muted">New Members</small>
+                    <small class="text-muted">Total Users</small>
                     <br>
-                    <strong class="h4">120</strong>
+                    <strong class="h4">{{numUsers}}</strong>
                   </div>
                 </div><!--/.col-->
                 <div class="col-sm-6">
                   <div class="callout callout-danger">
-                    <small class="text-muted">Active Cycle</small>
+                    <small class="text-muted">No. of Members</small>
                     <br>
-                    <strong class="h4">59</strong>
+                    <strong class="h4">{{numMembers}}</strong>
                   </div>
                 </div><!--/.col-->
               </div><!--/.row-->
@@ -120,16 +92,16 @@
               <div class="row">
                 <div class="col-sm-6">
                   <div class="callout callout-warning">
-                    <small class="text-muted">New Sellers</small>
+                    <small class="text-muted">No. of Sellers</small>
                     <br>
-                    <strong class="h4">78</strong>
+                    <strong class="h4">{{numSellers}}</strong>
                   </div>
                 </div><!--/.col-->
                 <div class="col-sm-6">
                   <div class="callout callout-success">
-                    <small class="text-muted">Inactive Member</small>
+                    <small class="text-muted">No. of Admin</small>
                     <br>
-                    <strong class="h4">49</strong>
+                    <strong class="h4">{{numAdmin}}</strong>
                   </div>
                 </div><!--/.col-->
               </div><!--/.row-->
@@ -138,7 +110,7 @@
             </div><!--/.col-->
           </div><!--/.row-->
           <br>
-          <table class="table table-responsive-sm table-hover table-outline mb-0">
+          <!-- <table class="table table-responsive-sm table-hover table-outline mb-0">
             <thead class="thead-light">
               <tr>
                 <th class="text-center"><i class="icon-people"></i></th>
@@ -175,7 +147,24 @@
                 </td>
               </tr>
             </tbody>
-          </table>
+          </table> -->
+
+          <p-table [value]="memberList" [paginator]="true" [rows]="25" [scrollable]="true">
+              <ng-template pTemplate="header">
+                  <tr class="dash-header">
+                      <th>Member's Name</th>
+                      <th>Role</th>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData>
+                <tr>
+                  <td>{{rowData.memberName}}</td>
+                  <td>{{rowData.role | uppercase}}</td>
+                </tr>
+              </ng-template>
+          </p-table>
+
+
         </div>
       </div>
     </div><!--/.col-->

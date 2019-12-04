@@ -52,4 +52,6 @@ export class AppConstants {
   public static get YES() : string { return 'Yes';}
   public static get NO() : string { return 'No';}
 
+  public static get CHAMBER_CAPACITY() : number { return 10; }
+
 }
