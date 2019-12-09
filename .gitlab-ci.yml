@@ -32,7 +32,7 @@ deploy:
   stage: deploy
   script:
     - npm install -g firebase-tools
-    - firebase use --add purse-diverse --token $FIREBASE_TOKEN staging
+    - firebase use --add purse-diverse
     - firebase deploy --token $FIREBASE_TOKEN
   only:
     - staging
