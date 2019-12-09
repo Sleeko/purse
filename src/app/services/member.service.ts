@@ -42,11 +42,11 @@ export class MemberService {
     .snapshotChanges()
     .subscribe(data => {
       const rawList : any = data.map(e => ({ id: e.payload.doc.id, ...e.payload.doc.data() })); 
-
+      console.log('rawList', JSON.stringify(rawList));
       const list = [];
       for (let u of rawList) {
         const user = {
-          memberName: this.nullChecker(u.personalInfo.firstName) + ' ' + this.nullChecker(u.personalInfo.lastName),
+          memberName: this.nullChecker(u.personalInfo),
           role: u.role
         }
         list.push(user);
@@ -60,7 +60,27 @@ export class MemberService {
   }
 
   nullChecker(value) {
-    return value ? value : ''
+    
+    let firstname, lastname;
+    if (value) {
+      if (value.firstName) {
+        firstname = value.firstName
+      } else {
+        firstname = "User's Profile";
+      }
+  
+      if (value.lastName) {
+        lastname = value.lastName
+      }
+      else {
+        lastname = "not yet COMPLETE";
+      }
+    } else {
+      firstname = "User's Profile";
+      lastname = "not yet COMPLETE"
+    }
+    
+    return firstname + " " + lastname;
   }
 
   // optimized later
@@ -153,7 +173,10 @@ export class MemberService {
         for (let obj of ARR_MAP) {
             const vcObj = virtualChamber.find(i => i.id === obj);
             const total = vcObj.members.reduce((t,i) => {
-                return t + i.memberList.length;
+                if (i.cycleId > 0) {
+                  return t + i.memberList.length;
+                }
+                return t + 0;
             }, 0);
             const pushObj = {
               id: obj, 
