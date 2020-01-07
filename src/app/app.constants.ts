@@ -6,7 +6,7 @@ export class AppConstants {
   public static get TOKEN_HEADER(): string { return 'X-HEB-CAMS-TOKEN'; }
 
   // urls
-  public static get BASE_API_URL(): string { return '/compounding_api' }
+  public static get BASE_API_URL(): string { return 'http://localhost:8080' }
 
   //roles
   public static get SELLER() : string { return 'seller'}

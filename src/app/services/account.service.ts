@@ -9,19 +9,19 @@ import { flatMap } from 'rxjs/operators';
 })
 export class AccountService {
 
-  private accountUrl = AppConstants.BASE_API_URL + '/account';
+  private accountUrl = AppConstants.BASE_API_URL;
   constructor(private http: HttpClient) { }
 
-  validateCodeIfExist(code: string): Observable<any> {
-    return this.http.get<any>(this.accountUrl + '/validateCodeIfExist?' + 'code='+ code);
+  validateCode(code: string): Observable<any> {
+    return this.http.get<any>(this.accountUrl + '/utils/validate-membercode?' + 'code='+ code);
   }
 
-  validateEmailNotTaken(email: string): Observable<any> {
-    return this.http.get<any>(this.accountUrl + '/validateEmailNotTaken?' + 'email='+ email);
+  validateEmail(email: string): Observable<any> {
+    return this.http.get<any>(this.accountUrl + '/utils/validate-email?' + 'email='+ email);
   }
 
   register(request: any): Observable<any> {
-    return this.http.post(this.accountUrl + '/register' , request);
+    return this.http.post(this.accountUrl + '/register-user' , request);
   }
 
   login(request: any): Observable<any> {
