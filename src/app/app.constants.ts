@@ -9,9 +9,9 @@ export class AppConstants {
   public static get BASE_API_URL(): string { return 'http://localhost:8080' }
 
   //roles
-  public static get SELLER() : string { return 'seller'}
-  public static get MEMBER() : string { return 'member'}
-  public static get ADMIN() : string { return 'admin'}
+  public static get SELLER() : string { return 'SELLER'}
+  public static get MEMBER() : string { return 'MEMBER'}
+  public static get ADMIN() : string { return 'ADMIN'}
 
 
   //statuses

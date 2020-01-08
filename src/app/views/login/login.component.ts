@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  navigateUserByRole(user: UserInfo) {
+  navigateUserByRole(user: any) {
     if (user.role == AppConstants.ADMIN) {
       this.router.navigate(['/admin-dashboard']);
     } else if (user.role == AppConstants.MEMBER) {
@@ -47,23 +47,13 @@ export class LoginComponent implements OnInit {
   }
 
   tryLogin(value) {
-    this.authService.doLogin(value)
-      .then(res => {
-        this.authService.getCurrentUser().pipe(take(1)).subscribe(resObj => {
-          if (this.authService.login(resObj)) {
-            this.userService.getUserDetailsByAuthId(resObj.uid).subscribe(e => {
-              const response = e.map(obj => ({
-                docId: obj.payload.doc.id,
-                ...obj.payload.doc.data()
-              } as UserInfo))
-              this.currentUser = response[0];
-              this.navigateUserByRole(this.currentUser)
-            });
-          }
-        });
-        }, err => {
-          console.log(err);
-          alert(err.message);
-        });
+    console.log(value);
+    this.authService.login(value).subscribe(res => {
+      const user = {
+        role: res.userData.accountType
       }
+      this.navigateUserByRole(user);
+    });
+  }
+  
 }

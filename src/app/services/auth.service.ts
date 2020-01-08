@@ -1,98 +1,83 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { AngularFireAuth } from '@angular/fire/auth';
-import * as firebase from 'firebase/app';
-import { Subject } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { Subject, BehaviorSubject, Observable } from 'rxjs';
+import { take, map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { AppConstants } from '../app.constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
+  private authURL = AppConstants.BASE_API_URL + `/auth`;
+  private currentUserSubject: BehaviorSubject<any>;
+  public currentUser: Observable<any>;
   public isLoggedIn: boolean = false;
 
-  constructor(public afAuth: AngularFireAuth,
-    private db: AngularFirestore) {}
+  constructor(private http: HttpClient) {
+    this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem('currentUser')));
+    this.currentUser = this.currentUserSubject.asObservable();
+  }
 
+  public get currentUserValue(): any {
+    return this.currentUserSubject.value;
+}
 
   public isAuthenticated(): boolean {
-    const userData : any = sessionStorage.getItem('authData');
+    const userData : any = localStorage.getItem('currentUser');
     if (userData && userData.length > 0) {
       const d = JSON.parse(userData);
-      return d.isLoggedIn ? true : false;
+      return d.loggedIn ? true : false;
     } else {
       return false;
     }
   }
 
-  public async login(postData) {
-    const loginApiResponse = {
-      authId: postData.uid,
-      isLoggedIn: postData.isLoggedIn
-    };
-    this.db.collection('userInfo', ref => ref.where('authId', '==', postData.uid)).snapshotChanges()
-      .pipe(take(1)).subscribe(e => {
-        const response : any = e.map(obj => ({docId: obj.payload.doc.id,
-          ...obj.payload.doc.data()}));
-          const userInfo = {
-              authId: response[0].authId,
-              uid: response[0].uid,
-              personalInfo: response[0].personalInfo,
-              email: response[0].email,
-              role: response[0].role
-          };
-          sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
-      });
-    await sessionStorage.setItem('authData', JSON.stringify(loginApiResponse));
-    return false;
+  login(payload) {
+    return this.http.post<any>(this.authURL + '/login', payload)
+        .pipe(map(user => {
+            // store user details and jwt token in local storage to keep user logged in between page refreshes
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            this.currentUserSubject.next(user);
+            return user;
+        }));
   }
 
-  public async logout() {
-    await sessionStorage.removeItem('userInfo');
-    await sessionStorage.removeItem('authData');
-    await sessionStorage.clear();
-    return true;
+  logout() {
+      // remove user from local storage to log user out
+      localStorage.removeItem('currentUser');
+      this.currentUserSubject.next(null);
   }
 
-  doRegister(value) {
-    return new Promise<any>((resolve, reject) => {
-      firebase.auth().createUserWithEmailAndPassword(value.email, value.password)
-        .then(res => {
-          resolve(res);
-        }, err => reject(err));
-    });
-  }
 
-  doLogin(value) {
-    return new Promise<any>((resolve, reject) => {
-      firebase.auth().signInWithEmailAndPassword(value.email, value.password)
-        .then(res => {
-          resolve(res);
-        }, err => reject(err));
-    });
-  }
+  // public async login(postData) {
+  //   const loginApiResponse = {
+  //     authId: postData.uid,
+  //     isLoggedIn: postData.isLoggedIn
+  //   };
+   
+  //   await sessionStorage.setItem('authData', JSON.stringify(loginApiResponse));
+  //   return false;
+  // }
 
-  doLogout() {
-    return new Promise((resolve, reject) => {
-      if (firebase.auth().currentUser) {
-        this.afAuth.auth.signOut();
-        resolve();
-      } else {
-        reject();
-      }
-    });
-  }
+  // public async logout() {
+  //   await sessionStorage.removeItem('userInfo');
+  //   await sessionStorage.removeItem('authData');
+  //   await sessionStorage.clear();
+  //   return true;
+  // }
 
-  getCurrentUser() {
-    const user$ = new Subject<any>();
-    this.afAuth.authState.subscribe((auth) => {
-      if (auth && auth.uid) {
-        const userData = { uid: auth.uid, isLoggedIn: true};
-        user$.next(userData);
-      }
-    });
-    return user$.asObservable();
-  }
+
+
+  // getCurrentUser() {
+  //   const user$ = new Subject<any>();
+  //   this.afAuth.authState.subscribe((auth) => {
+  //     if (auth && auth.uid) {
+  //       const userData = { uid: auth.uid, isLoggedIn: true};
+  //       user$.next(userData);
+  //     }
+  //   });
+  //   return user$.asObservable();
+  // }
 
 }
