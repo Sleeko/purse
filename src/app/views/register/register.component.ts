@@ -8,6 +8,9 @@ import { startWith, take, map, debounceTime } from 'rxjs/operators';
 import { FeaturedContentService } from '../../services/featured-content.service';
 import { FeaturedContent } from '../../model/featured-content.model';
 import { AccountService } from '../../services/account.service';
+import { AlertService } from 'ngx-alerts';
+import { GrowlService } from 'ngx-growl';
+import { AdvGrowlService } from 'primeng-advanced-growl';
 
 @Component({
   selector: 'app-register',
@@ -82,11 +85,13 @@ export class RegisterComponent implements OnInit {
   carouselItems: Observable<FeaturedContent[]>;
   registerFormGroup: FormGroup;
   sellerFormGroup: FormGroup;
+  registerLoading : boolean = false;
 
   isSeller = 1;
   constructor(private formBuilder: FormBuilder,
       private accountService: AccountService,
       private featuredContentService : FeaturedContentService,
+      private growlService : AdvGrowlService,
       public router: Router) {
               }
 
@@ -101,7 +106,7 @@ export class RegisterComponent implements OnInit {
       })
     );
     this.buildSellerForm();
-    this.getFeaturedContents();
+    // this.getFeaturedContents();
     this.registerFormGroup = this.formBuilder.group({
       email: [
         '',
@@ -150,15 +155,15 @@ export class RegisterComponent implements OnInit {
   /**
    * 
    */
-  getFeaturedContents(){
-    this.featuredContentService.getAllFeaturedContent().subscribe(e => {
-      const response = e.map(obj => ({
-        docId : obj.payload.doc.id,
-        ...obj.payload.doc.data()
-      } as FeaturedContent));
-      this.featuredContents = response;
-    });
-  }
+  // getFeaturedContents(){
+  //   this.featuredContentService.getAllFeaturedContent().subscribe(e => {
+  //     const response = e.map(obj => ({
+  //       docId : obj.payload.doc.id,
+  //       ...obj.payload.doc.data()
+  //     } as FeaturedContent));
+  //     this.featuredContents = response;
+  //   });
+  // }
 
 
 
@@ -211,10 +216,25 @@ export class RegisterComponent implements OnInit {
    * @param req request data for referrer code (upline code)
    */
   doRegisterUser(payload) {
-      this.accountService.register(payload).subscribe(res => {
-        console.log("register-response", JSON.stringify(res));
-      });
+    this.registerLoading = true;
+    this.accountService.register(payload).subscribe(
+      res => {
+        if(res.httpStatus == 'BAD_REQUEST'){
+          this.growlService.createTimedErrorMessage(res.message, 'Error',5000);
+        } else if(res.httpStatus == 'CREATED'){
+          this.growlService.createTimedSuccessMessage(res.message, 'Success',5000);
+        }
+      },
+      err => {
+        this.growlService.createErrorMessage('Error', 'Register Failed');
+      },
+      () => {
+        this.registerLoading = false;
+      }
+      );
   }
+
+
 
   doRegisterSeller(payload) {
     this.accountService.register(payload);

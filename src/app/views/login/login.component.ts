@@ -6,6 +6,7 @@ import { take } from 'rxjs/operators';
 import { UserService } from '../../services/user.service';
 import { UserInfo } from '../../model/user-info.model';
 import { AppConstants } from '../../app.constants';
+import { AdvGrowlService } from 'primeng-advanced-growl';
 
 @Component({
   selector: 'app-login',
@@ -22,6 +23,7 @@ export class LoginComponent implements OnInit {
   constructor(public authService: AuthService,
     public router: Router,
     private userService: UserService,
+    private growlService : AdvGrowlService,
     private fb: FormBuilder) {
     this.errorText = '';
     this.createForm();
@@ -49,11 +51,23 @@ export class LoginComponent implements OnInit {
   tryLogin(value) {
     console.log(value);
     this.authService.login(value).subscribe(res => {
+      if(res.httpStatus == 'OK'){
+        this.growlService.createTimedSuccessMessage(res.message, 'Success', 5000);
+      } else if(res.httpStatus == 500){
+        this.growlService.createTimedErrorMessage(res.message, 'Error', 5000);
+      }
       const user = {
         role: res.userData.accountType
       }
       this.navigateUserByRole(user);
-    });
+    },
+    err => {
+      this.growlService.createTimedErrorMessage('Username or Password is incorrect', 'Error', 5000);
+    },
+    () => {
+
+    }
+    );
   }
   
 }
