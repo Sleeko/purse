@@ -20,6 +20,10 @@ export class AccountService {
     return this.http.get<any>(this.accountUrl + '/utils/validate-email?' + 'email='+ email);
   }
 
+  validateUplineCode(code : string): Observable<any>{
+    return this.http.get<any>(this.accountUrl + '/utils/validate-uplinecode?' + 'code=' + code);
+  }
+
   register(request: any): Observable<any> {
     return this.http.post(this.accountUrl + '/register-user' , request);
   }

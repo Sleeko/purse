@@ -88,6 +88,7 @@ export class RegisterComponent implements OnInit {
   registerLoading: boolean = false;
   isDuplicateEmail: boolean = false;
   isDuplicateMemberCode: boolean = false;
+  isInvalidUplineCode : boolean = false;
 
   isSeller = 1;
   constructor(private formBuilder: FormBuilder,
@@ -168,7 +169,7 @@ export class RegisterComponent implements OnInit {
 
   validateEmail(email) {
     this.accountService.validateEmail(email).subscribe(data => {
-      if (data.success) {
+      if (data.used) {
         this.isDuplicateEmail = true;
         this.sellerFormGroup.controls['email'].setErrors({ isDuplicateEmail: true });
         this.registerFormGroup.controls['email'].setErrors({ isDuplicateEmail: true });
@@ -188,7 +189,7 @@ export class RegisterComponent implements OnInit {
   validateMemberCode(memberCode) {
     this.accountService.validateCode(memberCode).subscribe(data => {
       console.log(data)
-      if (!data.success) {
+      if (data.used) {
         this.isDuplicateMemberCode = true;
         this.registerFormGroup.controls['code'].setErrors({ isDuplicateMemberCode: true });
       } else {
@@ -199,6 +200,27 @@ export class RegisterComponent implements OnInit {
       err => {
         this.isDuplicateMemberCode = true;
         this.registerFormGroup.controls['code'].setErrors({ isDuplicateMemberCode: true });
+      },
+      () => {
+
+      }
+    );
+  }
+
+  validateUplineCode(uplineCode) {
+    this.accountService.validateUplineCode(uplineCode).subscribe(data => {
+      console.log(data)
+      if (!data.used) {
+        this.isInvalidUplineCode = true;
+        this.registerFormGroup.controls['referrerCode'].setErrors({ isInvalidUplineCode: true });
+      } else {
+        this.isInvalidUplineCode = false;
+        this.registerFormGroup.controls['referrerCode'].setErrors(null);
+      }
+    },
+      err => {
+        this.isInvalidUplineCode = true;
+        this.registerFormGroup.controls['referrerCode'].setErrors({ isInvalidUplineCode: true });
       },
       () => {
 
