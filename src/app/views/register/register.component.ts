@@ -81,19 +81,21 @@ export class RegisterComponent implements OnInit {
     animation: 'lazy'
   };
 
-  featuredContents : FeaturedContent[] = [];
+  featuredContents: FeaturedContent[] = [];
   carouselItems: Observable<FeaturedContent[]>;
   registerFormGroup: FormGroup;
   sellerFormGroup: FormGroup;
-  registerLoading : boolean = false;
+  registerLoading: boolean = false;
+  isDuplicateEmail: boolean = false;
+  isDuplicateMemberCode: boolean = false;
 
   isSeller = 1;
   constructor(private formBuilder: FormBuilder,
-      private accountService: AccountService,
-      private featuredContentService : FeaturedContentService,
-      private growlService : AdvGrowlService,
-      public router: Router) {
-              }
+    private accountService: AccountService,
+    private featuredContentService: FeaturedContentService,
+    private growlService: AdvGrowlService,
+    public router: Router) {
+  }
 
   ngOnInit() {
     this.carouselItems = interval(500).pipe(
@@ -111,7 +113,6 @@ export class RegisterComponent implements OnInit {
       email: [
         '',
         [Validators.required, Validators.email],
-        //this.validateEmail.bind(this)
       ],
       code: [
         '',
@@ -133,24 +134,24 @@ export class RegisterComponent implements OnInit {
         ''
       ],
       passwords: this.formBuilder.group({
-          password: ['', [Validators.required]],
-          confirm_password: ['', [Validators.required]],
-      }, {validator: this.passwordConfirming})
+        password: ['', [Validators.required]],
+        confirm_password: ['', [Validators.required]],
+      }, { validator: this.passwordConfirming })
     });
   }
 
-  buildSellerForm(){
+  buildSellerForm() {
     this.sellerFormGroup = this.formBuilder.group({
-      sellerName : ['', [Validators.required]],
-      contactNumber : ['',[Validators.required,Validators.maxLength(10), Validators.minLength(10)]],
-      sellerUrl : ['',[Validators.required]],
-      email : ['' ,[Validators.required, Validators.email]],
-      passwords : this.formBuilder.group({
+      // sellerName : ['', [Validators.required]],
+      // contactNumber : ['',[Validators.required,Validators.maxLength(10), Validators.minLength(10)]],
+      // sellerUrl : ['',[Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      passwords: this.formBuilder.group({
         password: ['', [Validators.required]],
         confirm_password: ['', [Validators.required]],
-    }, {validator: this.passwordConfirming})
-  })
-}
+      }, { validator: this.passwordConfirming })
+    })
+  }
 
   /**
    * 
@@ -165,9 +166,47 @@ export class RegisterComponent implements OnInit {
   //   });
   // }
 
+  validateEmail(email) {
+    this.accountService.validateEmail(email).subscribe(data => {
+      if (data.success) {
+        this.isDuplicateEmail = true;
+        this.sellerFormGroup.controls['email'].setErrors({ isDuplicateEmail: true });
+        this.registerFormGroup.controls['email'].setErrors({ isDuplicateEmail: true });
+      } else {
+        this.isDuplicateEmail = false;
+        this.sellerFormGroup.controls['email'].setErrors(null);
+        this.registerFormGroup.controls['email'].setErrors(null);
+      }
+    },
+      err => {
+        this.sellerFormGroup.controls['email'].setErrors({ isDuplicateEmail: true });
+        this.registerFormGroup.controls['email'].setErrors({ isDuplicateEmail: true });
+        this.isDuplicateEmail = true;
+      });
+  }
 
+  validateMemberCode(memberCode) {
+    this.accountService.validateCode(memberCode).subscribe(data => {
+      console.log(data)
+      if (!data.success) {
+        this.isDuplicateMemberCode = true;
+        this.registerFormGroup.controls['code'].setErrors({ isDuplicateMemberCode: true });
+      } else {
+        this.isDuplicateMemberCode = false;
+        this.registerFormGroup.controls['code'].setErrors(null);
+      }
+    },
+      err => {
+        this.isDuplicateMemberCode = true;
+        this.registerFormGroup.controls['code'].setErrors({ isDuplicateMemberCode: true });
+      },
+      () => {
 
-  searchCodeValidator()  {
+      }
+    );
+  }
+
+  searchCodeValidator() {
   }
 
   searchUplineValidator() {
@@ -219,10 +258,10 @@ export class RegisterComponent implements OnInit {
     this.registerLoading = true;
     this.accountService.register(payload).subscribe(
       res => {
-        if(res.httpStatus == 'BAD_REQUEST'){
-          this.growlService.createTimedErrorMessage(res.message, 'Error',5000);
-        } else if(res.httpStatus == 'CREATED'){
-          this.growlService.createTimedSuccessMessage(res.message, 'Success',5000);
+        if (res.httpStatus == 'BAD_REQUEST') {
+          this.growlService.createTimedErrorMessage(res.message, 'Error', 5000);
+        } else if (res.httpStatus == 'CREATED') {
+          this.growlService.createTimedSuccessMessage(res.message, 'Success', 5000);
         }
       },
       err => {
@@ -231,7 +270,7 @@ export class RegisterComponent implements OnInit {
       () => {
         this.registerLoading = false;
       }
-      );
+    );
   }
 
 
@@ -243,5 +282,5 @@ export class RegisterComponent implements OnInit {
 }
 
 export class Featured {
-    photoUrl: string;
+  photoUrl: string;
 }

@@ -8,22 +8,20 @@
           </div>
           <h5 class="card-title text-center mt-4 mb-3 text-success lead font-weight-bold">REGISTER</h5>
           <div class="form-group text-center">
-              <h4>Register as</h4>
-              <div class="row">
-                <div class="col-2" style="margin-left:33%">
-                  <label for="seller">Seller</label>
-                  <input class="form-control" type="radio" name="isSeller" id="seller" [value]="1"
-                  [(ngModel)]="isSeller">
-                </div>
-                <div class="col-2">
-                  <label for="member">Member</label>
-                  <input type="radio" class="form-control" name="isSeller" id="member" [value]="0"
-                    [(ngModel)]="isSeller">
-                </div>
+            <h4>Register as</h4>
+            <div class="row">
+              <div class="col-2" style="margin-left:33%">
+                <label for="seller">Seller</label>
+                <input class="form-control" type="radio" name="isSeller" id="seller" [value]="1" [(ngModel)]="isSeller">
+              </div>
+              <div class="col-2">
+                <label for="member">Member</label>
+                <input type="radio" class="form-control" name="isSeller" id="member" [value]="0" [(ngModel)]="isSeller">
               </div>
             </div>
+          </div>
           <div *ngIf="isSeller">
-            <form class="register-form" [formGroup]="sellerFormGroup" (ngSubmit)="registerSeller(sellerFormGroup.value)"
+            <form class="register-form" [formGroup]="sellerFormGroup" (ngSubmit)="registerSeller(sellerFormGroup.value)" autocomplete="off"
               novalidate>
               <!-- <div class="form-group">
                 <label>Seller Name</label>
@@ -49,13 +47,16 @@
               </div> -->
               <div class="form-group">
                 <label>Email address</label>
-                <input type="email" class="form-control" placeholder="" formControlName="email">
+                <input type="email" class="form-control" placeholder="" formControlName="email"
+                  (focusout)="validateEmail(sellerFormGroup.controls['email'].value)">
                 <small class="text-danger"
                   *ngIf="sellerFormGroup.controls['email'].dirty && sellerFormGroup.controls['email'].errors?.required">Enter
                   email address</small>
                 <small class="text-danger"
                   *ngIf="sellerFormGroup.controls['email'].dirty && sellerFormGroup.controls['email'].errors?.email">Enter
                   a valid email address</small>
+                <small class="text-danger"
+                  *ngIf="sellerFormGroup.controls['email'].dirty && isDuplicateEmail">Email address already in use.</small>
               </div>
               <div class="form-group" formGroupName="passwords">
                 <div>
@@ -73,29 +74,32 @@
                     does not match</small>
                 </div>
                 <div *ngIf="isSeller" class="form-group mt-4">
-                    <button type="submit" class="btn btn-success btn-block" [disabled]="sellerFormGroup.invalid || registerLoading"> Register
-                    </button>
-                  </div>
+                  <button type="submit" class="btn btn-success btn-block"
+                    [disabled]="sellerFormGroup.invalid || registerLoading"> Register
+                  </button>
+                </div>
               </div>
             </form>
           </div>
-          <form class="register-form" [formGroup]="registerFormGroup" (ngSubmit)="register(registerFormGroup.value)"
+          <form class="register-form" [formGroup]="registerFormGroup" (ngSubmit)="register(registerFormGroup.value)" autocomplete="off"
             novalidate>
             <div *ngIf="!isSeller">
               <div class="form-group">
                 <label>Email address</label>
-                <input type="email" class="form-control" placeholder="" formControlName="email">
+                <input type="email" class="form-control" placeholder="" formControlName="email" (focusout)="validateEmail(registerFormGroup.controls['email'].value)">
                 <small class="text-danger"
                   *ngIf="registerFormGroup.controls['email'].dirty && registerFormGroup.controls['email'].errors?.required">Enter
                   email address</small>
                 <small class="text-danger"
                   *ngIf="registerFormGroup.controls['email'].dirty && registerFormGroup.controls['email'].errors?.email">Enter
                   a valid email address</small>
+                  <small class="text-danger"
+                  *ngIf="registerFormGroup.controls['email'].dirty && isDuplicateEmail">Email address already in use.</small>
               </div>
               <div class="form-group">
                 <label>Code</label>
-                <input class="form-control" type="text" formControlName="code">
-                <small class="text-danger" *ngIf="registerFormGroup.controls['code'].errors?.isUsed">Enter a valid
+                <input class="form-control" type="text" formControlName="code" (focusout)="validateMemberCode(registerFormGroup.controls['code'].value)">
+                <small class="text-danger" *ngIf="isDuplicateMemberCode">Enter a valid
                   code</small>
               </div>
               <div class="form-group" formGroupName="passwords">
@@ -123,15 +127,16 @@
               </div>
             </div>
             <div *ngIf="!isSeller" class="form-group mt-4">
-              <button type="submit" class="btn btn-success btn-block" [disabled]="registerFormGroup.invalid  || registerLoading"> Register
+              <button type="submit" class="btn btn-success btn-block"
+                [disabled]="registerFormGroup.invalid  || registerLoading"> Register
               </button>
             </div>
           </form>
           <small class="form-text text-muted text-center">Already have an account? Login
-              <a class="text-success font-weight-bold" routerLink="/login" routerLinkActive="active">
-                here
-              </a>
-            </small>
+            <a class="text-success font-weight-bold" routerLink="/login" routerLinkActive="active">
+              here
+            </a>
+          </small>
         </div>
       </div>
     </div>
