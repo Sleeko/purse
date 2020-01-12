@@ -46,17 +46,31 @@ export class DefaultLayoutComponent implements OnDestroy, OnInit {
   }
 
   getCurrentUser(){
-    this.userService.getCurrentUser().then(res => {
-      this.userService.getUserDetails(res.email).subscribe(e => {
-        const response = e.map(obj => ({
-          docId : obj.payload.doc.id,
-          ...obj.payload.doc.data()
-        } as UserInfo))
-        this.currentUser = response[0];
-        this.removeNonAdminTabs(this.currentUser.role)
-        this.redirectUserToAccountSettings(this.currentUser);
-      })
-    })
+    // this.userService.getCurrentUser().then(res => {
+    //   this.userService.getUserDetails(res.email).subscribe(e => {
+    //     const response = e.map(obj => ({
+    //       docId : obj.payload.doc.id,
+    //       ...obj.payload.doc.data()
+    //     } as UserInfo))
+    //     this.currentUser = response[0];
+    //     this.removeNonAdminTabs(this.currentUser.role)
+    //     this.redirectUserToAccountSettings(this.currentUser);
+    //   })
+    // })
+
+    //new implementation
+    this.removeNonAdminTabs('MEMBER');
+    const mockUser = {
+      docId: '',
+      uid: '2',
+      email: 'bjmramos@gmail.com',
+      personalInfo: {
+        lastName: 'Ramos',
+        firstName: 'Bryan Judelle',
+        middleName: 'Mislang'
+      }
+    } as UserInfo;
+    this.redirectUserToAccountSettings(mockUser);
   }
 
   redirectUserToAccountSettings(user : UserInfo){
