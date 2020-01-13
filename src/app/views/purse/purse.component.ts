@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MemberService } from '../../services/member.service';
-import { take } from 'rxjs/operators';
+import { PurseService } from '../../services/purse.service';
 
 @Component({
   templateUrl: 'purse.component.html',
@@ -43,18 +42,18 @@ export class PurseComponent implements OnInit {
       amount: 30000 * 3
     }
   ];
-  constructor(private memberService: MemberService) {}
+  constructor(private purseService: PurseService) {}
 
   ngOnInit(): void {
-    this.memberService.searchMemberCycle('H2WSM1').pipe(take(1)).subscribe(e => {
-      console.log('member', JSON.stringify(e));
-      if ( e.memberCycle.currentCycle === "INACTIVE") {
+    this.purseService.getPurses().subscribe(res => {
+      console.log("data", JSON.stringify(res));
+      if ( res.cycleId === 0) {
         this.cycleMultiplier = 0;
       } else {
-        this.cycleMultiplier = Number(e.memberCycle.currentCycle);
+        this.cycleMultiplier = res.cycleId;
       }
 
-      const levelVar : any = this.LVL_MAP.find(i => i.LVL === e.level);
+      const levelVar : any = this.LVL_MAP.find(i => i.LVL === res.levelId);
       console.log('levelVar', JSON.stringify(levelVar));
       this.layAwayPurse = (levelVar.amount) * 0.25 * Number(this.cycleMultiplier);
       this.reEntryPurse = levelVar.amount / 3;
