@@ -72,13 +72,16 @@ export class RequestVoucherComponent implements OnInit {
    * Fetches all the Store Codes in the database.
    */
   getStoreCodes(){
-    this.storeService.getAllStores().subscribe(e => {
-      const response = e.map(obj => ({
-        docId : obj.payload.doc.id,
-        ...obj.payload.doc.data()
-      } as Store))
+    this.storeService.getAllStores().subscribe(response => {
       this.stores = response;
-    });
+    },
+    err => {
+
+    },
+    () => {
+
+    }
+    );
   }
 
   /**

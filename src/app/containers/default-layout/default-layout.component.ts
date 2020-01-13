@@ -89,7 +89,7 @@ export class DefaultLayoutComponent implements OnDestroy, OnInit {
     var navItemsArray = this.cloneObject(navItems);
     console.log(role)
     if(role == AppConstants.MEMBER){
-    //  navItemsArray.splice(navItemsArray.findIndex(nav => nav.name == "New Page"),1);
+     navItemsArray.splice(navItemsArray.findIndex(nav => nav.name == "New Page"),1);
      navItemsArray.splice(navItemsArray.findIndex(nav => nav.name == "Admin Dashboard"),1);
     } else if(role == AppConstants.SELLER){
       navItemsArray = null;
