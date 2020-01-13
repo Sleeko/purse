@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, Subject } from 'rxjs';
+import { AppConstants } from '../app.constants';
+import { HttpClient } from '@angular/common/http';
 
 /**
  * @author Bryan Judelle Ramos
@@ -10,7 +12,16 @@ export class ChamberService {
 
     chamber: any;
     virtualChamber$;
-    constructor(private db: AngularFirestore) {}
+
+    private url = AppConstants.BASE_API_URL + "/api";
+    private headers = {
+        'Content-Type':'application/json',
+        'Authorization' : 'Bearer ' + JSON.parse(localStorage.getItem('currentUser')).authToken
+    }
+
+    constructor(
+        private db: AngularFirestore, 
+        private http: HttpClient) {}
 
 
     /**
@@ -59,5 +70,10 @@ export class ChamberService {
         return this.db.collection('virtualChamber').doc(docId).snapshotChanges();
     }
 
+
+    // new backend implementation
+    getMemberChamber(): Observable<any> {
+        return this.http.get(this.url + '/get-memberChamber', {headers : this.headers});
+    }
 
 }

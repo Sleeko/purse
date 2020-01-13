@@ -1,9 +1,6 @@
 export class AppConstants {
   // application name
-  public static get APPLICATION_NAME(): string { return 'Compounding Management System' }
-  
-  // token
-  public static get TOKEN_HEADER(): string { return 'X-HEB-CAMS-TOKEN'; }
+  public static get APPLICATION_NAME(): string { return 'PURSE DIVERSIFIED' }
 
   // urls
   public static get BASE_API_URL(): string { return 'http://localhost:8080' }
