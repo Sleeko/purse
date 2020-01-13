@@ -2,6 +2,8 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FeaturedContent } from '../../model/featured-content.model';
 import { FeaturedContentService } from '../../services/featured-content.service';
+import { AppConstants } from '../../app.constants';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-new-page',
@@ -16,6 +18,7 @@ export class NewPageComponent implements OnInit {
   constructor(
     private formBuilder : FormBuilder,
     private featuredContentService : FeaturedContentService,
+    private spinnerService : NgxSpinnerService,
     private cdr : ChangeDetectorRef) { }
 
   ngOnInit() {
@@ -38,8 +41,10 @@ export class NewPageComponent implements OnInit {
   saveNewFeaturedContent(){
     var content : FeaturedContent;
     content = this.contentForm.getRawValue();
+    content.status = AppConstants.ACTIVE;
     console.log('Content ', content)
-    this.featuredContentService.uploadImage(content, this.image);
+    this.featuredContentService.uploadImage(content, this.image)
+    this.contentForm.reset();
   }
 
 }

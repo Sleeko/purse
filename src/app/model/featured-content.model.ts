@@ -4,4 +4,5 @@ export class FeaturedContent {
     description : string;
     imageUrl : string;
     imageName : string;
+    status : string
 }

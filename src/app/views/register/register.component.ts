@@ -11,6 +11,7 @@ import { AccountService } from '../../services/account.service';
 import { AlertService } from 'ngx-alerts';
 import { GrowlService } from 'ngx-growl';
 import { AdvGrowlService } from 'primeng-advanced-growl';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-register',
@@ -95,6 +96,7 @@ export class RegisterComponent implements OnInit {
     private accountService: AccountService,
     private featuredContentService: FeaturedContentService,
     private growlService: AdvGrowlService,
+    private spinnerService : NgxSpinnerService,
     public router: Router) {
   }
 
@@ -109,7 +111,7 @@ export class RegisterComponent implements OnInit {
       })
     );
     this.buildSellerForm();
-    // this.getFeaturedContents();
+    this.getFeaturedContents();
     this.registerFormGroup = this.formBuilder.group({
       email: [
         '',
@@ -157,15 +159,13 @@ export class RegisterComponent implements OnInit {
   /**
    * 
    */
-  // getFeaturedContents(){
-  //   this.featuredContentService.getAllFeaturedContent().subscribe(e => {
-  //     const response = e.map(obj => ({
-  //       docId : obj.payload.doc.id,
-  //       ...obj.payload.doc.data()
-  //     } as FeaturedContent));
-  //     this.featuredContents = response;
-  //   });
-  // }
+  getFeaturedContents(){
+    this.featuredContentService.getAllFeaturedContent().subscribe(
+      data => {
+        console.log('Featured' ,data)
+        this.featuredContents = data;
+    });
+  }
 
   validateEmail(email) {
     this.accountService.validateEmail(email).subscribe(data => {
@@ -277,6 +277,7 @@ export class RegisterComponent implements OnInit {
    * @param req request data for referrer code (upline code)
    */
   doRegisterUser(payload) {
+    this.spinnerService.show()
     this.registerLoading = true;
     this.accountService.register(payload).subscribe(
       res => {
@@ -291,6 +292,7 @@ export class RegisterComponent implements OnInit {
       },
       () => {
         this.registerLoading = false;
+        this.spinnerService.hide();
       }
     );
   }

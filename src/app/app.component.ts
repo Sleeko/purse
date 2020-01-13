@@ -5,8 +5,9 @@ import { Router, NavigationEnd } from '@angular/router';
   // tslint:disable-next-line
   selector: 'body',
   template: `
-  <adv-growl></adv-growl>
   <router-outlet></router-outlet>
+  <adv-growl></adv-growl>
+  <ngx-spinner></ngx-spinner>
   `
 })
 export class AppComponent implements OnInit {
