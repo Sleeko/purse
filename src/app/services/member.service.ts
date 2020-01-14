@@ -28,22 +28,6 @@ export class MemberService {
     return await sessionStorage.getItem('userInfo');
   }
 
-  getAdminMember() {
-    const admin$ = new Subject<any>();
-    this.db.collection('userInfo')
-      .snapshotChanges()
-      .subscribe(data => {
-        const rawList : any = data.map(e => ({ id: e.payload.doc.id, ...e.payload.doc.data() })); 
-        const adminList = rawList.map(o => {
-          if (['admin','staff','dept_head'].indexOf(o.role) > -1) {
-            return o;
-          };
-        }).filter(x => x);
-        admin$.next(adminList);
-      });
-    return admin$;
-  }
-
   getMembers() {
     const list$ = new Subject<any>();
 
@@ -169,5 +153,9 @@ export class MemberService {
 
   getAllUser(): Observable<any> {
     return this.http.get(this.purseUrl + '/get-allUsers', {headers: this.headers} );
-}
+  }
+
+  getVirtualChamberUser(): Observable<any> {
+    return this.http.get(this.purseUrl + '/get-chamberUser', {headers: this.headers} );
+  }
 }
