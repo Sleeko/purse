@@ -126,11 +126,11 @@ export class AdminDashboardComponent implements OnInit {
       this.virtualChamberStatus =  accumulator;
    });
 
-   this.memberService.getMembers().subscribe(e=> {
+   this.memberService.getAllUser().subscribe(e=> {
      this.memberList = e;
-     this.numMembers = e.filter(i => i.role === 'member').length;
-     this.numSellers = e.filter(i => i.role === 'seller').length;
-     this.numAdmin = e.filter(i => i.role === 'admin' || i.role === "staff").length;
+     this.numMembers = e.filter(i => i.accountType === 'MEMBER').length;
+     this.numSellers = e.filter(i => i.accountType === 'SELLER').length;
+     this.numAdmin = e.filter(i => i.accountType === 'ADMIN').length;
      this.numUsers = Object.keys(e).length;
 
    })
