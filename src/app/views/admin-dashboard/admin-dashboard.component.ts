@@ -83,11 +83,13 @@ export class AdminDashboardComponent implements OnInit {
     private modalService : NgbModal) {}
 
   ngOnInit(): void {
-   this.utilsService.getMemberCodeListImpl().subscribe(res => {
-    this.memberCode = res.map(e => ({code: e.code, isUsed: e.isUsed}));
+
+  this.utilsService.getMemberCodeList().subscribe(res => {
+    this.memberCode = res.map(e => ({code: e.memberCode, isUsed: e.used}));
    });
    
-   this.memberService.getUserInfoCount().subscribe(res => {
+   //
+   this.memberService.getUserInfoCounter().subscribe(res => {
      this.userCounter = res;
    });
 

@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { AppConstants } from '../app.constants';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,15 @@ export class MemberService {
 
   CAPACITY: number  = AppConstants.CHAMBER_CAPACITY * 10;
 
-  constructor(private db: AngularFirestore) { }
+  private purseUrl = AppConstants.BASE_API_URL + '/api/admin';
+
+    private headers = {
+      'Content-Type':'application/json',
+      'Authorization' : 'Bearer ' + JSON.parse(localStorage.getItem('currentUser')).authToken
+    }
+
+  constructor(private db: AngularFirestore,
+    private http: HttpClient) { }
 
   public async getMemberSessData() {
     return await sessionStorage.getItem('userInfo');
@@ -190,5 +199,11 @@ export class MemberService {
     });
 
     return virChmObj.asObservable();
+  }
+
+
+  // new backend implementation
+  getUserInfoCounter() {
+    return this.http.get(this.purseUrl + '/get-userInfoCounter', {headers: this.headers});
   }
 }
