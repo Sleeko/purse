@@ -47,11 +47,20 @@ export class PurseComponent implements OnInit {
   ngOnInit(): void {
     this.purseService.getPurses().subscribe(res => {
       console.log("data", JSON.stringify(res));
-      if ( res.cycleId === 0) {
-        this.cycleMultiplier = 0;
-      } else {
-        this.cycleMultiplier = res.cycleId;
+      if (res) {
+        if ( res.cycleId === 0) {
+          this.cycleMultiplier = 0;
+        } else {
+          this.cycleMultiplier = res.cycleId;
+        }
       }
+      else {
+        res = {
+          levelId: "LVL_P300",
+          cycleId: 0,
+        }
+      }
+      
 
       const levelVar : any = this.LVL_MAP.find(i => i.LVL === res.levelId);
       console.log('levelVar', JSON.stringify(levelVar));
