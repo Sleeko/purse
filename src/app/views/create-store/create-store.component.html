@@ -34,6 +34,8 @@
                         <td>
                             <button *ngIf="!(enableStoreEdit && i == editIndex)" class="btn btn-primary mx-1"
                                 (click)="enableEdit(i)">Edit</button>
+                            <button *ngIf="!(enableStoreEdit && i == editIndex)" class="btn btn-danger mx-1"
+                                (click)="deleteStore(store)">Delete</button>
                             <button *ngIf="(enableStoreEdit && i == editIndex)" class="btn btn-success"
                                 (click)="updateStore(store)">Save</button>
                             <button *ngIf="(enableStoreEdit && i == editIndex)" class="btn btn-danger"

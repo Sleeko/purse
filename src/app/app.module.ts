@@ -29,6 +29,7 @@ import { ChartsModule } from 'ng2-charts';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxSpinnerModule } from "ngx-spinner";
 import {CarouselModule} from 'primeng/carousel';
+import {AdvGrowlModule} from 'primeng-advanced-growl';
 
 
 import { AppComponent } from './app.component';
@@ -93,6 +94,7 @@ import { NgxMaskModule } from 'ngx-mask';
     CarouselModule,
     DirectivesModule,
     CreateStoreModule,
+    AdvGrowlModule
   ],
   declarations: [
     AppComponent,

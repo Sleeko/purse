@@ -47,32 +47,6 @@ export class CreateUserComponent implements OnInit {
   }
 
   doCreateAdminUser(reqObj, authObj) {
-    this.authService.doRegister(authObj)
-    .then(res => {
-      console.log('Account ID', res.user.uid);
-      const userInfoPayload = {
-        authId: res.user.uid,
-        uid: Math.random().toString(36).substring(6).toUpperCase(),
-        email: res.user.email,
-        personalInfo: {},
-        accountInfo: {},
-        governmentDocuments: {},
-        dateRegistered: new Date(),
-        role: reqObj.role
-      };
-
-      // saving seller data
-      this.userService.saveUserInfo(userInfoPayload).then(data => {
-        console.log('account creation', data);
-      }).catch(error => {
-        console.log('error', error);
-      });
-
-      alert('Your admin account was successfully created!.')
-      this.activeModal.close();
-    }, err => {
-      console.log(err.message);
-      alert(err.message);
-    });
+   
   }
 }

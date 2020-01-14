@@ -4,7 +4,11 @@ import { Router, NavigationEnd } from '@angular/router';
 @Component({
   // tslint:disable-next-line
   selector: 'body',
-  template: '<router-outlet></router-outlet>'
+  template: `
+  <router-outlet></router-outlet>
+  <adv-growl></adv-growl>
+  <ngx-spinner></ngx-spinner>
+  `
 })
 export class AppComponent implements OnInit {
   constructor(private router: Router) { }

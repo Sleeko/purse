@@ -8,11 +8,16 @@ import { Observable } from 'rxjs';
 })
 export class PurseService {
 
-  private purseUrl = AppConstants.BASE_API_URL + '/purse';
+  private purseUrl = AppConstants.BASE_API_URL + '/api';
+
+  private headers = {
+    'Content-Type':'application/json',
+    'Authorization' : 'Bearer ' + JSON.parse(localStorage.getItem('currentUser')).authToken
+  }
   
   constructor(private http: HttpClient) { }
 
-  getPurses(memberId: number): Observable<any> {
-    return this.http.get(this.purseUrl + '?memberId='+ memberId);
+  getPurses(): Observable<any> {
+    return this.http.get(this.purseUrl + '/get-memberCurrentChamber', {headers: this.headers});
   }
 }

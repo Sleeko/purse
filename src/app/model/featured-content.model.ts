@@ -1,7 +1,8 @@
 export class FeaturedContent {
-    docId : string;
+    id : string;
     title : string;
     description : string;
     imageUrl : string;
     imageName : string;
+    status : string
 }

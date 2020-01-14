@@ -34,9 +34,9 @@
                                 <span>Registered: {{rowData.registered |  date}}</span>
                             </div>
                         </td>
-                        <td>{{rowData.level}}</td>
+                        <td><b>{{rowData.level}}</b></td>
                         <!-- <td>{{rowData.isActive}}</td> -->
-                        <td><span [ngClass]="(rowData.isActive) ? 'badge badge-success':'badge badge-warning'">{{rowData.isActive ? 'ACTIVE' : 'INACTIVE'}}</span></td>
+                        <td><span [ngClass]="(rowData.isActive === 'CURRENT') ? 'badge badge-success':'badge badge-warning'">{{rowData.isActive}}</span></td>
                         <td>{{rowData.cycle}}</td>
                     </tr>
                 </ng-template>

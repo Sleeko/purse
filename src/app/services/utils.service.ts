@@ -4,6 +4,8 @@ import { Code } from '../model/code.model';
 import { Subject, Observable } from 'rxjs';
 import { debounceTime, take, map } from 'rxjs/operators';
 import { AsyncValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { AppConstants } from '../app.constants';
 
 /**
  * @author Bryan
@@ -14,8 +16,17 @@ const M = 'memberCode';
 @Injectable()
 export class UtilsService {
 
+    private utilsURL = AppConstants.BASE_API_URL + '/utils';
+    private secUtils = AppConstants.BASE_API_URL + '/api/admin';
+
+    private headers = {
+      'Content-Type':'application/json',
+      'Authorization' : 'Bearer ' + JSON.parse(localStorage.getItem('currentUser')).authToken
+    }
+
     memberCode: any;
-    constructor(private db: AngularFirestore) {}
+    constructor(private db: AngularFirestore,
+        private http: HttpClient) {}
 
     /**
      *  Membership Code API's segment
@@ -70,16 +81,6 @@ export class UtilsService {
         }
     }
 
-    getMemberCodeListImpl() {
-        let memberCode$ = new Subject<any>();
-        this.getGeneratedCode()
-            .subscribe(data => {
-                const listOfCode = data.map(e => ({ id: e.payload.doc.id, 
-                    ...e.payload.doc.data() })); 
-                memberCode$.next(listOfCode);
-        });
-        return memberCode$.asObservable();
-    }
 
     /**
      *  Upline Code Lookup API's segment
@@ -119,8 +120,10 @@ export class UtilsService {
         return subj.asObservable();
     }
 
-    /**
-     *  Membership Code API's segment
-     */
+    // new backend implementation
+    getMemberCodeList(): Observable<any> {
+        return this.http.get(this.utilsURL + '/get-membercode');
+    }
+
 
 }

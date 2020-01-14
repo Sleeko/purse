@@ -83,33 +83,54 @@ export class AdminDashboardComponent implements OnInit {
     private modalService : NgbModal) {}
 
   ngOnInit(): void {
-   this.utilsService.getMemberCodeListImpl().subscribe(res => {
-    this.memberCode = res.map(e => ({code: e.code, isUsed: e.isUsed}));
+
+  this.utilsService.getMemberCodeList().subscribe(res => {
+    this.memberCode = res.map(e => ({code: e.memberCode, isUsed: e.used}));
    });
    
-   this.memberService.getUserInfoCount().subscribe(res => {
+   this.memberService.getUserInfoCounter().subscribe(res => {
      this.userCounter = res;
    });
 
-   this.memberService.getAdminMember().subscribe(res => {
+   this.memberService.getAllUser().subscribe(res => {
       res.forEach(element => {
-        const admin = {
-          email: element.email,
-          role: element.role
-        };
-        this.adminUsers.push(admin);
+        if (element.accountType === "ADMIN") {
+          const admin = {
+            email: element.email,
+            role: element.accountType
+          };
+          this.adminUsers.push(admin);
+        }
       });
    });
 
-   this.memberService.getVirtualChamberStatus().subscribe(e => {
-      this.virtualChamberStatus =  e;
+   //
+   const ARR_MAP = [
+    'LVL_P300', 'LVL_P500', 'LVL_P1K', 'LVL_P5K',
+    'LVL_P10K', 'LVL_P20K', 'LVL_P30K',
+  ];
+   this.memberService.getVirtualChamberUser().subscribe(e => {
+      let accumulator = [];
+      for (let obj of ARR_MAP) {
+        const lvlObj = e.filter((x) => x.levelId === obj && x.cycleId > 0).length
+        const pushObj = {
+          id: obj, 
+          count: lvlObj, 
+          capacity: 50,
+          usage: (lvlObj / 50) * 100
+        };
+
+        accumulator.push(pushObj);
+      }
+    
+      this.virtualChamberStatus =  accumulator;
    });
 
-   this.memberService.getMembers().subscribe(e=> {
+   this.memberService.getAllUser().subscribe(e=> {
      this.memberList = e;
-     this.numMembers = e.filter(i => i.role === 'member').length;
-     this.numSellers = e.filter(i => i.role === 'seller').length;
-     this.numAdmin = e.filter(i => i.role === 'admin' || i.role === "staff").length;
+     this.numMembers = e.filter(i => i.accountType === 'MEMBER').length;
+     this.numSellers = e.filter(i => i.accountType === 'SELLER').length;
+     this.numAdmin = e.filter(i => i.accountType === 'ADMIN').length;
      this.numUsers = Object.keys(e).length;
 
    })

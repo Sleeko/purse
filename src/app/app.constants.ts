@@ -1,23 +1,23 @@
 export class AppConstants {
   // application name
-  public static get APPLICATION_NAME(): string { return 'Compounding Management System' }
-  
-  // token
-  public static get TOKEN_HEADER(): string { return 'X-HEB-CAMS-TOKEN'; }
+  public static get APPLICATION_NAME(): string { return 'PURSE DIVERSIFIED' }
 
   // urls
-  public static get BASE_API_URL(): string { return '/compounding_api' }
-
+  //public static get BASE_API_URL(): string { return 'http://localhost:8080' }
+  public static get BASE_API_URL(): string { return 'http://18.140.58.115:8080/purse-diversified' }
+  
   //roles
-  public static get SELLER() : string { return 'seller'}
-  public static get MEMBER() : string { return 'member'}
-  public static get ADMIN() : string { return 'admin'}
+  public static get SELLER() : string { return 'SELLER'}
+  public static get MEMBER() : string { return 'MEMBER'}
+  public static get ADMIN() : string { return 'ADMIN'}
 
 
   //statuses
   public static get PENDING() : string { return 'PENDING'}
   public static get APPROVED() : string { return 'APPROVED'}
   public static get REJECTED() : string { return 'REJECTED'}
+  public static get ACTIVE() : string { return 'ACTIVE'}
+  public static get INACTIVE() : string { return 'INACTIVE'}
 
   // icons
   public static get LOG_OFF_ICON(): string { return 'sign-out'; }

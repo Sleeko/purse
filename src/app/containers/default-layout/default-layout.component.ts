@@ -46,17 +46,21 @@ export class DefaultLayoutComponent implements OnDestroy, OnInit {
   }
 
   getCurrentUser(){
-    this.userService.getCurrentUser().then(res => {
-      this.userService.getUserDetails(res.email).subscribe(e => {
-        const response = e.map(obj => ({
-          docId : obj.payload.doc.id,
-          ...obj.payload.doc.data()
-        } as UserInfo))
-        this.currentUser = response[0];
-        this.removeNonAdminTabs(this.currentUser.role)
-        this.redirectUserToAccountSettings(this.currentUser);
-      })
-    })
+    const sessData : any = JSON.parse(localStorage.getItem('currentUser'));
+
+    //new implementation
+    this.removeNonAdminTabs(sessData.userData.accountType);
+    const mockUser = {
+      docId: '',
+      uid: '2',
+      email: sessData.email,
+      personalInfo: {
+        lastName: 'N/A',
+        firstName: 'N/A',
+        middleName: 'N/A'
+      }
+    } as UserInfo;
+    this.redirectUserToAccountSettings(mockUser);
   }
 
   redirectUserToAccountSettings(user : UserInfo){
@@ -73,7 +77,7 @@ export class DefaultLayoutComponent implements OnDestroy, OnInit {
 
   removeNonAdminTabs(role){
     var navItemsArray = this.cloneObject(navItems);
- 
+    console.log(role)
     if(role == AppConstants.MEMBER){
      navItemsArray.splice(navItemsArray.findIndex(nav => nav.name == "New Page"),1);
      navItemsArray.splice(navItemsArray.findIndex(nav => nav.name == "Admin Dashboard"),1);

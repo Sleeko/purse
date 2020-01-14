@@ -6,6 +6,7 @@ import { take } from 'rxjs/operators';
 import { UserService } from '../../services/user.service';
 import { UserInfo } from '../../model/user-info.model';
 import { AppConstants } from '../../app.constants';
+import { AdvGrowlService } from 'primeng-advanced-growl';
 
 @Component({
   selector: 'app-login',
@@ -22,6 +23,7 @@ export class LoginComponent implements OnInit {
   constructor(public authService: AuthService,
     public router: Router,
     private userService: UserService,
+    private growlService : AdvGrowlService,
     private fb: FormBuilder) {
     this.errorText = '';
     this.createForm();
@@ -36,7 +38,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  navigateUserByRole(user: UserInfo) {
+  navigateUserByRole(user: any) {
     if (user.role == AppConstants.ADMIN) {
       this.router.navigate(['/admin-dashboard']);
     } else if (user.role == AppConstants.MEMBER) {
@@ -47,23 +49,25 @@ export class LoginComponent implements OnInit {
   }
 
   tryLogin(value) {
-    this.authService.doLogin(value)
-      .then(res => {
-        this.authService.getCurrentUser().pipe(take(1)).subscribe(resObj => {
-          if (this.authService.login(resObj)) {
-            this.userService.getUserDetailsByAuthId(resObj.uid).subscribe(e => {
-              const response = e.map(obj => ({
-                docId: obj.payload.doc.id,
-                ...obj.payload.doc.data()
-              } as UserInfo))
-              this.currentUser = response[0];
-              this.navigateUserByRole(this.currentUser)
-            });
-          }
-        });
-        }, err => {
-          console.log(err);
-          alert(err.message);
-        });
+    console.log(value);
+    this.authService.login(value).subscribe(res => {
+      if(res.httpStatus == 'OK'){
+        this.growlService.createTimedSuccessMessage(res.message, 'Success', 5000);
+      } else if(res.httpStatus == 500){
+        this.growlService.createTimedErrorMessage(res.message, 'Error', 5000);
       }
+      const user = {
+        role: res.userData.accountType
+      }
+      this.navigateUserByRole(user);
+    },
+    err => {
+      this.growlService.createTimedErrorMessage('Username or Password is incorrect', 'Error', 5000);
+    },
+    () => {
+
+    }
+    );
+  }
+  
 }
