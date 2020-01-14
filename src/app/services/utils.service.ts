@@ -16,7 +16,8 @@ const M = 'memberCode';
 @Injectable()
 export class UtilsService {
 
-    private purseUrl = AppConstants.BASE_API_URL + '/utils';
+    private utilsURL = AppConstants.BASE_API_URL + '/utils';
+    private secUtils = AppConstants.BASE_API_URL + '/api/admin';
 
     private headers = {
       'Content-Type':'application/json',
@@ -121,7 +122,8 @@ export class UtilsService {
 
     // new backend implementation
     getMemberCodeList(): Observable<any> {
-        return this.http.get(this.purseUrl + '/get-membercode');
+        return this.http.get(this.utilsURL + '/get-membercode');
     }
+
 
 }

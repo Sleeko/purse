@@ -88,21 +88,23 @@ export class AdminDashboardComponent implements OnInit {
     this.memberCode = res.map(e => ({code: e.memberCode, isUsed: e.used}));
    });
    
-   //
    this.memberService.getUserInfoCounter().subscribe(res => {
      this.userCounter = res;
    });
 
-   this.memberService.getAdminMember().subscribe(res => {
+   this.memberService.getAllUser().subscribe(res => {
       res.forEach(element => {
-        const admin = {
-          email: element.email,
-          role: element.role
-        };
-        this.adminUsers.push(admin);
+        if (element.accountType === "ADMIN") {
+          const admin = {
+            email: element.email,
+            role: element.accountType
+          };
+          this.adminUsers.push(admin);
+        }
       });
    });
 
+   //
    this.memberService.getVirtualChamberStatus().subscribe(e => {
       this.virtualChamberStatus =  e;
    });
