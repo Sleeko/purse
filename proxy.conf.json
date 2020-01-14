@@ -1,6 +1,6 @@
 {
   "/purse_api": {
-    "target": "http://localhost:8081",
+    "target": "http://18.140.58.115:8080/purse-diversified/",
     "secure": false
   }
 }
