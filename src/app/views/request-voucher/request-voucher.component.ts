@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Voucher } from '../../model/voucher.model';
@@ -13,6 +13,7 @@ import { UserService } from '../../services/user.service';
 import { User } from 'firebase';
 import { FirebaseUserModel } from '../../model/user.model';
 import { UserInfo } from '../../model/user-info.model';
+import { AdvGrowlService } from 'primeng-advanced-growl';
 
 @Component({
   selector: 'app-request-voucher',
@@ -24,6 +25,7 @@ export class RequestVoucherComponent implements OnInit {
   voucherForm : FormGroup;
   stores : Store[] = [];
   currentUser = new UserInfo();
+  @Output() emitCreatedVoucher = new EventEmitter<Voucher>();
   
   constructor(
     private modalService : NgbModal,
@@ -33,7 +35,8 @@ export class RequestVoucherComponent implements OnInit {
     private storeService : StoreService,
     private router : Router,
     private voucherService : VoucherService,
-    private userService : UserService
+    private userService : UserService,
+    private growlService : AdvGrowlService
   ) { }
 
   ngOnInit() {
@@ -91,10 +94,18 @@ export class RequestVoucherComponent implements OnInit {
   createRequest(voucher : Voucher){
     this.spinner.show();
     var voucherToSave : Voucher = voucher;
-    voucherToSave.status = AppConstants.PENDING;
-    voucherToSave.name = this.currentUser.personalInfo ? this.currentUser.personalInfo.firstName + ' ' +this.currentUser.personalInfo.lastName : null;
-    this.voucherService.saveNewVoucher(voucher).then(data => {
+    console.log(this.currentUser)
+    voucherToSave.voucherStatus = AppConstants.PENDING;
+    voucherToSave.voucherName = this.currentUser.personalInfo ? this.currentUser.personalInfo.firstName + ' ' +this.currentUser.personalInfo.lastName : null;
+    this.voucherService.saveNewVoucher(voucher).subscribe(
+      data => {
       this.activeModal.close();
+      this.growlService.createTimedSuccessMessage('Voucher Created', 'Success', 5000);
+    }, err => {
+      this.growlService.createTimedErrorMessage('Failed to create voucher', 'Error', 5000);
+    }, () => {
+      this.spinner.hide()
+      this.emitCreatedVoucher.emit(voucher);
     })
   }
 
