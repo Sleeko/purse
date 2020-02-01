@@ -5,6 +5,8 @@ import * as firebase from 'firebase/app';
 import { PersonalInfo } from '../model/personal-info.model';
 import { UserInfo } from '../model/user-info.model';
 import 'firebase/storage'
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { AppConstants } from '../app.constants';
 /**
  * @author Bryan
  */
@@ -15,9 +17,14 @@ export class UserService {
     
   private basePath : string = '/userInfo';
 
+  private url = AppConstants.BASE_API_URL;
+  private headers = {
+    'Content-Type':'application/json',
+    'Authorization' : 'Bearer ' + JSON.parse(localStorage.getItem('currentUser')).authToken
+  }
+
     constructor(
-        public db: AngularFirestore,
-        public afAuth: AngularFireAuth
+        private http: HttpClient
     ) {}
 
     uploadPhoto(photo : File, userInfo : UserInfo){
@@ -60,16 +67,23 @@ export class UserService {
     }
 
     getUserDetails(email : string){
-        return this.db.collection('/userInfo', ref => ref.where('email','==', email)).snapshotChanges();
+        const payload = {
+            headers : this.headers,
+            body : {
+            params : new HttpParams().set(
+                    'email', email
+                )}
+        }
+        return this.http.get(this.url + '/api/admin/get-user-details', payload);
     }
 
     getUserDetailsByAuthId(id : string){
-        return this.db.collection('/userInfo', ref => ref.where('authId','==', id)).snapshotChanges();
+        // return this.db.collection('/userInfo', ref => ref.where('authId','==', id)).snapshotChanges();
     }
 
     updateUserInfo(info : UserInfo){
         console.log('updateUserInfo')
-        return this.db.doc('userInfo/' + info.docId ).update(Object.assign({},info));
+        return this.http.put(this.url + '/api/admin/update-user', info, {headers : this.headers})
     }
 
     updateCurrentUser(value) {
@@ -87,6 +101,6 @@ export class UserService {
 
     // CRUD Section
     saveUserInfo(userInfo) {
-        return this.db.collection('userInfo').add(userInfo);
+        return this.http.post(this.url + '/api/admin/add-user', userInfo);
     }
 }
