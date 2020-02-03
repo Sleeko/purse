@@ -15,10 +15,10 @@
             <ng-template pTemplate="body" let-voucher let-i="rowIndex">
                 <tr class="text-center">
                     <td>{{i+1}}</td>
-                    <td>{{voucher.name}}</td>
+                    <td>{{voucher.voucherName.includes('undefined') ? '' : voucher.voucherName}}</td>
                     <td>{{voucher.storeCode}}</td>
                     <td>₱{{voucher.amount}}</td>
-                    <td *ngIf="!isAdmin">{{voucher.status | uppercase}}</td>
+                    <td *ngIf="!isAdmin">{{voucher.voucherStatus | uppercase}}</td>
                     <td *ngIf="isAdmin">
                         <button class="btn btn-success mx-1" (click)="approveVoucher(voucher)">Approve</button>
                         <button class="btn btn-danger" (click)="denyVoucher(voucher)">Deny</button>

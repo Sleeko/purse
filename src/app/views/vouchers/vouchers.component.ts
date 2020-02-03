@@ -8,6 +8,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import { UserService } from '../../services/user.service';
 import { UserInfo } from '../../model/user-info.model';
+import { AdvGrowlService } from 'primeng-advanced-growl';
 
 @Component({
   selector: 'app-vouchers',
@@ -26,7 +27,9 @@ export class VouchersComponent implements OnInit {
   constructor(
     private modalService: NgbModal,
     private voucherService : VoucherService,
-    private userService : UserService
+    private userService : UserService,
+    private spinner : NgxSpinnerService,
+    private growlService : AdvGrowlService
   ) { }
 
   ngOnInit() {
@@ -54,14 +57,12 @@ export class VouchersComponent implements OnInit {
    * Gets all PENDING status vouchers from database.
    */
   getAllPendingVouchers(){
-    this.voucherService.getAllPendingVouchers().subscribe(e=> {
-      const response = e.map(obj => ({
-        docId : obj.payload.doc.id,
-        ...obj.payload.doc.data()
-      } as Voucher))
-      this.vouchers = response;
-      console.log('vouchers ' , this.vouchers)
-    });
+    this.voucherService.getAllPendingVouchers().subscribe(
+      data => {
+        this.vouchers = data;
+        console.log('Vouchers ', this.vouchers)
+      }
+    )
   }
 
   /**
@@ -69,16 +70,28 @@ export class VouchersComponent implements OnInit {
    */
   requestVoucher() {
     const requestVoucherModal = this.modalService.open(RequestVoucherComponent, { centered: true, backdrop: true });
+    requestVoucherModal.componentInstance.emitCreatedVoucher.subscribe(
+      data => {
+        this.vouchers.push(data);
+      }
+    )
   }
 
   /**
    * Sets the status of a Voucher to REJECTED in the database.
    */
   denyVoucher(voucher : Voucher) {
+    this.spinner.show()
     var voucherToDeny : Voucher = voucher;
-    voucherToDeny.status = AppConstants.REJECTED;
-    this.voucherService.approveOrRejectVoucher(voucher).then(res => {
-      alert('Voucher Rejected')
+    voucherToDeny.voucherStatus = AppConstants.REJECTED;
+    this.voucherService.approveOrRejectVoucher(voucher).subscribe(
+      res => {
+      this.growlService.createTimedSuccessMessage('Voucher Denied', 'Success', 5000);
+    }, err => {
+      this.growlService.createTimedErrorMessage('Failed to deny voucher', 'Error', 5000);
+    }, () => { 
+      this.spinner.hide()
+      this.vouchers.splice(this.vouchers.findIndex(vou => vou.id == voucher.id),1);
     })
   }
 
@@ -89,11 +102,16 @@ export class VouchersComponent implements OnInit {
   approveVoucher(voucher : Voucher) {
     var voucherToApprove : Voucher = voucher;
     
-    voucherToApprove.status = AppConstants.APPROVED;
-    this.voucherService.approveOrRejectVoucher(voucher).then(res => {
-      this.vouchers.splice(this.vouchers.findIndex(vouch => vouch.docId == voucher.docId),1);
-      alert('Voucher Approved')
-    });
+    voucherToApprove.voucherStatus = AppConstants.APPROVED;
+    this.voucherService.approveOrRejectVoucher(voucher).subscribe(
+      res => {
+      this.growlService.createTimedSuccessMessage('Voucher Approved', 'Success', 5000);
+    }, err => {
+      this.growlService.createTimedErrorMessage('Failed to approve voucher', 'Error', 5000);
+    }, () => {
+       this.spinner.hide()
+       this.vouchers.splice(this.vouchers.findIndex(vou => vou.id == voucher.id),1);
+      })
   }
 
 }

@@ -15,6 +15,8 @@ import { DatePipe } from '@angular/common';
 import { Timestamp } from 'rxjs/internal/operators/timestamp';
 import { AccountInfo } from '../../model/account-info.model';
 import { GovermentDocuments } from '../../model/goverment-docs.model';
+import { AdvGrowlService } from 'primeng-advanced-growl';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   templateUrl: 'account-settings.component.html',
@@ -36,7 +38,9 @@ export class AccountSettingsComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private datePipe: DatePipe,
-    public router: Router) { }
+    public router: Router,
+    private growlService : AdvGrowlService,
+    private spinner : NgxSpinnerService) { }
 
 
   ngOnInit() {
@@ -153,16 +157,24 @@ export class AccountSettingsComponent implements OnInit {
    * Gets current changes from the UI and saves the changes to database.
    */
   updateUserInfo() {
+    this.spinner.show();
     var userInfo = this.mapFormToUserInfo();
-
     if (this.photoFile != null || this.photoFile != undefined) {
     this.userService.uploadPhoto(this.photoFile, userInfo).then(res => {
       alert('Update Successful')
     })
     } else {
-      this.userService.updateUserInfo(userInfo).then(e => {
-        alert('Update Successful')
-      })
+      this.userService.updateUserInfo(userInfo).subscribe(
+        data => {
+          this.growlService.createTimedSuccessMessage('User Successfully Updated', 'Success', 5000);
+        },
+        err => {
+          this.growlService.createTimedErrorMessage('Error Updating User', 'Error', 5000);
+        },
+        () => {
+          this.spinner.hide();
+        }
+      )
     }
   }
 
@@ -192,22 +204,17 @@ export class AccountSettingsComponent implements OnInit {
    */
   getCurrentUser() {
     this.userService.getCurrentUser().then(res => {
-      var test = this.userService.getUserDetails(res.email).subscribe(e => {
-        const response = e.map(obj => ({
-          docId: obj.payload.doc.id,
-          ...obj.payload.doc.data()
-        } as UserInfo))
-        this.userInfo = response;
-        console.log('User Info ', this.userInfo[0])
-        this.mapUserInfoToForm(this.userInfo[0]);
-        test.unsubscribe();
-      },
+      var test = this.userService.getUserDetails(res.email).subscribe(
+        data => {
+          
+        },
         err => {
 
         },
         () => {
-        })
-    });
+
+        }
+    )})
   }
 
   /**
