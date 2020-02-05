@@ -43,12 +43,12 @@ export class VouchersComponent implements OnInit {
   getCurrentUser(){
     this.userService.getCurrentUser().then(res => {
       this.userService.getUserDetails(res.email).subscribe(e => {
-        const response = e.map(obj => ({
-          docId : obj.payload.doc.id,
-          ...obj.payload.doc.data()
-        } as UserInfo))
-        this.currentUser = response[0];
-        this.isAdmin = this.currentUser.role == AppConstants.ADMIN ? true : false;
+        // const response = e.map(obj => ({
+        //   docId : obj.payload.doc.id,
+        //   ...obj.payload.doc.data()
+        // } as UserInfo))
+        // this.currentUser = response[0];
+        // this.isAdmin = this.currentUser.role == AppConstants.ADMIN ? true : false;
       })
     })
   }
