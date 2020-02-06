@@ -51,11 +51,11 @@ export class RequestVoucherComponent implements OnInit {
   getCurrentUser(){
     this.userService.getCurrentUser().then(res => {
       this.userService.getUserDetails(res.email).subscribe(e => {
-        const response = e.map(obj => ({
-          docId : obj.payload.doc.id,
-          ...obj.payload.doc.data()
-        } as UserInfo))
-        this.currentUser = response[0];
+        // const response = e.map(obj => ({
+        //   docId : obj.payload.doc.id,
+        //   ...obj.payload.doc.data()
+        // } as UserInfo))
+        // this.currentUser = response[0];
       })
     })
   }
