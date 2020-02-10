@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { AuthService } from '../../services/auth.service';
@@ -10,13 +10,16 @@ import * as moment from 'moment';
 import { PersonalInfo } from '../../model/personal-info.model';
 import { UserService } from '../../services/user.service';
 import { FirebaseUserModel } from '../../model/user.model';
-import { UserInfo } from '../../model/user-info.model';
 import { DatePipe } from '@angular/common';
 import { Timestamp } from 'rxjs/internal/operators/timestamp';
 import { AccountInfo } from '../../model/account-info.model';
-import { GovermentDocuments } from '../../model/goverment-docs.model';
 import { AdvGrowlService } from 'primeng-advanced-growl';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Profile } from './../../model/profile.model';
+import { Beneficiaries } from '../../model/beneficiaries.model';
+import { MemberProfile } from './../../model/member-profile.model';
+import { BankAccount } from './../../model/bank-account.model';
+import { GovermentDocuments } from './../../model/government-documents.model';
 
 @Component({
   templateUrl: 'account-settings.component.html',
@@ -30,8 +33,10 @@ export class AccountSettingsComponent implements OnInit {
   governmentForm: FormGroup;
   bankForm: FormGroup;
   photoFile: any;
-  userInfo: UserInfo[] = [];
+  profile : Profile = new Profile();
   isInvalidBeneficiary: boolean = false;
+  currentUser : any;
+  userId;
 
   constructor(private formBuilder: FormBuilder,
     private accountService: AccountService,
@@ -40,23 +45,25 @@ export class AccountSettingsComponent implements OnInit {
     private datePipe: DatePipe,
     public router: Router,
     private growlService : AdvGrowlService,
-    private spinner : NgxSpinnerService) { }
+    private spinner : NgxSpinnerService,
+    private cdr : ChangeDetectorRef) { }
 
 
   ngOnInit() {
     this.getCurrentUser();
     let nowDate = new Date().toISOString().split('T')[0];
-    console.log(nowDate);
     this.personalInfoForm = this.formBuilder.group({
+      id: [''],
+      uid : [this.userId],
       firstName: ['', [Validators.required]],
       middleName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
       address: ['', [Validators.required]],
-      dateOfBirth: [nowDate, [Validators.required, CustomValidators.ageValidator]],
-      placeOfBirth: [null, [Validators.required]],
+      birthday: [nowDate, [Validators.required, CustomValidators.ageValidator]],
+      birthPlace: [null, [Validators.required]],
       gender: [null, [Validators.required]],
       civilStatus: ['', [Validators.required]],
-      nationality: ['', [Validators.required]],
+      // nationality: ['', [Validators.required]],
       contactNumber: ['', [Validators.required, Validators.maxLength(10), Validators.minLength(10)]],
       photo: ['']
     })
@@ -73,22 +80,22 @@ export class AccountSettingsComponent implements OnInit {
    * Checks the beneficiary FormArray if the values are not valid. 
    */
   checkBeneficiaryValidity() {
-    var beneficariesData: PersonalInfo[] = [];
+    // var beneficariesData: PersonalInfo[] = [];
 
-    this.beneficiariesForm.valueChanges.subscribe(data => {
-      beneficariesData = this.beneficiariesForm.get('beneficiaries').value
-      this.isInvalidBeneficiary = beneficariesData.some(ben => {
-        let birthDate = new Date(ben.dateOfBirth);
-        let age = moment().diff(birthDate, 'years');
-        return ben.address == null || ben.address == "" || ben.civilStatus == null
-          || ben.civilStatus == "" || ben.contactNumber == null || ben.contactNumber == ""
-          || ben.dateOfBirth == null || ben.dateOfBirth == "" || ben.firstName == null
-          || ben.firstName == "" || ben.gender == null || ben.gender == ""
-          || ben.lastName == null || ben.lastName == "" || ben.middleName == null
-          || ben.middleName == "" || ben.nationality == null || ben.nationality == ""
-          || ben.placeOfBirth == null || ben.placeOfBirth == "" || ben.tinNumber == null || age < 18
-      })
-    })
+    // this.beneficiariesForm.valueChanges.subscribe(data => {
+    //   beneficariesData = this.beneficiariesForm.get('beneficiaries').value
+    //   this.isInvalidBeneficiary = beneficariesData.some(ben => {
+    //     let birthDate = new Date(ben.dateOfBirth);
+    //     let age = moment().diff(birthDate, 'years');
+    //     return ben.address == null || ben.address == "" || ben.civilStatus == null
+    //       || ben.civilStatus == "" || ben.contactNumber == null || ben.contactNumber == ""
+    //       || ben.dateOfBirth == null || ben.dateOfBirth == "" || ben.firstName == null
+    //       || ben.firstName == "" || ben.gender == null || ben.gender == ""
+    //       || ben.lastName == null || ben.lastName == "" || ben.middleName == null
+    //       || ben.middleName == "" || ben.nationality == null || ben.nationality == ""
+    //       || ben.placeOfBirth == null || ben.placeOfBirth == "" || ben.tinNumber == null || age < 18
+    //   })
+    // })
   }
 
 
@@ -96,23 +103,9 @@ export class AccountSettingsComponent implements OnInit {
    * Build Beneficiary FormArray
    */
   buildBeneficiariesForm() {
-    this.beneficiariesForm = this.formBuilder.group({
-      beneficiaries: this.formBuilder.array([this.beneficiaries()]),
-    })
-
+    this.beneficiariesForm = this.beneficiaries();
   }
 
-  get getBene() {
-    return <FormArray>this.beneficiariesForm.controls.beneficiaries;
-  }
-
-  /**
-   * Remove 1 entry of Beneficiary Form in UI.
-   * @param index Index of the array to be removed.
-   */
-  removeBene(index: number) {
-    this.getBene.removeAt(index);
-  }
 
   /**
    * Build single beneficiary form.
@@ -120,12 +113,14 @@ export class AccountSettingsComponent implements OnInit {
   beneficiaries() {
     let nowDate = new Date().toISOString().split('T')[0];
     return this.formBuilder.group({
+      id: [''],
+      uid : [this.userId],
       firstName: ['', [Validators.required]],
       middleName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
       address: ['', [Validators.required]],
-      dateOfBirth: [nowDate, [Validators.required, CustomValidators.ageValidator]],
-      placeOfBirth: [null, [Validators.required]],
+      birthday: [nowDate, [Validators.required, CustomValidators.ageValidator]],
+      birthPlace: [null, [Validators.required]],
       gender: [null, [Validators.required]],
       civilStatus: ['', [Validators.required]],
       nationality: ['', [Validators.required]],
@@ -139,7 +134,9 @@ export class AccountSettingsComponent implements OnInit {
    */
   buildGovernmentForm() {
     this.governmentForm = this.formBuilder.group({
-      tinNumber: ['', Validators.required]
+      id: [''],
+      uid : [this.userId],
+      tinId: ['', Validators.required]
     })
   }
 
@@ -148,23 +145,30 @@ export class AccountSettingsComponent implements OnInit {
    */
   buildBankForm() {
     this.bankForm = this.formBuilder.group({
-      bankAccountNumber: [null, Validators.required],
-      paymayaAccountNumber: [null, Validators.required]
+      id: [''],
+      uid : [this.userId],
+      bankAccount: ['', Validators.required],
+      paymayaAccount: ['', Validators.required]
     })
   }
+
+
 
   /**
    * Gets current changes from the UI and saves the changes to database.
    */
   updateUserInfo() {
     this.spinner.show();
-    var userInfo = this.mapFormToUserInfo();
+    var profile : Profile = this.mapFormToUserInfo();
+    console.log('profile ', profile)
     if (this.photoFile != null || this.photoFile != undefined) {
-    this.userService.uploadPhoto(this.photoFile, userInfo).then(res => {
-      alert('Update Successful')
+    this.userService.uploadPhoto(this.photoFile, profile).then(res => {
+      this.growlService.createTimedSuccessMessage('User Successfully Updated', 'Success', 5000);
+      this.spinner.hide();
+      this.cdr.detectChanges();
     })
     } else {
-      this.userService.updateUserInfo(userInfo).subscribe(
+      this.userService.updateUserInfo(profile).subscribe(
         data => {
           this.growlService.createTimedSuccessMessage('User Successfully Updated', 'Success', 5000);
         },
@@ -182,96 +186,94 @@ export class AccountSettingsComponent implements OnInit {
    * Maps the data from the Reactive Form to Object Models.
    */
   mapFormToUserInfo() {
-    var userInfo: UserInfo = new UserInfo();
-    userInfo = this.userInfo[0] ? this.userInfo[0] : new UserInfo();
-    var personalInfo: PersonalInfo = this.personalInfoForm.getRawValue();
-    personalInfo.photoUrl = userInfo.personalInfo ? userInfo.personalInfo.photoUrl : null;
-    var beneficiaries: PersonalInfo[] = this.beneficiariesForm.get('beneficiaries').value;
-    var accountInfo : AccountInfo = this.bankForm.getRawValue();
+    var profile : Profile = new Profile();
+    profile = this.profile[0] ? this.profile[0] : new Profile();
+    var memberProfile: MemberProfile = this.personalInfoForm.getRawValue();
+    memberProfile.photoUrl = profile.memberProfile ? profile.memberProfile.photoUrl : null;
+    var beneficiaries : Beneficiaries =  this.beneficiariesForm.getRawValue();
+    var bankAccount : BankAccount = this.bankForm.getRawValue();
     var governmentDocuments : GovermentDocuments = this.governmentForm.getRawValue();
-    userInfo.personalInfo = typeof personalInfo.lastName === "undefined" ? null : personalInfo;
-    userInfo.beneficiaries = beneficiaries;
-    userInfo.accountInfo = typeof accountInfo.bankAccountNumber === "undefined" ? null : accountInfo
-    userInfo.governmentDocuments = typeof governmentDocuments.tinNumber === "undefined" ? null : governmentDocuments;
-    if (beneficiaries[0].firstName == "" || beneficiaries[0].lastName == "") {
-      userInfo.beneficiaries = null
-    } 
-    return userInfo;
+    profile.memberProfile = memberProfile;
+    profile.beneficiaries = beneficiaries;
+    profile.bankAccount = bankAccount;
+    profile.govDocs = governmentDocuments;
+
+    return profile;
   }
 
   /**
    * Gets current logged in user in the app.
    */
   getCurrentUser() {
-    this.userService.getCurrentUser().then(res => {
-      var test = this.userService.getUserDetails(res.email).subscribe(
-        data => {
-          
-        },
-        err => {
+    this.userId = JSON.parse(localStorage.getItem('currentUser')).userData.userId;
+    console.log(JSON.parse(localStorage.getItem('currentUser')))
+    this.userService.getUserDetailsByAuthId(JSON.parse(localStorage.getItem('currentUser')).authToken).subscribe(data => {
+      this.profile = data;
+      console.log('profile from back end ', this.profile)
+    }, err => {
 
-        },
-        () => {
-
-        }
-    )})
+    }, () => {
+      this.mapUserInfoToForm(this.profile);
+    })
+      
+    
   }
 
   /**
    * Maps Objects to Reactive Form.
    * @param userInfo 
    */
-  mapUserInfoToForm(userInfo: UserInfo) {
-    console.log('User Info ', userInfo)
-    this.personalInfoForm.patchValue({
-      firstName: userInfo.personalInfo.firstName,
-      middleName: userInfo.personalInfo.middleName,
-      lastName: userInfo.personalInfo.lastName,
-      address: userInfo.personalInfo.address,
-      dateOfBirth: userInfo.personalInfo.dateOfBirth,
-      placeOfBirth: userInfo.personalInfo.placeOfBirth,
-      gender: userInfo.personalInfo.gender,
-      civilStatus: userInfo.personalInfo.civilStatus,
-      nationality: userInfo.personalInfo.nationality,
-      contactNumber: userInfo.personalInfo.contactNumber,
-    });
-
-    this.governmentForm.patchValue({
-      tinNumber: userInfo.governmentDocuments ? userInfo.governmentDocuments.tinNumber : "000000000000"
-    });
-
-    let array: PersonalInfo[] = userInfo.beneficiaries;
-    let beneficiaries = <FormArray>this.beneficiariesForm.controls['beneficiaries'];
-
-    if (array) {
-      array.forEach(beneficiary => {
-        beneficiaries.push(this.formBuilder.group(beneficiary));
-      })
-      beneficiaries.removeAt(0);
+  mapUserInfoToForm(profile: Profile) {
+    console.log('User Info ', profile)
+    if(profile.memberProfile){
+      this.personalInfoForm.patchValue({
+        id : profile.memberProfile.id,
+        firstName: profile.memberProfile.firstName,
+        middleName: profile.memberProfile.middleName,
+        lastName: profile.memberProfile.lastName,
+        address: profile.memberProfile.address,
+        birthday: new Date(profile.memberProfile.birthday).toISOString().substring(0,10),
+        birthPlace: profile.memberProfile.birthPlace,
+        gender: profile.memberProfile.gender,
+        civilStatus: profile.memberProfile.civilStatus,
+        nationality: profile.memberProfile.nationality,
+        contactNumber: profile.memberProfile.contactNumber,
+      });
     }
 
-    this.bankForm.patchValue({
-      bankAccountNumber: userInfo.accountInfo.bankAccountNumber,
-      paymayaAccountNumber: userInfo.accountInfo.paymayaAccountNumber
-    })
+    if(profile.govDocs){
+      this.governmentForm.patchValue({
+        id : profile.govDocs.id,
+        tinId: profile.govDocs ? profile.govDocs.tinId : "000000000000"
+      });
+    }
 
-
-
-  }
-
-  /**
-   * Adds another Beneficiary Form entry in UI
-   */
-  addBenefeciary() {
-    (this.beneficiariesForm.get('beneficiaries') as FormArray).push(this.beneficiaries());
-  }
+    if(profile.beneficiaries){
+      this.beneficiariesForm.patchValue({
+        id: profile.beneficiaries.id,
+        firstName: profile.beneficiaries.firstName,
+        middleName: profile.beneficiaries.middleName,
+        lastName: profile.beneficiaries.lastName,
+        address: profile.beneficiaries.address,
+        birthday: new Date(profile.beneficiaries.birthday).toISOString().substring(0,10),
+        birthPlace: profile.beneficiaries.birthPlace,
+        gender: profile.beneficiaries.gender,
+        civilStatus: profile.beneficiaries.civilStatus,
+        nationality: profile.beneficiaries.nationality,
+        contactNumber: profile.beneficiaries.contactNumber,
+        tinNumber : profile.beneficiaries.tinNumber
+      })
+    }
   
-  /**
-   * Removes one Beneficiary Form in the UI.
-   * @param index 
-   */
-  deleteBeneficiary(index) {
-    (this.beneficiariesForm.get('beneficiaries') as FormArray).removeAt(index);
+    if(profile.bankAccount){
+      this.bankForm.patchValue({
+        id : profile.bankAccount.id,
+        bankAccount: profile.bankAccount.bankAccount,
+        paymayaAccount: profile.bankAccount.paymayaAccount
+      })
+    }
+
+
   }
 
   /**

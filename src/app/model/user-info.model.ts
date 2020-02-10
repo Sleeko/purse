@@ -1,6 +1,6 @@
 import { PersonalInfo } from './personal-info.model';
 import { AccountInfo } from './account-info.model';
-import { GovermentDocuments } from './goverment-docs.model';
+// import { GovermentDocuments } from './goverment-docs.model';
 
 export class UserInfo {
     docId : string;
@@ -9,7 +9,7 @@ export class UserInfo {
     personalInfo: PersonalInfo = new PersonalInfo();
     beneficiaries : PersonalInfo[];
     accountInfo: AccountInfo = new AccountInfo();
-    governmentDocuments: GovermentDocuments = new GovermentDocuments();
+    // governmentDocuments: GovermentDocuments = new GovermentDocuments();
     role: string;
     dateRegistered?: Date = new Date();
 }
