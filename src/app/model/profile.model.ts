@@ -5,8 +5,8 @@ import { GovermentDocuments } from './government-documents.model';
 
 
 export class Profile {
-    memberProfile : MemberProfile;
-    beneficiaries : Beneficiaries;
-    bankAccount : BankAccount;
-    govDocs : GovermentDocuments
+    memberProfile : MemberProfile = new MemberProfile();
+    beneficiaries : Beneficiaries = new Beneficiaries();
+    bankAccount : BankAccount = new BankAccount();
+    govDocs : GovermentDocuments = new GovermentDocuments();
 }

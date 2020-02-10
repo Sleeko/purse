@@ -3,7 +3,6 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import { PersonalInfo } from '../model/personal-info.model';
-import { UserInfo } from '../model/user-info.model';
 import 'firebase/storage'
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { AppConstants } from '../app.constants';
@@ -23,6 +22,7 @@ export class UserService {
     'Content-Type':'application/json',
     'Authorization' : 'Bearer ' + JSON.parse(localStorage.getItem('currentUser')).authToken
   }
+  private user : any = JSON.parse(localStorage.getItem('currentUser'));
 
     constructor(
         private http: HttpClient
@@ -46,7 +46,7 @@ export class UserService {
                     resolve(profile.memberProfile.photoUrl = downloadUrl);
               
             }).then(data => {
-               var update =  this.updateUserInfo(profile);
+              this.updateUserInfo(profile).subscribe();
                isFinished = true;
             });
           }
@@ -57,13 +57,13 @@ export class UserService {
 
     getCurrentUser() {
         return new Promise<any>((resolve, reject) => {
-            const userInfo = firebase.auth().onAuthStateChanged((user) => {
-                if (user) {
-                    resolve(user);
-                } else {
-                    reject('No user logged in');
-                }
-            });
+            // const userInfo = firebase.auth().onAuthStateChanged((user) => {
+            //     if (user) {
+            //         resolve(user);
+            //     } else {
+            //         reject('No user logged in');
+            //     }
+            // });
         });
     }
 
@@ -79,7 +79,7 @@ export class UserService {
     }
 
     getUserDetailsByAuthId(id : string){
-        return this.http.get<Profile>(this.url + '/api/get-accountSettings', {headers : this.headers});
+        return this.http.get<Profile>(this.url + '/api/get-accountSettings',  {headers : this.headers});
     }
 
     updateUserInfo(profile : Profile){

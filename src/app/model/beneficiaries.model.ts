@@ -5,10 +5,11 @@ export class Beneficiaries {
     firstName : String;
     middleName : String;
     address : String;   
-    birthday : String;
+    birthday : Date;
     gender : String;
     civilStatus : String;
     nationality : String;
     contactNumber : String;
     tinNumber : String;
+    birthPlace: String;
 }

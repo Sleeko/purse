@@ -6,7 +6,7 @@ export class MemberProfile {
     firstName : String;
     middleName : String;
     address : String;
-    birthday : String;
+    birthday : Date;
     gender : String;
     nationality : String;
     civilStatus : String;

@@ -8,7 +8,7 @@
                 </div>
                 <div class="card-body">
                     <h3 class="card-title mb-4">
-                        {{(profile?.memberProfile?.firstName ? profile?.memberProfile?.firstName : '')  + ' ' + (profile?.memberProfile?.lastName ? memberProfile?.memberProfile?.lastName : '')}}
+                        {{(profile?.memberProfile?.firstName ? profile?.memberProfile?.firstName : '')  + ' ' + (profile?.memberProfile?.lastName ? profile?.memberProfile?.lastName : '')}}
                     </h3>
                 </div>
             </div>
@@ -62,9 +62,9 @@
                                     <label>Date Of Birth <small class="ml-1">(* age should be 18 years old and
                                             above)</small></label>
                                     <input type="date" class="form-control form-control-sm"
-                                        formControlName="dateOfBirth">
+                                        formControlName="birthday">
                                     <small class="text-danger font-weight-bold ml-1"
-                                        *ngIf="(personalInfoForm.get('dateOfBirth').invalid && personalInfoForm.get('dateOfBirth').dirty)">
+                                        *ngIf="(personalInfoForm.get('birthday').invalid && personalInfoForm.get('birthday').dirty)">
                                         You must be at least 18 years old
                                     </small>
                                 </div>
@@ -72,9 +72,9 @@
                                 <div class="form-group">
                                     <label>Place of Birth</label>
                                     <input type="text" class="form-control form-control-sm" placeholder=""
-                                        formControlName="placeOfBirth">
+                                        formControlName="birthPlace">
                                     <small class="text-danger font-weight-bold ml-1"
-                                        *ngIf="(personalInfoForm.get('placeOfBirth').invalid && personalInfoForm.get('placeOfBirth').dirty)">
+                                        *ngIf="(personalInfoForm.get('birthPlace').invalid && personalInfoForm.get('birthPlace').dirty)">
                                         Enter place of birth
                                     </small>
                                 </div>
@@ -109,7 +109,7 @@
                                         Enter civil status
                                     </small>
                                 </div>
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <label>Nationality</label>
                                     <input type="text" class="form-control form-control-sm" placeholder=""
                                         formControlName="nationality" blockSpecialChar>
@@ -117,7 +117,7 @@
                                         *ngIf="(personalInfoForm.get('nationality').invalid && personalInfoForm.get('nationality').dirty)">
                                         Enter nationality
                                     </small>
-                                </div>
+                                </div> -->
                                 <div class="form-group">
                                     <label>Contact Number</label>
                                     <input type="text" class="form-control form-control-sm" placeholder="000-000-0000"
@@ -149,7 +149,7 @@
                     </mat-tab>
                     <mat-tab label="Beneficiaries">
                         <form [formGroup]="beneficiariesForm">
-                            <div class="form-group mt-3">
+                            <div class="form-group m-3">
                                 <div class="card-body p-2">
                                     <div class="row">
                                         <div class="form-group col-md-4 col-sm-12">
@@ -157,7 +157,7 @@
                                             <input type="text" class="form-control form-control-sm" placeholder=""
                                                 formControlName="firstName" blockSpecialChar>
                                             <small class="text-danger font-weight-bold ml-1"
-                                                *ngIf="((beneficiary.controls.firstName.value == null || beneficiary.controls.firstName.value == '') && beneficiary.get('firstName').dirty)">
+                                                *ngIf="((beneficiariesForm.controls.firstName.value == null || beneficiariesForm.controls.firstName.value == '') && beneficiariesForm.get('firstName').dirty)">
                                                 Enter your first name
                                             </small>
                                         </div>
@@ -166,7 +166,7 @@
                                             <input type="text" class="form-control form-control-sm" placeholder=""
                                                 formControlName="middleName" blockSpecialChar>
                                             <small class="text-danger font-weight-bold ml-1"
-                                                *ngIf="((beneficiary.controls.middleName.value == null || beneficiary.controls.middleName.value == '') && beneficiary.get('middleName').dirty)">
+                                                *ngIf="((beneficiariesForm.controls.middleName.value == null || beneficiariesForm.controls.middleName.value == '') && beneficiariesForm.get('middleName').dirty)">
                                                 Enter your middle name
                                             </small>
                                         </div>
@@ -175,7 +175,7 @@
                                             <input type="text" class="form-control form-control-sm" placeholder=""
                                                 formControlName="lastName" blockSpecialChar>
                                             <small class="text-danger font-weight-bold ml-1"
-                                                *ngIf="((beneficiary.controls.lastName.value == null || beneficiary.controls.lastName.value == '') && beneficiary.get('lastName').dirty)">
+                                                *ngIf="((beneficiariesForm.controls.lastName.value == null || beneficiariesForm.controls.lastName.value == '') && beneficiariesForm.get('lastName').dirty)">
                                                 Enter your last name
                                             </small>
                                         </div>
@@ -184,18 +184,18 @@
                                         <div class="form-group col-md-6 col-sm-12">
                                             <label>Date Of Birth</label>
                                             <input type="date" class="form-control form-control-sm" placeholder=""
-                                                formControlName="dateOfBirth">
+                                                formControlName="birthday">
                                             <small class="text-danger font-weight-bold ml-1"
-                                                *ngIf="((beneficiary.controls.dateOfBirth.value == null || beneficiary.controls.dateOfBirth.value == '' || beneficiary.controls.dateOfBirth.errors?.ageInvalid) && beneficiary.get('dateOfBirth').dirty)">
+                                                *ngIf="((beneficiariesForm.controls.birthday.value == null || beneficiariesForm.controls.birthday.value == '' || beneficiariesForm.controls.birthday.errors?.ageInvalid) && beneficiariesForm.get('birthday').dirty)">
                                                 Enter your birth date. Must be 18 years old above.
                                             </small>
                                         </div>
                                         <div class="form-group col-md-6 col-sm-12">
                                             <label>Place of Birth</label>
                                             <input type="text" class="form-control form-control-sm" placeholder=""
-                                                formControlName="placeOfBirth" blockSpecialChar>
+                                                formControlName="birthPlace" blockSpecialChar>
                                             <small class="text-danger font-weight-bold ml-1"
-                                                *ngIf="((beneficiary.controls.placeOfBirth.value == null || beneficiary.controls.placeOfBirth.value == '') && beneficiary.get('placeOfBirth').dirty)">
+                                                *ngIf="((beneficiariesForm.controls.birthPlace.value == null || beneficiariesForm.controls.birthPlace.value == '') && beneficiariesForm.get('birthPlace').dirty)">
                                                 Enter your place of birth
                                             </small>
                                         </div>
@@ -205,7 +205,7 @@
                                         <input type="text" class="form-control form-control-sm" placeholder=""
                                             formControlName="address">
                                         <small class="text-danger font-weight-bold ml-1"
-                                            *ngIf="((beneficiary.controls.address.value == null || beneficiary.controls.address.value == '') && beneficiary.get('address').dirty)">
+                                            *ngIf="((beneficiariesForm.controls.address.value == null || beneficiariesForm.controls.address.value == '') && beneficiariesForm.get('address').dirty)">
                                             Enter your address
                                         </small>
                                     </div>
@@ -226,7 +226,7 @@
                                                 </label>
                                             </div>
                                             <small class="text-danger font-weight-bold ml-1"
-                                                *ngIf="((beneficiary.controls.gender.value == null || beneficiary.controls.gender.value == '') && beneficiary.get('gender').dirty)">
+                                                *ngIf="((beneficiariesForm.controls.gender.value == null || beneficiariesForm.controls.gender.value == '') && beneficiariesForm.get('gender').dirty)">
                                                 Select your gender
                                             </small>
                                         </div>
@@ -237,7 +237,7 @@
                                             <input type="text" class="form-control form-control-sm" placeholder=""
                                                 formControlName="civilStatus" blockSpecialChar>
                                             <small class="text-danger font-weight-bold ml-1"
-                                                *ngIf="((beneficiary.controls.civilStatus.value == null || beneficiary.controls.civilStatus.value == '') && beneficiary.get('civilStatus').dirty)">
+                                                *ngIf="((beneficiariesForm.controls.civilStatus.value == null || beneficiariesForm.controls.civilStatus.value == '') && beneficiariesForm.get('civilStatus').dirty)">
                                                 Enter your civil status
                                             </small>
                                         </div>
@@ -246,7 +246,7 @@
                                             <input type="text" class="form-control form-control-sm" placeholder=""
                                                 formControlName="nationality" blockSpecialChar>
                                             <small class="text-danger font-weight-bold ml-1"
-                                                *ngIf="((beneficiary.controls.nationality.value == null || beneficiary.controls.nationality.value == '') && beneficiary.get('nationality').dirty)">
+                                                *ngIf="((beneficiariesForm.controls.nationality.value == null || beneficiariesForm.controls.nationality.value == '') && beneficiariesForm.get('nationality').dirty)">
                                                 Enter your nationality
                                             </small>
                                         </div>
@@ -257,7 +257,7 @@
                                             formControlName="contactNumber" placeholder="000-000-0000"
                                             mask="000-000-0000" prefix="+63-" oninput="validity.valid||(value='');">
                                         <small class="text-danger font-weight-bold ml-1"
-                                            *ngIf="((beneficiary.controls.contactNumber.value == null || beneficiary.controls.contactNumber.value == '') && beneficiary.get('contactNumber').dirty)">
+                                            *ngIf="((beneficiariesForm.controls.contactNumber.value == null || beneficiariesForm.controls.contactNumber.value == '') && beneficiariesForm.get('contactNumber').dirty)">
                                             Enter your contact number
                                         </small>
                                     </div>
@@ -267,66 +267,65 @@
                                             placeholder="000-000-000-000" mask="000-000-000-000"
                                             formControlName="tinNumber">
                                         <small class="text-danger font-weight-bold ml-1"
-                                            *ngIf="((beneficiary.controls.tinNumber.value == null || beneficiary.controls.tinNumber.value == '') && beneficiary.get('tinNumber').dirty)">
+                                            *ngIf="((beneficiariesForm.controls.tinNumber.value == null || beneficiariesForm.controls.tinNumber.value == '') && beneficiariesForm.get('tinNumber').dirty)">
                                             Please enter valid Tin Number
                                         </small>
                                     </div>
                                 </div>
                             </div>
+                            <button class="btn- btn-sm btn-success float-right mr-3 mb-4" (click)="updateUserInfo()"
+                                [disabled]="beneficiariesForm.invalid">Save</button>
+                        </form>
+                    </mat-tab>
+                    <mat-tab label="Government Documents">
+                        <form [formGroup]="governmentForm" (ngSubmit)="updateUserInfo()">
+                            <div class="m-5">
+                                <div class="form-group">
+                                    <label>Tin Number</label>
+                                    <input type="text" class="form-control form-control-sm"
+                                        placeholder="000-000-000-000" mask="000-000-000-000"
+                                        formControlName="tinId">
+                                    <small class="text-danger font-weight-bold ml-1"
+                                        *ngIf="(governmentForm.get('tinId').invalid && governmentForm.get('tinId').dirty)">
+                                        Enter valid tin number
+                                    </small>
+                                </div>
+                                <button class="btn- btn-sm btn-success float-right mr-3 mb-4" type="submit"
+                                    [disabled]="governmentForm.invalid">Save</button>
+                            </div>
+                        </form>
+                    </mat-tab>
+                    <mat-tab label="Bank Information">
+                        <form [formGroup]="bankForm" (ngSubmit)="updateUserInfo()">
+                            <div class="m-5">
+                                <div class="form-group">
+                                    <label>Bank Account</label>
+                                    <input type="number" min="0" class="form-control form-control-sm" placeholder=""
+                                        formControlName="bankAccount" oninput="validity.valid||(value='');">
+                                    <small class="text-danger font-weight-bold ml-1"
+                                        *ngIf="(bankForm.get('bankAccount').invalid && bankForm.get('bankAccount').dirty)">
+                                        Enter valid bank account number
+                                    </small>
+                                </div>
+                                <div class="form-group">
+                                    <label>Paymaya Account</label>
+                                    <input type="text" class="form-control form-control-sm"
+                                        placeholder="0000 0000 0000 0000" mask="0000 0000 0000 0000"
+                                        formControlName="paymayaAccount">
+                                    <small class="text-danger font-weight-bold ml-1"
+                                        *ngIf="(bankForm.get('paymayaAccount').invalid && bankForm.get('paymayaAccount').dirty)">
+                                        Enter valid paymaya account number
+                                    </small>
+                                </div>
+                                <button class="btn- btn-sm btn-success float-right mr-3 mb-4" type="submit"
+                                    [disabled]="bankForm.invalid">Save</button>
+                            </div>
+                        </form>
+
+                    </mat-tab>
+                </mat-tab-group>
+                <!-- </form> -->
             </div>
         </div>
-        <button class="btn- btn-sm btn-success float-right mr-3 mb-4" (click)="updateUserInfo()"
-            [disabled]="isInvalidBeneficiary">Save</button>
     </div>
-    </form>
-    </mat-tab>
-    <mat-tab label="Government Documents">
-        <form [formGroup]="governmentForm" (ngSubmit)="updateUserInfo()">
-            <div class="m-5">
-                <div class="form-group">
-                    <label>Tin Number</label>
-                    <input type="text" class="form-control form-control-sm" placeholder="000-000-000-000"
-                        mask="000-000-000-000" formControlName="tinNumber">
-                    <small class="text-danger font-weight-bold ml-1"
-                        *ngIf="(governmentForm.get('tinNumber').invalid && governmentForm.get('tinNumber').dirty)">
-                        Enter valid tin number
-                    </small>
-                </div>
-                <button class="btn- btn-sm btn-success float-right mr-3 mb-4" type="submit"
-                    [disabled]="governmentForm.invalid">Save</button>
-            </div>
-        </form>
-    </mat-tab>
-    <mat-tab label="Bank Information">
-        <form [formGroup]="bankForm" (ngSubmit)="updateUserInfo()">
-            <div class="m-5">
-                <div class="form-group">
-                    <label>Bank Account</label>
-                    <input type="number" min="0" class="form-control form-control-sm" placeholder=""
-                        formControlName="bankAccountNumber" oninput="validity.valid||(value='');">
-                    <small class="text-danger font-weight-bold ml-1"
-                        *ngIf="(bankForm.get('bankAccountNumber').invalid && bankForm.get('bankAccountNumber').dirty)">
-                        Enter valid bank account number
-                    </small>
-                </div>
-                <div class="form-group">
-                    <label>Paymaya Account</label>
-                    <input type="text" class="form-control form-control-sm" placeholder="0000 0000 0000 0000"
-                        mask="0000 0000 0000 0000" formControlName="paymayaAccountNumber">
-                    <small class="text-danger font-weight-bold ml-1"
-                        *ngIf="(bankForm.get('paymayaAccountNumber').invalid && bankForm.get('paymayaAccountNumber').dirty)">
-                        Enter valid paymaya account number
-                    </small>
-                </div>
-                <button class="btn- btn-sm btn-success float-right mr-3 mb-4" type="submit"
-                    [disabled]="bankForm.invalid">Save</button>
-            </div>
-        </form>
-
-    </mat-tab>
-    </mat-tab-group>
-    <!-- </form> -->
-</div>
-</div>
-</div>
 </div>
