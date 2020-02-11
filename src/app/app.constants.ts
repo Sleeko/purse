@@ -3,8 +3,8 @@ export class AppConstants {
   public static get APPLICATION_NAME(): string { return 'PURSE DIVERSIFIED' }
 
   // urls
-  public static get BASE_API_URL(): string { return 'http://localhost:8080' }
-  // public static get BASE_API_URL(): string { return 'http://18.140.58.115:8080/purse-diversified' }
+  // public static get BASE_API_URL(): string { return 'http://localhost:8080' }
+  public static get BASE_API_URL(): string { return 'http://18.140.58.115:8080/purse-diversified' }
   
   //roles
   public static get SELLER() : string { return 'SELLER'}
