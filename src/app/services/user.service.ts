@@ -18,10 +18,12 @@ export class UserService {
   private basePath : string = '/userInfo';
 
   private url = AppConstants.BASE_API_URL;
-  private headers = {
-    'Content-Type':'application/json',
-    'Authorization' : 'Bearer ' + JSON.parse(localStorage.getItem('currentUser')).authToken
-  }
+  // disabled: because of nullity issue during prod
+  // private headers = {
+  //   'Content-Type':'application/json',
+  //   'Authorization' : 'Bearer ' + JSON.parse(localStorage.getItem('currentUser')).authToken
+  // }
+
   private user : any = JSON.parse(localStorage.getItem('currentUser'));
 
     constructor(
@@ -68,8 +70,12 @@ export class UserService {
     }
 
     getUserDetails(email : string){
+      let headersX = {
+        'Content-Type':'application/json',
+        'Authorization' : 'Bearer ' + JSON.parse(localStorage.getItem('currentUser')).authToken
+      }
         const payload = {
-            headers : this.headers,
+            headers : headersX,
             body : {
             params : new HttpParams().set(
                     'email', email
@@ -79,11 +85,19 @@ export class UserService {
     }
 
     getUserDetailsByAuthId(id : string){
-        return this.http.get<Profile>(this.url + '/api/get-accountSettings',  {headers : this.headers});
+       let headersX = {
+        'Content-Type':'application/json',
+        'Authorization' : 'Bearer ' + JSON.parse(localStorage.getItem('currentUser')).authToken
+      };
+        return this.http.get<Profile>(this.url + '/api/get-accountSettings',  {headers : headersX});
     }
 
     updateUserInfo(profile : Profile){
-        return this.http.put(this.url + '/api/update-accountSettings', profile, {headers : this.headers})
+      let headersX = {
+        'Content-Type':'application/json',
+        'Authorization' : 'Bearer ' + JSON.parse(localStorage.getItem('currentUser')).authToken
+      };
+        return this.http.put(this.url + '/api/update-accountSettings', profile, {headers : headersX})
     }
 
     updateCurrentUser(value) {
