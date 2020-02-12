@@ -41,11 +41,12 @@ export class VouchersComponent implements OnInit {
    * Gets current logged in User in app.
    */
   getCurrentUser(){
-    this.userService.getCurrentUser().then(res => {
-      this.userService.getUserDetails(res.email).subscribe(e => {
+    let userD = JSON.parse(localStorage.getItem('currentUser'));
+
+      this.userService.getUserDetails(userD.userData.email).subscribe(e => {
 
       })
-    })
+    
   }
 
   /**

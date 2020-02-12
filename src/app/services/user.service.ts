@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import * as firebase from 'firebase/app';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { AppConstants } from '../app.constants';
 import { Profile } from './../model/profile.model';
@@ -12,11 +13,7 @@ export class UserService {
   private basePath : string = '/userInfo';
   private url = AppConstants.BASE_API_URL;
 
-  private user : any = JSON.parse(localStorage.getItem('currentUser'));
-
-    constructor(
-        private http: HttpClient
-    ) {}
+    constructor(private http: HttpClient) {}
 
     uploadPhoto(photo : File, profile : Profile){
         var isFinished : boolean = false;
@@ -44,18 +41,6 @@ export class UserService {
       })
     }
     
-    getCurrentUser() {
-        return new Promise<any>((resolve, reject) => {
-            // const userInfo = firebase.auth().onAuthStateChanged((user) => {
-            //     if (user) {
-            //         resolve(user);
-            //     } else {
-            //         reject('No user logged in');
-            //     }
-            // });
-        });
-    }
-
     getUserDetails(email : string){
       let headersX = {
         'Content-Type':'application/json',

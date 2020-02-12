@@ -49,15 +49,10 @@ export class RequestVoucherComponent implements OnInit {
    * Gets the current logged in user in the app
    */
   getCurrentUser(){
-    this.userService.getCurrentUser().then(res => {
-      this.userService.getUserDetails(res.email).subscribe(e => {
-        // const response = e.map(obj => ({
-        //   docId : obj.payload.doc.id,
-        //   ...obj.payload.doc.data()
-        // } as UserInfo))
-        // this.currentUser = response[0];
-      })
-    })
+      let userD = JSON.parse(localStorage.getItem('currentUser'));
+      this.userService.getUserDetails(userD.userData.email).subscribe(e => {
+       
+      });
   }
 
   /**
