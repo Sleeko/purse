@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { Voucher } from '../model/voucher.model';
 import { AppConstants } from '../app.constants';
 import { HttpClient } from '@angular/common/http';

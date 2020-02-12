@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { FeaturedContent } from '../model/featured-content.model';
 import * as firebase from 'firebase/app';
 import 'firebase/storage'
@@ -15,7 +14,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class FeaturedContentService {
 
   constructor(
-    private db : AngularFirestore,
     private http: HttpClient,
     private growlService : AdvGrowlService,
     private spinnerService : NgxSpinnerService
@@ -56,14 +54,6 @@ export class FeaturedContentService {
   }
   
   getAllFeaturedContent(){
-    // const headers = {
-    //   'Content-Type':'application/json',
-    //   'Authorization' : localStorage.getItem('currentUser')
-    // }
-
-    // const params = {
-    //   headers : new HttpHeaders(headers)
-    // }
     return this.http.get<FeaturedContent[]>(this.url + '/api/admin/list-featuredContent');
   }
 

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { Store } from '../model/store.model';
 import { HttpClient } from '@angular/common/http';
 import { AppConstants } from '../app.constants';
@@ -15,7 +14,6 @@ export class StoreService {
     'Authorization' : 'Bearer ' + JSON.parse(localStorage.getItem('currentUser')).authToken
   }
   constructor(
-    private db : AngularFirestore,
     private http : HttpClient
   ) { }
 

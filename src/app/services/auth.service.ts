@@ -48,36 +48,4 @@ export class AuthService {
       localStorage.removeItem('currentUser');
       this.currentUserSubject.next(null);
   }
-
-
-  // public async login(postData) {
-  //   const loginApiResponse = {
-  //     authId: postData.uid,
-  //     isLoggedIn: postData.isLoggedIn
-  //   };
-   
-  //   await sessionStorage.setItem('authData', JSON.stringify(loginApiResponse));
-  //   return false;
-  // }
-
-  // public async logout() {
-  //   await sessionStorage.removeItem('userInfo');
-  //   await sessionStorage.removeItem('authData');
-  //   await sessionStorage.clear();
-  //   return true;
-  // }
-
-
-
-  // getCurrentUser() {
-  //   const user$ = new Subject<any>();
-  //   this.afAuth.authState.subscribe((auth) => {
-  //     if (auth && auth.uid) {
-  //       const userData = { uid: auth.uid, isLoggedIn: true};
-  //       user$.next(userData);
-  //     }
-  //   });
-  //   return user$.asObservable();
-  // }
-
 }

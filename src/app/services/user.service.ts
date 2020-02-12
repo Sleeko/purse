@@ -1,9 +1,4 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { AngularFireAuth } from '@angular/fire/auth';
-import * as firebase from 'firebase/app';
-import { PersonalInfo } from '../model/personal-info.model';
-import 'firebase/storage'
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { AppConstants } from '../app.constants';
 import { Profile } from './../model/profile.model';
@@ -14,15 +9,8 @@ import { Profile } from './../model/profile.model';
 @Injectable()
 export class UserService {
 
-    
   private basePath : string = '/userInfo';
-
   private url = AppConstants.BASE_API_URL;
-  // disabled: because of nullity issue during prod
-  // private headers = {
-  //   'Content-Type':'application/json',
-  //   'Authorization' : 'Bearer ' + JSON.parse(localStorage.getItem('currentUser')).authToken
-  // }
 
   private user : any = JSON.parse(localStorage.getItem('currentUser'));
 
@@ -56,7 +44,6 @@ export class UserService {
       })
     }
     
-
     getCurrentUser() {
         return new Promise<any>((resolve, reject) => {
             // const userInfo = firebase.auth().onAuthStateChanged((user) => {
@@ -99,19 +86,6 @@ export class UserService {
       };
         return this.http.put(this.url + '/api/update-accountSettings', profile, {headers : headersX})
     }
-
-    updateCurrentUser(value) {
-        return new Promise<any>((resolve, reject) => {
-            const user = firebase.auth().currentUser;
-            user.updateProfile({
-                displayName: value.name,
-                photoURL: user.photoURL
-            }).then(res => {
-                resolve(res);
-            }, err => reject(err));
-        });
-    }
-
 
     // CRUD Section
     saveUserInfo(userInfo) {
