@@ -49,7 +49,6 @@ export class LoginComponent implements OnInit {
   }
 
   tryLogin(value) {
-    console.log(value);
     this.authService.login(value).subscribe(res => {
       if(res.httpStatus == 'OK'){
         this.growlService.createTimedSuccessMessage(res.message, 'Success', 5000);

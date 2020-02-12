@@ -162,7 +162,6 @@ export class RegisterComponent implements OnInit {
   getFeaturedContents(){
     this.featuredContentService.getAllFeaturedContent().subscribe(
       data => {
-        console.log('Featured' ,data)
         this.featuredContents = data;
     });
   }
@@ -188,7 +187,6 @@ export class RegisterComponent implements OnInit {
 
   validateMemberCode(memberCode) {
     this.accountService.validateCode(memberCode).subscribe(data => {
-      console.log(data)
       if (data.used) {
         this.isDuplicateMemberCode = true;
         this.registerFormGroup.controls['code'].setErrors({ isDuplicateMemberCode: true });
@@ -209,7 +207,6 @@ export class RegisterComponent implements OnInit {
 
   validateUplineCode(uplineCode) {
     this.accountService.validateUplineCode(uplineCode).subscribe(data => {
-      console.log(data)
       if (!data.used) {
         this.isInvalidUplineCode = true;
         this.registerFormGroup.controls['referrerCode'].setErrors({ isInvalidUplineCode: true });

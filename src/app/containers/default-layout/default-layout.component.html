@@ -1,6 +1,6 @@
 <div class="header-app">
 <app-header
-  [navbarBrandRouterLink]="['/dashboard']"
+  [navbarBrandRouterLink]="userData.accountType == 'ADMIN' ? '' :  ['/dashboard']"
   [fixed]="true"
   [navbarBrandFull]="{src: 'assets/images/Purse Diversified Logo - 01.jpg', width: 120, height: 50, alt: 'CoreUI Logo'}"
   [navbarBrandMinimized]="{src: 'assets/images/Purse Diversified Logo Only (Small).jpg', width: 30, height: 50, alt: 'CoreUI Logo'}"

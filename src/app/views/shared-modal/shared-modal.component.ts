@@ -38,6 +38,5 @@ export class SharedModalComponent implements OnInit {
   }
 
   test(){
-    console.log('test')
   }
 }

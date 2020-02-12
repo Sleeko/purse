@@ -3,7 +3,7 @@
         <div class="col-sm-6 col-lg-3">
             <div class="card text-center">
                 <div class="card-header">
-                    <img style="width:100%;height:300px;" [src]="profile?.memberProfile?.photoUrl" alt=""
+                    <img style="width:100%;height:300px;" [src]="photoUrl" alt=""
                         class="card-img-top rounded-circle" style="width: 150px;height: 150px;" />
                 </div>
                 <div class="card-body">
@@ -25,7 +25,7 @@
                                 <div class="form-group">
                                     <label>First Name</label>
                                     <input type="text" class="form-control form-control-sm" placeholder=""
-                                        formControlName="firstName" blockSpecialChar>
+                                        formControlName="firstName" (focusout)="checkIfProfileIsDuplicate('PROFILE')">
                                     <small class="text-danger font-weight-bold ml-1"
                                         *ngIf="(personalInfoForm.get('firstName').invalid && personalInfoForm.get('firstName').dirty)">
                                         Enter your first name
@@ -34,7 +34,7 @@
                                 <div class="form-group">
                                     <label>Middle Name</label>
                                     <input type="text" class="form-control form-control-sm" placeholder=""
-                                        formControlName="middleName" blockSpecialChar>
+                                        formControlName="middleName" (focusout)="checkIfProfileIsDuplicate('PROFILE')">
                                     <small class="text-danger font-weight-bold ml-1"
                                         *ngIf="(personalInfoForm.get('middleName').invalid && personalInfoForm.get('middleName').dirty)">
                                         Enter your middle name
@@ -43,7 +43,7 @@
                                 <div class="form-group">
                                     <label>Last Name</label>
                                     <input type="text" class="form-control form-control-sm" placeholder=""
-                                        formControlName="lastName" blockSpecialChar>
+                                        formControlName="lastName" (focusout)="checkIfProfileIsDuplicate('PROFILE')">
                                     <small class="text-danger font-weight-bold ml-1"
                                         *ngIf="(personalInfoForm.get('lastName').invalid && personalInfoForm.get('lastName').dirty)">
                                         Enter your last name
@@ -62,7 +62,7 @@
                                     <label>Date Of Birth <small class="ml-1">(* age should be 18 years old and
                                             above)</small></label>
                                     <input type="date" class="form-control form-control-sm"
-                                        formControlName="birthday">
+                                        formControlName="birthday" (focusout)="checkIfProfileIsDuplicate('PROFILE')">
                                     <small class="text-danger font-weight-bold ml-1"
                                         *ngIf="(personalInfoForm.get('birthday').invalid && personalInfoForm.get('birthday').dirty)">
                                         You must be at least 18 years old
@@ -103,21 +103,21 @@
                                 <div class="form-group">
                                     <label>Civil Status</label>
                                     <input type="text" class="form-control form-control-sm" placeholder=""
-                                        formControlName="civilStatus" blockSpecialChar>
+                                        formControlName="civilStatus">
                                     <small class="text-danger font-weight-bold ml-1"
                                         *ngIf="(personalInfoForm.get('civilStatus').invalid && personalInfoForm.get('civilStatus').dirty)">
                                         Enter civil status
                                     </small>
                                 </div>
-                                <!-- <div class="form-group">
+                                <div class="form-group">
                                     <label>Nationality</label>
                                     <input type="text" class="form-control form-control-sm" placeholder=""
-                                        formControlName="nationality" blockSpecialChar>
+                                        formControlName="nationality">
                                     <small class="text-danger font-weight-bold ml-1"
                                         *ngIf="(personalInfoForm.get('nationality').invalid && personalInfoForm.get('nationality').dirty)">
                                         Enter nationality
                                     </small>
-                                </div> -->
+                                </div>
                                 <div class="form-group">
                                     <label>Contact Number</label>
                                     <input type="text" class="form-control form-control-sm" placeholder="000-000-0000"
@@ -132,17 +132,21 @@
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" id="customFile"
                                             accept=".png,.jpeg, .jpg" (change)="onFileChange($event)"
-                                            formControlName="photo">
+                                            formControlName="photoUrl">
                                         <label class="custom-file-label"
                                             for="customFile">{{photoFile==null ? 'Choose file': photoFile.name}}</label>
                                     </div>
                                     <small class="text-danger font-weight-bold ml-1"
-                                        *ngIf="(personalInfoForm.get('photo').invalid && personalInfoForm.get('photo').dirty)">
+                                        *ngIf="(personalInfoForm.get('photoUrl').invalid && personalInfoForm.get('photoUrl').dirty)">
                                         Select a photo
                                     </small>
                                 </div>
+                                <small class="text-danger font-weight-bold ml-1"
+                                *ngIf="isDuplicateProfile">
+                                    Duplicate member profile detected. You will not be able to proceed.
+                                </small>                                
                                 <button type="submit" class="btn btn-success btn-block" [disabled]="
-                                personalInfoForm.invalid || (photoFile == null && personalInfoForm.get('photo').dirty)
+                                personalInfoForm.invalid || (photoFile == null && personalInfoForm.get('photoUrl').dirty) || personalInfoForm.pristine || isDuplicateProfile
                                 "> Submit </button>
                             </div>
                         </form>
@@ -155,7 +159,7 @@
                                         <div class="form-group col-md-4 col-sm-12">
                                             <label>First Name</label>
                                             <input type="text" class="form-control form-control-sm" placeholder=""
-                                                formControlName="firstName" blockSpecialChar>
+                                                formControlName="firstName" >
                                             <small class="text-danger font-weight-bold ml-1"
                                                 *ngIf="((beneficiariesForm.controls.firstName.value == null || beneficiariesForm.controls.firstName.value == '') && beneficiariesForm.get('firstName').dirty)">
                                                 Enter your first name
@@ -164,7 +168,7 @@
                                         <div class="form-group col-md-4 col-sm-12">
                                             <label>Middle Name</label>
                                             <input type="text" class="form-control form-control-sm" placeholder=""
-                                                formControlName="middleName" blockSpecialChar>
+                                                formControlName="middleName" >
                                             <small class="text-danger font-weight-bold ml-1"
                                                 *ngIf="((beneficiariesForm.controls.middleName.value == null || beneficiariesForm.controls.middleName.value == '') && beneficiariesForm.get('middleName').dirty)">
                                                 Enter your middle name
@@ -173,7 +177,7 @@
                                         <div class="form-group col-md-4 col-sm-12">
                                             <label>Last Name</label>
                                             <input type="text" class="form-control form-control-sm" placeholder=""
-                                                formControlName="lastName" blockSpecialChar>
+                                                formControlName="lastName" >
                                             <small class="text-danger font-weight-bold ml-1"
                                                 *ngIf="((beneficiariesForm.controls.lastName.value == null || beneficiariesForm.controls.lastName.value == '') && beneficiariesForm.get('lastName').dirty)">
                                                 Enter your last name
@@ -193,7 +197,7 @@
                                         <div class="form-group col-md-6 col-sm-12">
                                             <label>Place of Birth</label>
                                             <input type="text" class="form-control form-control-sm" placeholder=""
-                                                formControlName="birthPlace" blockSpecialChar>
+                                                formControlName="birthPlace" >
                                             <small class="text-danger font-weight-bold ml-1"
                                                 *ngIf="((beneficiariesForm.controls.birthPlace.value == null || beneficiariesForm.controls.birthPlace.value == '') && beneficiariesForm.get('birthPlace').dirty)">
                                                 Enter your place of birth
@@ -235,7 +239,7 @@
                                         <div class="form-group col-md-6 col-sm-12">
                                             <label>Civil Status</label>
                                             <input type="text" class="form-control form-control-sm" placeholder=""
-                                                formControlName="civilStatus" blockSpecialChar>
+                                                formControlName="civilStatus">
                                             <small class="text-danger font-weight-bold ml-1"
                                                 *ngIf="((beneficiariesForm.controls.civilStatus.value == null || beneficiariesForm.controls.civilStatus.value == '') && beneficiariesForm.get('civilStatus').dirty)">
                                                 Enter your civil status
@@ -244,7 +248,7 @@
                                         <div class="form-group col-md-6 col-sm-12">
                                             <label>Nationality</label>
                                             <input type="text" class="form-control form-control-sm" placeholder=""
-                                                formControlName="nationality" blockSpecialChar>
+                                                formControlName="nationality">
                                             <small class="text-danger font-weight-bold ml-1"
                                                 *ngIf="((beneficiariesForm.controls.nationality.value == null || beneficiariesForm.controls.nationality.value == '') && beneficiariesForm.get('nationality').dirty)">
                                                 Enter your nationality
@@ -284,14 +288,18 @@
                                     <label>Tin Number</label>
                                     <input type="text" class="form-control form-control-sm"
                                         placeholder="000-000-000-000" mask="000-000-000-000"
-                                        formControlName="tinId">
+                                        formControlName="tinId" (focusout)="checkIfProfileIsDuplicate('GOV')">
                                     <small class="text-danger font-weight-bold ml-1"
                                         *ngIf="(governmentForm.get('tinId').invalid && governmentForm.get('tinId').dirty)">
                                         Enter valid tin number
                                     </small>
                                 </div>
+                                <small class="text-danger font-weight-bold ml-1"
+                                *ngIf="isDuplicateGovernmentProfile">
+                                    Duplicate member profile detected. You will not be able to proceed.
+                                </small>      
                                 <button class="btn- btn-sm btn-success float-right mr-3 mb-4" type="submit"
-                                    [disabled]="governmentForm.invalid">Save</button>
+                                    [disabled]="governmentForm.invalid || isDuplicateGovernmentProfile">Save</button>
                             </div>
                         </form>
                     </mat-tab>

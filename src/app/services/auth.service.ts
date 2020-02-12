@@ -15,7 +15,7 @@ export class AuthService {
   public isLoggedIn: boolean = false;
 
   constructor(private http: HttpClient) {
-    this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem('currentUser')));
+    this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(sessionStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
@@ -24,7 +24,7 @@ export class AuthService {
 }
 
   public isAuthenticated(): boolean {
-    const userData : any = localStorage.getItem('currentUser');
+    const userData : any = sessionStorage.getItem('currentUser');
     if (userData && userData.length > 0) {
       const d = JSON.parse(userData);
       return d.loggedIn ? true : false;
@@ -37,7 +37,7 @@ export class AuthService {
     return this.http.post<any>(this.authURL + '/login', payload)
         .pipe(map(user => {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
-            localStorage.setItem('currentUser', JSON.stringify(user));
+            sessionStorage.setItem('currentUser', JSON.stringify(user));
             this.currentUserSubject.next(user);
             return user;
         }));
@@ -45,7 +45,7 @@ export class AuthService {
 
   logout() {
       // remove user from local storage to log user out
-      localStorage.removeItem('currentUser');
+      sessionStorage.removeItem('currentUser');
       this.currentUserSubject.next(null);
   }
 }

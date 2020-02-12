@@ -15,7 +15,7 @@ export class ChamberService {
     private url = AppConstants.BASE_API_URL + "/api";
     private headers = {
         'Content-Type':'application/json',
-        'Authorization' : 'Bearer ' + JSON.parse(localStorage.getItem('currentUser')).authToken
+        'Authorization' : 'Bearer ' + JSON.parse(sessionStorage.getItem('currentUser')).authToken
     }
 
     constructor(private http: HttpClient) {}

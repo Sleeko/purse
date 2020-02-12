@@ -21,7 +21,7 @@ export class UtilsService {
 
     private headers = {
       'Content-Type':'application/json',
-      'Authorization' : 'Bearer ' + JSON.parse(localStorage.getItem('currentUser')).authToken
+      'Authorization' : 'Bearer ' + JSON.parse(sessionStorage.getItem('currentUser')).authToken
     }
 
     memberCode: any;
@@ -50,7 +50,6 @@ export class UtilsService {
           take(1),
           map(res => 
             {
-              console.log(res);
               let docId;
               if(res.length>0) {
                 docId = res[0].payload.doc.id;

@@ -17,7 +17,7 @@ export class DashboardComponent implements OnInit {
   isSeller : boolean = false;
   personalInfo: any;
   constructor(private chamberService: ChamberService) { 
-    const sessData : any = JSON.parse(localStorage.getItem('currentUser'));
+    const sessData : any = JSON.parse(sessionStorage.getItem('currentUser'));
     this.code = sessData.userData.referralCode;
 
     //TODO:

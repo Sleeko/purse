@@ -8,4 +8,5 @@ export class Voucher {
     voucherStatus : string;
     storeCode : string;
     storeBranch : string;
+    uid : string;
 }

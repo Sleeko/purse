@@ -6,8 +6,8 @@ import { Router, NavigationEnd } from '@angular/router';
   selector: 'body',
   template: `
   <router-outlet></router-outlet>
-  <adv-growl></adv-growl>
   <ngx-spinner></ngx-spinner>
+  <div style="position:relative;z-index: 10"><adv-growl></adv-growl></div>
   `
 })
 export class AppComponent implements OnInit {
