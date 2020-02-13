@@ -1,0 +1,17 @@
+<div class="container card">
+    <div class="card-header mt-2">
+        <img src="assets/images/Purse Diversified Logo - 01.jpg" class="float-left" width="50px" height="50px">
+       <h4 class="float-left ml-2 mt-2">Purse Diverse</h4>
+       <span class="float-right mt-2">{{dateToday | date : 'yyyy-MM-dd'}}</span>
+    </div>
+    <div class="card-body">
+        <p>Amount requested : {{cashPurse}}</p>
+        <p>Email : {{userData?.email}}</p>
+    </div>
+    <div class="card-footer mb-2">
+        <div *ngIf="!printStart"class="float-right">
+            <button class="btn btn-success" (click)="print()">Print</button>
+            <button class="btn btn-primary" (click)="returnPurse()">Back</button>
+        </div>
+    </div>
+</div>

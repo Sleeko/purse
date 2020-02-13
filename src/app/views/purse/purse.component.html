@@ -1,4 +1,4 @@
-<div class="animated fadeIn">
+<div *ngIf="!showPrint" class="animated fadeIn">
     <div class="row">
       <div class="col-sm-6 col-lg-4">
         <div class="card text-white bg-primary">
@@ -12,6 +12,7 @@
           <div class="card text-white bg-success">
             <div class="card-body pb-0">
               <div class="purse-value">{{ cashPurse  | currency:'PHP':'symbol-narrow':'0.2-2'}}</div>
+              <div (click)="openPrint()"><i class="fa fa-money fa-1x float-right">  Withdraw</i></div>              
               <div class="purse-label">Cash Purse</div>
             </div>
           </div>
@@ -33,5 +34,9 @@
             </div>
         </div>
     </div>
+  </div>
+
+  <div *ngIf="showPrint">
+    <app-purse-print [cashPurse]="cashPurse" (emitBack)="getEmit($event)"></app-purse-print>
   </div>
   
