@@ -85,7 +85,7 @@ export const navItems: NavData[] = [
   //   }
   // },
   {
-    name: 'New Page',
+    name: 'Featured Content',
     url: '/new-page',
     icon: 'fa fa-sticky-note fa-5x',
     badge: {

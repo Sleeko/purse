@@ -5,10 +5,25 @@ import { MemberService } from '../../services/member.service';
 import { UserInfo } from '../../model/user-info.model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateUserComponent, AdminUser } from '../create-user/create-user.component';
+import { FilterUtils } from 'primeng/primeng';
 
 export class CodeDTO {
   code: string;
   isUsed: boolean;
+}
+
+export class VCReport {
+  uid: number;
+  name: string;
+  email: string;
+  level: string;
+  cycle: string;
+  isActive: boolean;
+  layaway: number;
+  cash: number;
+  reentry: number;
+  levelUp: number;
+  dateRegistered: Date;
 }
 
 @Component({
@@ -78,6 +93,10 @@ export class AdminDashboardComponent implements OnInit {
   numSellers: number = 0;
   numAdmin: number = 0;
 
+  // virtual chamber report property
+  vcReport: VCReport[] = [];
+  vcCols: any[];
+
   constructor(private utilsService: UtilsService,
     private memberService: MemberService,
     private modalService : NgbModal) {}
@@ -87,6 +106,41 @@ export class AdminDashboardComponent implements OnInit {
   this.utilsService.getMemberCodeList().subscribe(res => {
     this.memberCode = res.map(e => ({code: e.memberCode, isUsed: e.used}));
    });
+
+   //--
+   // fetch virtual chamber reports
+   //--
+   this.utilsService.getVirtualChamberReport().subscribe(res => {
+    this.vcReport = res.map(e => (
+      {
+        uid: e.uid,
+        name: e.name,
+        email: e.email,
+        level: e.levelId,
+        cycle: e.currentCycle,
+        isActive: Number(e.currentCycle) > 0 ? true : false,
+        layaway: e.layAwayPurse,
+        cash: e.cashPurse,
+        reentry: e.reEntryPurse,
+        levelUp: e.levelUpPurse,
+        dateRegistered: e.dateRegistered
+      }
+      ));
+   });
+
+   this.vcCols = [
+        { field: 'uid', header: 'User ID' },
+        { field: 'name', header: 'Name' },
+        { field: 'email', header: 'Email' },
+        { field: 'level', header: 'Level' },
+        { field: 'cycle', header: 'Cycle' },
+        { field: 'layaway', header: 'Status' },
+        { field: 'layaway', header: 'Layaway Purse' },
+        { field: 'cash', header: 'Cash Purse' },
+        { field: 'reentry', header: 'Re-Entry Purse' },
+        { field: 'levelUp', header: 'Level-Up Purse' },
+        { field: 'dateRegistered', header: 'Date Registered' }
+    ];
    
    this.memberService.getUserInfoCounter().subscribe(res => {
      this.userCounter = res;
@@ -137,7 +191,27 @@ export class AdminDashboardComponent implements OnInit {
 
   }
 
-  createUser(){
+  exportExcel() {
+    import("xlsx").then(xlsx => {
+        const worksheet = xlsx.utils.json_to_sheet(this.vcReport);
+        const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+        const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+        this.saveAsExcelFile(excelBuffer, "virtual_chamber_report");
+    });
+  }
+
+  saveAsExcelFile(buffer: any, fileName: string): void {
+    import("file-saver").then(FileSaver => {
+        let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+        let EXCEL_EXTENSION = '.xlsx';
+        const data: Blob = new Blob([buffer], {
+            type: EXCEL_TYPE
+        });
+        FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+    });
+}
+
+createUser(){
     const userModal = this.modalService.open(CreateUserComponent, {backdrop: true, centered: true})
   }
 

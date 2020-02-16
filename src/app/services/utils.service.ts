@@ -17,7 +17,7 @@ const M = 'memberCode';
 export class UtilsService {
 
     private utilsURL = AppConstants.BASE_API_URL + '/utils';
-    private secUtils = AppConstants.BASE_API_URL + '/api/admin';
+    private secUtils = AppConstants.BASE_API_URL + '/api/';
 
     private headers = {
       'Content-Type':'application/json',
@@ -97,31 +97,14 @@ export class UtilsService {
         return this.db.collection('uplineLookup', ref => ref.where('uplineCode', '==', uplineCode)).snapshotChanges();
     }
 
-    /**
-    *  Members API's service implementation segment
-    */
-    validateMembershipCode(code): Observable<any> {
-        const subj = new Subject<any>();
-        this.searchCode(code).subscribe(e => {
-        const response = e.map(obj => ({docId: obj.payload.doc.id,
-            ...obj.payload.doc.data()} as Code));
-            if (response[0]) {
-                if (response[0].isUsed) {
-                    subj.next({ message: 'code is already used.', isUsed: true, codeObj: response });
-                } else {
-                    subj.next({ message: 'code is valid.', isUsed: false, codeObj: response });
-                }
-            } else {
-                subj.next({ message: 'Invalid membership code.', isUsed: true, codeObj: response });
-            }
-        });
-
-        return subj.asObservable();
-    }
 
     // new backend implementation
     getMemberCodeList(): Observable<any> {
         return this.http.get(this.utilsURL + '/get-membercode');
+    }
+
+    getVirtualChamberReport(): Observable<any> {
+        return this.http.get(this.secUtils + '/get-virtualChamberReport', {headers : this.headers});
     }
 
 
