@@ -21,7 +21,7 @@ export class DefaultLayoutComponent implements OnDestroy, OnInit {
   private changes: MutationObserver;
   public element: HTMLElement;
   private currentUser : UserInfo = new UserInfo();
-  private userData : UserData = new UserData();
+  userData : UserData = new UserData();
   constructor(
     public authService: AuthService, 
     public router: Router, 
