@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, FormControl, ValidationErrors, AsyncValidatorFn } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NguCarouselConfig } from '@ngu/carousel';
 import { Observable, interval, Subject } from 'rxjs';
@@ -120,12 +119,10 @@ export class RegisterComponent implements OnInit {
       code: [
         '',
         [Validators.required],
-        //[this.searchCodeValidator()]
       ],
       referrerCode: [
         '',
         [Validators.required],
-        //[this.searchUplineValidator()]
       ],
       sellerName: [
         ''
@@ -145,9 +142,6 @@ export class RegisterComponent implements OnInit {
 
   buildSellerForm() {
     this.sellerFormGroup = this.formBuilder.group({
-      // sellerName : ['', [Validators.required]],
-      // contactNumber : ['',[Validators.required,Validators.maxLength(10), Validators.minLength(10)]],
-      // sellerUrl : ['',[Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       passwords: this.formBuilder.group({
         password: ['', [Validators.required]],
@@ -225,12 +219,6 @@ export class RegisterComponent implements OnInit {
     );
   }
 
-  searchCodeValidator() {
-  }
-
-  searchUplineValidator() {
-  }
-
   passwordConfirming(c: AbstractControl): { invalid: boolean } {
     if (c.get('password').value !== c.get('confirm_password').value) {
       return { invalid: true };
@@ -293,8 +281,6 @@ export class RegisterComponent implements OnInit {
       }
     );
   }
-
-
 
   doRegisterSeller(payload) {
     this.accountService.register(payload);

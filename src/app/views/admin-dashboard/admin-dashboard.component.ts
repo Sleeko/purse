@@ -5,7 +5,6 @@ import { MemberService } from '../../services/member.service';
 import { UserInfo } from '../../model/user-info.model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateUserComponent, AdminUser } from '../create-user/create-user.component';
-import { FilterUtils } from 'primeng/primeng';
 
 export class CodeDTO {
   code: string;
