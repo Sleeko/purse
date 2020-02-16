@@ -85,7 +85,7 @@ export const navItems: NavData[] = [
   //   }
   // },
   {
-    name: 'New Page',
+    name: 'Featured Content',
     url: '/new-page',
     icon: 'fa fa-sticky-note fa-5x',
     badge: {
@@ -110,15 +110,15 @@ export const navItems: NavData[] = [
       text: ''
     }
   },
-  {
-    name: 'Contact Us',
-    url: '/contact-us',
-    icon: 'fa fa-phone fa-5x',
-    badge: {
-      variant: 'info',
-      text: ''
-    }
-  },
+  // {
+  //   name: 'Contact Us',
+  //   url: '/contact-us',
+  //   icon: 'fa fa-phone fa-5x',
+  //   badge: {
+  //     variant: 'info',
+  //     text: ''
+  //   }
+  // },
   {
     name: 'Quit',
     url: '/quit',

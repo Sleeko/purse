@@ -4,10 +4,10 @@
         <p-table [value]="vouchers">
             <ng-template pTemplate="header">
                 <tr class="text-center" style="font-size: 1.25em">
-                    <th class="w-10">#</th>
-                    <th>Name</th>
-                    <th>Store Name</th>
-                    <th class="w-15">{{isAdmin ? 'Amount':'Amount Request'}}</th>
+                    <th>#</th>
+                    <!-- <th>Name</th>
+                    <th>Store Name</th> -->
+                    <th>{{isAdmin ? 'Amount':'Amount Request'}}</th>
                     <th *ngIf="!isAdmin">Status</th>
                     <th *ngIf="isAdmin"></th>
                 </tr>
@@ -15,8 +15,8 @@
             <ng-template pTemplate="body" let-voucher let-i="rowIndex">
                 <tr class="text-center">
                     <td>{{i+1}}</td>
-                    <td>{{voucher.voucherName.includes('undefined') ? '' : voucher.voucherName}}</td>
-                    <td>{{voucher.storeCode}}</td>
+                    <!-- <td>{{voucher.voucherName.includes('undefined') ? '' : voucher.voucherName}}</td>
+                    <td>{{voucher.storeCode}}</td> -->
                     <td>₱{{voucher.amount}}</td>
                     <td *ngIf="!isAdmin">{{voucher.voucherStatus | uppercase}}</td>
                     <td *ngIf="isAdmin">

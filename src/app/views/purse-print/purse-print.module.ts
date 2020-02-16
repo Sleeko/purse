@@ -4,21 +4,20 @@ import { ChartsModule } from 'ng2-charts';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 
-import { PurseComponent } from './purse.component';
-import { PurseRoutingModule } from './purse-routing.module';
 import { CommonModule } from '@angular/common';
-import { PursePrintModule } from '../purse-print/purse-print.module';
+import { PursePrintComponent } from './purse-print.component';
 
 @NgModule({
   imports: [
     FormsModule,
-    PurseRoutingModule,
     ChartsModule,
     BsDropdownModule,
     CommonModule,
-    ButtonsModule.forRoot(),
-    PursePrintModule
+    ButtonsModule.forRoot()
   ],
-  declarations: [ PurseComponent ]
+  exports : [
+    PursePrintComponent
+  ],
+  declarations: [ PursePrintComponent ]
 })
-export class PurseModule { }
+export class PursePrintModule { }

@@ -14,6 +14,7 @@ import { User } from 'firebase';
 import { FirebaseUserModel } from '../../model/user.model';
 import { UserInfo } from '../../model/user-info.model';
 import { AdvGrowlService } from 'primeng-advanced-growl';
+import { UserData } from '../../model/user-data.model';
 
 @Component({
   selector: 'app-request-voucher',
@@ -24,7 +25,7 @@ export class RequestVoucherComponent implements OnInit {
 
   voucherForm : FormGroup;
   stores : Store[] = [];
-  currentUser = new UserInfo();
+  currentUser = new UserData();
   @Output() emitCreatedVoucher = new EventEmitter<Voucher>();
   
   constructor(
@@ -41,7 +42,6 @@ export class RequestVoucherComponent implements OnInit {
 
   ngOnInit() {
     this.initVoucherForm();
-    this.getStoreCodes();
     this.getCurrentUser();
   }
 
@@ -49,15 +49,11 @@ export class RequestVoucherComponent implements OnInit {
    * Gets the current logged in user in the app
    */
   getCurrentUser(){
-    this.userService.getCurrentUser().then(res => {
-      this.userService.getUserDetails(res.email).subscribe(e => {
-        // const response = e.map(obj => ({
-        //   docId : obj.payload.doc.id,
-        //   ...obj.payload.doc.data()
-        // } as UserInfo))
-        // this.currentUser = response[0];
-      })
-    })
+      let userD = JSON.parse(sessionStorage.getItem('currentUser'));
+      this.currentUser = userD.userData;
+      // this.userService.getUserDetails(userD.userData.email).subscribe(e => {
+       
+      // });
   }
 
   /**
@@ -65,8 +61,8 @@ export class RequestVoucherComponent implements OnInit {
    */
   initVoucherForm(){
     this.voucherForm = this.formBuilder.group({
-      storeCode : [null, Validators.required],
-      storeBranch : [null,Validators.required],
+      // storeCode : [null, Validators.required],
+      // storeBranch : [null,Validators.required],
       amount : [null,Validators.required]
     });
   }
@@ -74,18 +70,18 @@ export class RequestVoucherComponent implements OnInit {
   /**
    * Fetches all the Store Codes in the database.
    */
-  getStoreCodes(){
-    this.storeService.getAllStores().subscribe(response => {
-      this.stores = response;
-    },
-    err => {
+  // getStoreCodes(){
+  //   this.storeService.getAllStores().subscribe(response => {
+  //     this.stores = response;
+  //   },
+  //   err => {
 
-    },
-    () => {
+  //   },
+  //   () => {
 
-    }
-    );
-  }
+  //   }
+  //   );
+  // }
 
   /**
    * Creates and saves the voucher that is PENDING in the database.
@@ -94,9 +90,9 @@ export class RequestVoucherComponent implements OnInit {
   createRequest(voucher : Voucher){
     this.spinner.show();
     var voucherToSave : Voucher = voucher;
-    console.log(this.currentUser)
     voucherToSave.voucherStatus = AppConstants.PENDING;
-    voucherToSave.voucherName = this.currentUser.personalInfo ? this.currentUser.personalInfo.firstName + ' ' +this.currentUser.personalInfo.lastName : null;
+    // voucherToSave.voucherName = this.currentUser;
+    voucherToSave.uid = this.currentUser.userId;
     this.voucherService.saveNewVoucher(voucher).subscribe(
       data => {
       this.activeModal.close();

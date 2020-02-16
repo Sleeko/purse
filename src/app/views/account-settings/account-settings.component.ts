@@ -37,6 +37,9 @@ export class AccountSettingsComponent implements OnInit {
   isInvalidBeneficiary: boolean = false;
   currentUser : any;
   userId;
+  photoUrl : String = '';
+  isDuplicateProfile : boolean = false;
+  isDuplicateGovernmentProfile : boolean = false;
 
   constructor(private formBuilder: FormBuilder,
     private accountService: AccountService,
@@ -63,41 +66,15 @@ export class AccountSettingsComponent implements OnInit {
       birthPlace: [null, [Validators.required]],
       gender: [null, [Validators.required]],
       civilStatus: ['', [Validators.required]],
-      // nationality: ['', [Validators.required]],
+      nationality: ['', [Validators.required]],
       contactNumber: ['', [Validators.required, Validators.maxLength(10), Validators.minLength(10)]],
-      photo: ['']
+      photoUrl: [''],
     })
 
     this.buildBankForm();
     this.buildGovernmentForm();
     this.buildBeneficiariesForm();
-    this.checkBeneficiaryValidity();
-
   }
-
-
-  /**
-   * Checks the beneficiary FormArray if the values are not valid. 
-   */
-  checkBeneficiaryValidity() {
-    // var beneficariesData: PersonalInfo[] = [];
-
-    // this.beneficiariesForm.valueChanges.subscribe(data => {
-    //   beneficariesData = this.beneficiariesForm.get('beneficiaries').value
-    //   this.isInvalidBeneficiary = beneficariesData.some(ben => {
-    //     let birthDate = new Date(ben.dateOfBirth);
-    //     let age = moment().diff(birthDate, 'years');
-    //     return ben.address == null || ben.address == "" || ben.civilStatus == null
-    //       || ben.civilStatus == "" || ben.contactNumber == null || ben.contactNumber == ""
-    //       || ben.dateOfBirth == null || ben.dateOfBirth == "" || ben.firstName == null
-    //       || ben.firstName == "" || ben.gender == null || ben.gender == ""
-    //       || ben.lastName == null || ben.lastName == "" || ben.middleName == null
-    //       || ben.middleName == "" || ben.nationality == null || ben.nationality == ""
-    //       || ben.placeOfBirth == null || ben.placeOfBirth == "" || ben.tinNumber == null || age < 18
-    //   })
-    // })
-  }
-
 
   /**
    * Build Beneficiary FormArray
@@ -152,20 +129,17 @@ export class AccountSettingsComponent implements OnInit {
     })
   }
 
-
-
   /**
    * Gets current changes from the UI and saves the changes to database.
    */
   updateUserInfo() {
     this.spinner.show();
     var profile : Profile = this.mapFormToUserInfo();
-    console.log('profile ', profile)
     if (this.photoFile != null || this.photoFile != undefined) {
     this.userService.uploadPhoto(this.photoFile, profile).then(res => {
       this.growlService.createTimedSuccessMessage('User Successfully Updated', 'Success', 5000);
       this.spinner.hide();
-      this.cdr.detectChanges();
+      this.photoUrl = res;
     })
     } else {
       this.userService.updateUserInfo(profile).subscribe(
@@ -205,11 +179,10 @@ export class AccountSettingsComponent implements OnInit {
    * Gets current logged in user in the app.
    */
   getCurrentUser() {
-    this.userId = JSON.parse(localStorage.getItem('currentUser')).userData.userId;
-    console.log(JSON.parse(localStorage.getItem('currentUser')))
-    this.userService.getUserDetailsByAuthId(JSON.parse(localStorage.getItem('currentUser')).authToken).subscribe(data => {
+    this.userId = JSON.parse(sessionStorage.getItem('currentUser')).userData.userId;
+    this.userService.getUserDetailsByAuthId(JSON.parse(sessionStorage.getItem('currentUser')).authToken).subscribe(data => {
       this.profile = data;
-      console.log('profile from back end ', this.profile)
+      this.photoUrl = this.profile.memberProfile.photoUrl;
     }, err => {
 
     }, () => {
@@ -219,12 +192,32 @@ export class AccountSettingsComponent implements OnInit {
     
   }
 
+  checkIfProfileIsDuplicate(origin : string){
+    var profile = this.mapFormToUserInfo();
+    var origin = origin;
+    var res : any;
+    this.userService.checkProfileDuplicate(profile, origin).subscribe(
+      data => {
+        res = data;
+          this.isDuplicateGovernmentProfile = false;
+          this.isDuplicateProfile = false;
+      },
+      err => {
+        if(origin == 'PROFILE'){
+          this.isDuplicateProfile = true;
+        } else if(origin == 'GOV') {
+          this.isDuplicateGovernmentProfile = true;
+        } 
+      }
+      
+    )
+  }
+
   /**
    * Maps Objects to Reactive Form.
    * @param userInfo 
    */
   mapUserInfoToForm(profile: Profile) {
-    console.log('User Info ', profile)
     if(profile.memberProfile){
       this.personalInfoForm.patchValue({
         id : profile.memberProfile.id,
@@ -238,6 +231,7 @@ export class AccountSettingsComponent implements OnInit {
         civilStatus: profile.memberProfile.civilStatus,
         nationality: profile.memberProfile.nationality,
         contactNumber: profile.memberProfile.contactNumber,
+        
       });
     }
 
@@ -273,7 +267,7 @@ export class AccountSettingsComponent implements OnInit {
       })
     }
 
-
+    this.personalInfoForm.markAsPristine();
   }
 
   /**
@@ -282,8 +276,7 @@ export class AccountSettingsComponent implements OnInit {
    */
   onFileChange($event) {
     this.photoFile = $event.target.files[0]; // <--- File Object for future use.
-    console.log(this.photoFile);
-    this.personalInfoForm.controls['photo'].setValue(this.photoFile ? this.photoFile.name : ''); // <-- Set Value for Validation
+    this.personalInfoForm.controls['photoUrl'].setValue(this.photoFile ? this.photoFile.name : ''); // <-- Set Value for Validation
   }
 
 
@@ -291,7 +284,6 @@ export class AccountSettingsComponent implements OnInit {
 
     var personalInfo: PersonalInfo;
     personalInfo = this.registerCompleteFormGroup.getRawValue();
-    console.log(personalInfo)
 
     this.accountService.savePhotoAndRegister(this.photoFile, value).subscribe(
       data => {

@@ -109,7 +109,6 @@ export class SellersComponent implements OnInit {
     this.sellersService.getSellers().subscribe(
       data => {
         this.sellers = data;
-        console.log(data);
       },
       err => {
         //alert('error')

@@ -20,7 +20,7 @@ export class VouchersComponent implements OnInit {
   vouchers: Voucher[] = [];
 
   currentUser : UserInfo = new UserInfo();
-
+  currentUid;
   //change this while role is not implemented
   isAdmin : boolean = false; 
 
@@ -33,29 +33,18 @@ export class VouchersComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getAllPendingVouchers();
-    this.getCurrentUser();
-  }
-
-  /**
-   * Gets current logged in User in app.
-   */
-  getCurrentUser(){
-    this.userService.getCurrentUser().then(res => {
-      this.userService.getUserDetails(res.email).subscribe(e => {
-
-      })
-    })
+    this.getAllPendingVouchersByUser();
   }
 
   /**
    * Gets all PENDING status vouchers from database.
    */
-  getAllPendingVouchers(){
-    this.voucherService.getAllPendingVouchers().subscribe(
+  getAllPendingVouchersByUser(){
+    let userD = JSON.parse(sessionStorage.getItem('currentUser'));
+    this.currentUid = userD.userData.userId;
+    this.voucherService.getAllPendingVoucherByUser(this.currentUid).subscribe(
       data => {
         this.vouchers = data;
-        console.log('Vouchers ', this.vouchers)
       }
     )
   }

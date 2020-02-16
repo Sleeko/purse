@@ -11,6 +11,7 @@ export class PurseComponent implements OnInit {
   levelUpPurse: number = 0;
   reEntryPurse: number = 0;
   cycleMultiplier: number = 0;
+  showPrint : boolean = false;
 
   LVL_MAP: any = [
     {
@@ -69,6 +70,16 @@ export class PurseComponent implements OnInit {
       this.cashPurse = ((levelVar.amount) * 0.20  + ( 6 + 4 ) )* this.cycleMultiplier;
       this.levelUpPurse = (levelVar.amount) * 0.06;
     });
+  }
+
+  openPrint(){
+    this.showPrint = true;
+    console.log("asdasdas")
+  }
+
+  getEmit(event){
+    console.log(event)
+    this.showPrint = false;
   }
 
 }

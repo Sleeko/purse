@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { UserInfo } from '../../model/user-info.model';
 import { AppConstants } from '../../app.constants';
+import { UserData } from '../../model/user-data.model';
 
 
 @Component({
@@ -20,6 +21,7 @@ export class DefaultLayoutComponent implements OnDestroy, OnInit {
   private changes: MutationObserver;
   public element: HTMLElement;
   private currentUser : UserInfo = new UserInfo();
+  private userData : UserData = new UserData();
   constructor(
     public authService: AuthService, 
     public router: Router, 
@@ -46,8 +48,8 @@ export class DefaultLayoutComponent implements OnDestroy, OnInit {
   }
 
   getCurrentUser(){
-    const sessData : any = JSON.parse(localStorage.getItem('currentUser'));
-
+    const sessData : any = JSON.parse(sessionStorage.getItem('currentUser'));
+    this.userData = sessData.userData;
     //new implementation
     this.removeNonAdminTabs(sessData.userData.accountType);
     const mockUser = {
@@ -77,7 +79,6 @@ export class DefaultLayoutComponent implements OnDestroy, OnInit {
 
   removeNonAdminTabs(role){
     var navItemsArray = this.cloneObject(navItems);
-    console.log(role)
     if(role == AppConstants.MEMBER){
      navItemsArray.splice(navItemsArray.findIndex(nav => nav.name == "New Page"),1);
      navItemsArray.splice(navItemsArray.findIndex(nav => nav.name == "Admin Dashboard"),1);

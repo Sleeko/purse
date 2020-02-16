@@ -64,6 +64,7 @@ import { UtilsService } from './services/utils.service';
 import { CreateStoreModule } from './views/create-store/create-store.module';
 import { ChamberService } from './services/chamber.service';
 import { NgxMaskModule } from 'ngx-mask';
+import { PursePrintComponent } from './views/purse-print/purse-print.component';
 
 firebase.initializeApp(environment.firebase);
 

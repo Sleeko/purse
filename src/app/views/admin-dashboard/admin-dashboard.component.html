@@ -64,6 +64,67 @@
   <div class="row">
     <div class="col-md-12">
       <div class="card">
+          <div class="card-header">
+              Virtual Chamber Report
+          </div>
+          <div class="card-body">
+              <!-- p-table -->   
+              <p-table #dt [value]="vcReport" [paginator]="true" [rows]="10" [scrollable]="true" [globalFilterFields]="['uid','name','email']">
+                <ng-template pTemplate="caption">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <div style="text-align: left">
+                        <button type="button" label="EXCEL" (click)="exportExcel()" class="btn btn-primary btn-sm"><i class="fa fa-download"></i> <b>Generate Excel</b></button>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div style="text-align: right">        
+                        <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+                        <input type="text" pInputText size="50" placeholder="Search" (input)="dt.filterGlobal($event.target.value, 'contains')" style="width:auto">
+                    </div>
+                    </div>
+                  </div>
+              </ng-template>
+                  <ng-template pTemplate="header">
+                      <tr class="dash-header">
+                          <th>User ID</th>
+                          <th>Name</th>
+                          <th>Email</th>
+                          <th>Level</th>
+                          <th>Cycle</th>
+                          <th>Status</th>
+                          <th>Layaway Purse</th>
+                          <th>Cash Purse</th>
+                          <th>Re-Entry Purse</th>
+                          <th>Level-Up Purse</th>
+                          <th>Date Registered</th>
+                      </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-rowData>
+                    <tr>
+                      <td>{{rowData.uid}}</td>
+                      <td>{{rowData.name}}</td>
+                      <td>{{rowData.email}}</td>
+                      <td>{{rowData.level}}</td>
+                      <td>{{rowData.cycle}}</td>
+                      <td><span [ngClass]="(rowData.isActive) ? 'badge badge-success':'badge badge-danger'">{{rowData.isActive ? 'ACTIVE' : 'INACTIVE'}}</span></td>
+                      <td>{{rowData.layaway | currency:'PHP':'symbol-narrow':'0.2-2'}}</td>
+                      <td>{{rowData.cash | currency:'PHP':'symbol-narrow':'0.2-2'}}</td>
+                      <td>{{rowData.reentry | currency:'PHP':'symbol-narrow':'0.2-2'}}</td>
+                      <td>{{rowData.levelUp | currency:'PHP':'symbol-narrow':'0.2-2'}}</td>
+                      <td>{{rowData.dateRegistered | date: 'mediumDate'}}</td>
+                    </tr>
+                  </ng-template>
+              </p-table>
+            
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
         <div class="card-header">
           Member's Activities
         </div>
@@ -198,6 +259,7 @@
       </div>
     </div>
   </div>
+
 
   <div class="row">
     <div class="col-md-12">

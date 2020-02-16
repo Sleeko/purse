@@ -11,7 +11,7 @@
                 </div>
                 <div class="form-group">
                     <label>Image</label>
-                    <input type="file" class="form-control" (change)="onFileChange($event)">
+                    <input type="file" class="form-control" accept=".png,.jpeg, .jpg"  (change)="onFileChange($event)">
                 </div>
                 <div class="form-group">
                     <label>Description</label>
@@ -22,3 +22,38 @@
         </div>
     </div>
 </div>
+<div class="w-100">
+        <p-table [value]="featuredContents">
+            <ng-template pTemplate="header">
+                <tr class="text-center" style="font-size: 1.25em">
+                    <th style="width: 10%;">Id</th>
+                    <th style="width: 20%;">Title</th>
+                    <th style="width: 40%;">Description</th>
+                    <th style="width: 20%">Image</th>
+                    <th style="width: 15%;">Status</th>
+                    <th style="width: 15%;"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-featured let-i="rowIndex">
+                <tr class="text-center">
+                    <td>{{featured.id}}</td>
+                    <td><input type="text" class="w-100 form-control" [(ngModel)]="featured.title"></td>
+                    <td><textarea class="w-100 h-100 form-control" [(ngModel)]="featured.description"></textarea></td>
+                    <td>
+                        <img [src]="featured.imageUrl" width="150" height="150">
+                        <input type="file"  accept=".png,.jpeg, .jpg" class="m-1" (change)="onFileChange($event, rowIndex, featured)">
+                    </td>
+                    <td>
+                      <select [(ngModel)]="featured.status" class="form-control">
+                          <option>ACTIVE</option>
+                          <option>DELETED</option>
+                      </select>
+                    </td>
+                    <td>
+                        <button class="btn btn-success" (click)="updateFeatured(featured)">Update</button>
+                        <button class="btn btn-danger mx-1" (click)="deleteFeaturedContent(featured)">Delete</button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
