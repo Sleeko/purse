@@ -22,7 +22,7 @@ export class VouchersComponent implements OnInit {
   currentUser : UserInfo = new UserInfo();
   currentUid;
   //change this while role is not implemented
-  isAdmin : boolean = true; 
+  isAdmin : boolean = false; 
 
   constructor(
     private modalService: NgbModal,
@@ -42,6 +42,7 @@ export class VouchersComponent implements OnInit {
   getAllPendingVouchersByUser(){
     let userD = JSON.parse(sessionStorage.getItem('currentUser'));
     this.currentUid = userD.userData.userId;
+    this.isAdmin = userD.userData.accountType == AppConstants.ADMIN ? true : false;
     this.voucherService.getAllPendingVoucherByUser(this.currentUid).subscribe(
       data => {
         this.vouchers = data;
