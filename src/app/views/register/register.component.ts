@@ -9,8 +9,8 @@ import { FeaturedContent } from '../../model/featured-content.model';
 import { AccountService } from '../../services/account.service';
 import { AlertService } from 'ngx-alerts';
 import { GrowlService } from 'ngx-growl';
-import { AdvGrowlService } from 'primeng-advanced-growl';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -94,7 +94,7 @@ export class RegisterComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
     private accountService: AccountService,
     private featuredContentService: FeaturedContentService,
-    private growlService: AdvGrowlService,
+    private growlService: ToastrService,
     private spinnerService : NgxSpinnerService,
     public router: Router) {
   }
@@ -267,13 +267,13 @@ export class RegisterComponent implements OnInit {
     this.accountService.register(payload).subscribe(
       res => {
         if (res.httpStatus == 'BAD_REQUEST') {
-          this.growlService.createTimedErrorMessage(res.message, 'Error', 5000);
+          this.growlService.error(res.message, 'Error');
         } else if (res.httpStatus == 'CREATED') {
-          this.growlService.createTimedSuccessMessage(res.message, 'Success', 5000);
+          this.growlService.success(res.message, 'Success');
         }
       },
       err => {
-        this.growlService.createErrorMessage('Error', 'Register Failed');
+        this.growlService.error('Error', 'Register Failed');
       },
       () => {
         this.registerLoading = false;
@@ -283,7 +283,15 @@ export class RegisterComponent implements OnInit {
   }
 
   doRegisterSeller(payload) {
-    this.accountService.register(payload);
+    this.accountService.register(payload).subscribe(
+      data => {
+        this.router.navigate(['/login']);
+        this.growlService.success('User Created!', 'Success')
+      },
+      err => {
+        this.growlService.error('Error creating user', 'Error')
+      }
+    );
   }
 
 }

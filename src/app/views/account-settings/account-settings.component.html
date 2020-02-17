@@ -8,7 +8,7 @@
                 </div>
                 <div class="card-body">
                     <h3 class="card-title mb-4">
-                        {{(profile?.memberProfile?.firstName ? profile?.memberProfile?.firstName : '')  + ' ' + (profile?.memberProfile?.lastName ? profile?.memberProfile?.lastName : '')}}
+                        {{(userFirstName)  + ' ' + (userLastName)}}
                     </h3>
                 </div>
             </div>
@@ -190,8 +190,8 @@
                                             <input type="date" class="form-control form-control-sm" placeholder=""
                                                 formControlName="birthday">
                                             <small class="text-danger font-weight-bold ml-1"
-                                                *ngIf="((beneficiariesForm.controls.birthday.value == null || beneficiariesForm.controls.birthday.value == '' || beneficiariesForm.controls.birthday.errors?.ageInvalid) && beneficiariesForm.get('birthday').dirty)">
-                                                Enter your birth date. Must be 18 years old above.
+                                                *ngIf="((beneficiariesForm.controls.birthday.value == null || beneficiariesForm.controls.birthday.value == '') && beneficiariesForm.get('birthday').dirty)">
+                                                Please provide birthdate.
                                             </small>
                                         </div>
                                         <div class="form-group col-md-6 col-sm-12">

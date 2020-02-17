@@ -4,8 +4,8 @@ import * as firebase from 'firebase/app';
 import 'firebase/storage'
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { AppConstants } from '../app.constants';
-import { AdvGrowlService } from 'primeng-advanced-growl';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Injectable({
@@ -14,14 +14,11 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class FeaturedContentService {
 
   private url = AppConstants.BASE_API_URL;
-  private headers = {
-    'Content-Type':'application/json',
-    'Authorization' : 'Bearer ' + JSON.parse(sessionStorage.getItem('currentUser')).authToken
-  }
+
 
   constructor(
     private http: HttpClient,
-    private growlService : AdvGrowlService,
+    private growlService : ToastrService,
     private spinnerService : NgxSpinnerService
     ) { }
 
@@ -57,11 +54,19 @@ export class FeaturedContentService {
 }
 
   updateFeaturedContent(featured : FeaturedContent){
-    return this.http.put(this.url + '/api/admin/update-featuredContent', featured, {headers : this.headers});
+    const headers = {
+      'Content-Type':'application/json',
+      'Authorization' : 'Bearer ' + JSON.parse(sessionStorage.getItem('currentUser')).authToken
+    }
+    return this.http.put(this.url + '/api/admin/update-featuredContent', featured, {headers : headers});
   }
 
   deleteFeaturedContent(featured : FeaturedContent){
-    return this.http.delete(this.url + '/api/admin/delete-featuredContent/' + featured.id, {headers : this.headers});
+    const headers = {
+      'Content-Type':'application/json',
+      'Authorization' : 'Bearer ' + JSON.parse(sessionStorage.getItem('currentUser')).authToken
+    }
+    return this.http.delete(this.url + '/api/admin/delete-featuredContent/' + featured.id, {headers :headers});
   }
   
   getAllFeaturedContent(){
@@ -69,7 +74,11 @@ export class FeaturedContentService {
   }
 
   saveNewFeaturedContent(content: FeaturedContent) {
-    return this.http.post(this.url + '/api/admin/create-featuredContent', content, {headers : this.headers});
+    const headers = {
+      'Content-Type':'application/json',
+      'Authorization' : 'Bearer ' + JSON.parse(sessionStorage.getItem('currentUser')).authToken
+    }
+    return this.http.post(this.url + '/api/admin/create-featuredContent', content, {headers : headers});
   }
   
 

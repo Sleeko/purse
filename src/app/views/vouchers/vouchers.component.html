@@ -17,7 +17,7 @@
                     <td>{{i+1}}</td>
                     <!-- <td>{{voucher.voucherName.includes('undefined') ? '' : voucher.voucherName}}</td>
                     <td>{{voucher.storeCode}}</td> -->
-                    <td>₱{{voucher.amount}}</td>
+                    <td>₱{{voucher.amount | number : '0.00'}}</td>
                     <td *ngIf="!isAdmin">{{voucher.voucherStatus | uppercase}}</td>
                     <td *ngIf="isAdmin">
                         <button class="btn btn-success mx-1" (click)="approveVoucher(voucher)">Approve</button>

@@ -13,8 +13,8 @@ import { UserService } from '../../services/user.service';
 import { User } from 'firebase';
 import { FirebaseUserModel } from '../../model/user.model';
 import { UserInfo } from '../../model/user-info.model';
-import { AdvGrowlService } from 'primeng-advanced-growl';
 import { UserData } from '../../model/user-data.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-request-voucher',
@@ -37,12 +37,13 @@ export class RequestVoucherComponent implements OnInit {
     private router : Router,
     private voucherService : VoucherService,
     private userService : UserService,
-    private growlService : AdvGrowlService
+    private growlService : ToastrService
   ) { }
 
   ngOnInit() {
     this.initVoucherForm();
     this.getCurrentUser();
+    this.getStoreCodes();
   }
 
   /**
@@ -61,8 +62,8 @@ export class RequestVoucherComponent implements OnInit {
    */
   initVoucherForm(){
     this.voucherForm = this.formBuilder.group({
-      // storeCode : [null, Validators.required],
-      // storeBranch : [null,Validators.required],
+      storeCode : [null, Validators.required],
+      storeBranch : [null,Validators.required],
       amount : [null,Validators.required]
     });
   }
@@ -70,18 +71,18 @@ export class RequestVoucherComponent implements OnInit {
   /**
    * Fetches all the Store Codes in the database.
    */
-  // getStoreCodes(){
-  //   this.storeService.getAllStores().subscribe(response => {
-  //     this.stores = response;
-  //   },
-  //   err => {
+  getStoreCodes(){
+    this.storeService.getAllStores().subscribe(response => {
+      this.stores = response;
+    },
+    err => {
 
-  //   },
-  //   () => {
+    },
+    () => {
 
-  //   }
-  //   );
-  // }
+    }
+    );
+  }
 
   /**
    * Creates and saves the voucher that is PENDING in the database.
@@ -96,9 +97,9 @@ export class RequestVoucherComponent implements OnInit {
     this.voucherService.saveNewVoucher(voucher).subscribe(
       data => {
       this.activeModal.close();
-      this.growlService.createTimedSuccessMessage('Voucher Created', 'Success', 5000);
+      this.growlService.success('Voucher Created', 'Success');
     }, err => {
-      this.growlService.createTimedErrorMessage('Failed to create voucher', 'Error', 5000);
+      this.growlService.error('Failed to create voucher', 'Error');
     }, () => {
       this.spinner.hide()
       this.emitCreatedVoucher.emit(voucher);

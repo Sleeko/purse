@@ -75,15 +75,6 @@ export const navItems: NavData[] = [
       text: ''
     }
   },
-  // {
-  //   name: 'Account Settings',
-  //   url: '/account-settings',
-  //   icon: 'fa fa-user-o fa-5x',
-  //   badge: {
-  //     variant: 'info',
-  //     text: ''
-  //   }
-  // },
   {
     name: 'Featured Content',
     url: '/new-page',
@@ -92,15 +83,7 @@ export const navItems: NavData[] = [
       variant: 'info',
       text: ''
     }
-  },  // {
-  //   name: 'FAQ',
-  //   url: '/faq',
-  //   icon: 'fa fa-question-circle fa-5x',
-  //   badge: {
-  //     variant: 'info',
-  //     text: ''
-  //   }
-  // },
+  },  
   {
     name: 'Terms and Conditions',
     url: '/terms-and-conditions',
@@ -110,15 +93,6 @@ export const navItems: NavData[] = [
       text: ''
     }
   },
-  // {
-  //   name: 'Contact Us',
-  //   url: '/contact-us',
-  //   icon: 'fa fa-phone fa-5x',
-  //   badge: {
-  //     variant: 'info',
-  //     text: ''
-  //   }
-  // },
   {
     name: 'Quit',
     url: '/quit',
@@ -128,6 +102,25 @@ export const navItems: NavData[] = [
       text: ''
     }
   },
+
+    //   name: 'FAQ',
+  //   url: '/faq',
+  //   icon: 'fa fa-question-circle fa-5x',
+  //   badge: {
+  //     variant: 'info',
+  //     text: ''
+  //   }
+  // },
+  // {
+  //   name: 'Contact Us',
+  //   url: '/contact-us',
+  //   icon: 'fa fa-phone fa-5x',
+  //   badge: {
+  //     variant: 'info',
+  //     text: ''
+  //   }
+  // },
+
   // 
   // { 
   //   name: 'Seller Profile',
