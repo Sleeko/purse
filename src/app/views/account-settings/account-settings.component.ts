@@ -96,7 +96,7 @@ export class AccountSettingsComponent implements OnInit {
       middleName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
       address: ['', [Validators.required]],
-      birthday: [nowDate, [Validators.required, CustomValidators.ageValidator]],
+      birthday: [nowDate, [Validators.required]],
       birthPlace: [null, [Validators.required]],
       gender: [null, [Validators.required]],
       civilStatus: ['', [Validators.required]],
@@ -140,11 +140,13 @@ export class AccountSettingsComponent implements OnInit {
       this.growlService.success('User Successfully Updated', 'Success');
       this.spinner.hide();
       this.photoUrl = res;
+      this.updateNamesUponSave(profile);
     })
     } else {
       this.userService.updateUserInfo(profile).subscribe(
         data => {
           this.growlService.success('User Successfully Updated', 'Success');
+          this.updateNamesUponSave(profile);
         },
         err => {
           this.growlService.error('Error Updating User', 'Error');
@@ -154,6 +156,11 @@ export class AccountSettingsComponent implements OnInit {
         }
       )
     }
+  }
+
+  updateNamesUponSave(profile : Profile){
+    this.profile.memberProfile.firstName = profile.memberProfile.firstName;
+    this.profile.memberProfile.lastName = profile.memberProfile.lastName;
   }
 
   /**

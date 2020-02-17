@@ -43,6 +43,7 @@ export class RequestVoucherComponent implements OnInit {
   ngOnInit() {
     this.initVoucherForm();
     this.getCurrentUser();
+    this.getStoreCodes();
   }
 
   /**
@@ -61,8 +62,8 @@ export class RequestVoucherComponent implements OnInit {
    */
   initVoucherForm(){
     this.voucherForm = this.formBuilder.group({
-      // storeCode : [null, Validators.required],
-      // storeBranch : [null,Validators.required],
+      storeCode : [null, Validators.required],
+      storeBranch : [null,Validators.required],
       amount : [null,Validators.required]
     });
   }
@@ -70,18 +71,18 @@ export class RequestVoucherComponent implements OnInit {
   /**
    * Fetches all the Store Codes in the database.
    */
-  // getStoreCodes(){
-  //   this.storeService.getAllStores().subscribe(response => {
-  //     this.stores = response;
-  //   },
-  //   err => {
+  getStoreCodes(){
+    this.storeService.getAllStores().subscribe(response => {
+      this.stores = response;
+    },
+    err => {
 
-  //   },
-  //   () => {
+    },
+    () => {
 
-  //   }
-  //   );
-  // }
+    }
+    );
+  }
 
   /**
    * Creates and saves the voucher that is PENDING in the database.

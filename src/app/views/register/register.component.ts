@@ -283,7 +283,15 @@ export class RegisterComponent implements OnInit {
   }
 
   doRegisterSeller(payload) {
-    this.accountService.register(payload);
+    this.accountService.register(payload).subscribe(
+      data => {
+        this.router.navigate(['/login']);
+        this.growlService.success('User Created!', 'Success')
+      },
+      err => {
+        this.growlService.error('Error creating user', 'Error')
+      }
+    );
   }
 
 }

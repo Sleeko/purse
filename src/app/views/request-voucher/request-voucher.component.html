@@ -8,7 +8,7 @@
     <form [formGroup]="voucherForm" (ngSubmit)="createRequest(voucherForm.value)">
         <div class="modal-body">
             <div>
-                <!-- <div class="form-group">
+                <div class="form-group">
                     <label for="storeCode">Store Code</label>
                     <select class="form-control" formControlName="storeCode">
                         <option [ngValue]="null"></option>
@@ -18,7 +18,7 @@
                         *ngIf="(voucherForm.get('storeCode').invalid && voucherForm.get('storeCode').dirty)">
                         Select store code
                     </small>
-                    <button *ngIf="currentUser?.role == 'admin'" class="btn-sm btn-primary pull-right mt-1" (click)="createNewStore()">Create new
+                    <button *ngIf="currentUser?.accountType == 'ADMIN'" class="btn-sm btn-primary pull-right mt-1" (click)="createNewStore()">Create new
                         store</button>
                 </div>
                 <div class="form-group">
@@ -28,7 +28,7 @@
                         *ngIf="(voucherForm.get('storeBranch').invalid && voucherForm.get('storeBranch').dirty)">
                         Enter store branch
                     </small>
-                </div> -->
+                </div>
                 <div class="form-group">
                     <label for="amount">Amount</label>
                     <input currencyMask

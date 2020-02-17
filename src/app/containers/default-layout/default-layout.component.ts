@@ -78,10 +78,13 @@ export class DefaultLayoutComponent implements OnDestroy, OnInit {
   }
 
   removeNonAdminTabs(role){
-    var navItemsArray = this.cloneObject(navItems);
+    let navItemsArray = this.cloneObject(navItems);
+    console.log('old ' , navItems)
+    console.log('clone ' , navItemsArray)
     if(role == AppConstants.MEMBER){
      navItemsArray.splice(navItemsArray.findIndex(nav => nav.name == "New Page"),1);
      navItemsArray.splice(navItemsArray.findIndex(nav => nav.name == "Admin Dashboard"),1);
+     navItemsArray.splice(navItemsArray.findIndex(nav => nav.name == "Featured Content"),1);
     } else if(role == AppConstants.SELLER){
       navItemsArray = null;
     } else if(role == AppConstants.ADMIN){
@@ -91,6 +94,7 @@ export class DefaultLayoutComponent implements OnDestroy, OnInit {
       navItemsArray.splice(navItemsArray.findIndex(nav => nav.name == "Quit"),1);
     }
 
+    console.log(this.navItemsFiltered)
 
     this.navItemsFiltered = navItemsArray;
    }
