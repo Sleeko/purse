@@ -18,7 +18,6 @@ export class PursePrintComponent implements OnInit {
 
   ngOnInit() {
     this.userData = JSON.parse(sessionStorage.getItem('currentUser')).userData
-    console.log(this.userData)
   }
 
   async print(){

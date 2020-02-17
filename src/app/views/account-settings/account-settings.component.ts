@@ -40,6 +40,8 @@ export class AccountSettingsComponent implements OnInit {
   photoUrl : String = '';
   isDuplicateProfile : boolean = false;
   isDuplicateGovernmentProfile : boolean = false;
+  userFirstName : String = '';
+  userLastName : String = '';
 
   constructor(private formBuilder: FormBuilder,
     private accountService: AccountService,
@@ -159,8 +161,8 @@ export class AccountSettingsComponent implements OnInit {
   }
 
   updateNamesUponSave(profile : Profile){
-    this.profile.memberProfile.firstName = profile.memberProfile.firstName;
-    this.profile.memberProfile.lastName = profile.memberProfile.lastName;
+    this.userFirstName = profile.memberProfile.firstName;
+    this.userLastName = profile.memberProfile.lastName;
   }
 
   /**
@@ -189,7 +191,11 @@ export class AccountSettingsComponent implements OnInit {
     this.userId = JSON.parse(sessionStorage.getItem('currentUser')).userData.userId;
     this.userService.getUserDetailsByAuthId(JSON.parse(sessionStorage.getItem('currentUser')).authToken).subscribe(data => {
       this.profile = data;
-      this.photoUrl = this.profile.memberProfile.photoUrl;
+      if(this.profile.memberProfile){
+        this.updateNamesUponSave(this.profile);
+        this.photoUrl = this.profile.memberProfile.photoUrl;
+
+      }
     }, err => {
 
     }, () => {

@@ -74,11 +74,9 @@ export class PurseComponent implements OnInit {
 
   openPrint(){
     this.showPrint = true;
-    console.log("asdasdas")
   }
 
   getEmit(event){
-    console.log(event)
     this.showPrint = false;
   }
 

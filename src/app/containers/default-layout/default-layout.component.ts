@@ -79,8 +79,6 @@ export class DefaultLayoutComponent implements OnDestroy, OnInit {
 
   removeNonAdminTabs(role){
     let navItemsArray = this.cloneObject(navItems);
-    console.log('old ' , navItems)
-    console.log('clone ' , navItemsArray)
     if(role == AppConstants.MEMBER){
      navItemsArray.splice(navItemsArray.findIndex(nav => nav.name == "New Page"),1);
      navItemsArray.splice(navItemsArray.findIndex(nav => nav.name == "Admin Dashboard"),1);
@@ -93,9 +91,6 @@ export class DefaultLayoutComponent implements OnDestroy, OnInit {
       navItemsArray.splice(navItemsArray.findIndex(nav => nav.name == "Terms and Conditions"),1);
       navItemsArray.splice(navItemsArray.findIndex(nav => nav.name == "Quit"),1);
     }
-
-    console.log(this.navItemsFiltered)
-
     this.navItemsFiltered = navItemsArray;
    }
 
