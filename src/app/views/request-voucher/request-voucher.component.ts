@@ -13,8 +13,8 @@ import { UserService } from '../../services/user.service';
 import { User } from 'firebase';
 import { FirebaseUserModel } from '../../model/user.model';
 import { UserInfo } from '../../model/user-info.model';
-import { AdvGrowlService } from 'primeng-advanced-growl';
 import { UserData } from '../../model/user-data.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-request-voucher',
@@ -37,7 +37,7 @@ export class RequestVoucherComponent implements OnInit {
     private router : Router,
     private voucherService : VoucherService,
     private userService : UserService,
-    private growlService : AdvGrowlService
+    private growlService : ToastrService
   ) { }
 
   ngOnInit() {
@@ -96,9 +96,9 @@ export class RequestVoucherComponent implements OnInit {
     this.voucherService.saveNewVoucher(voucher).subscribe(
       data => {
       this.activeModal.close();
-      this.growlService.createTimedSuccessMessage('Voucher Created', 'Success', 5000);
+      this.growlService.success('Voucher Created', 'Success');
     }, err => {
-      this.growlService.createTimedErrorMessage('Failed to create voucher', 'Error', 5000);
+      this.growlService.error('Failed to create voucher', 'Error');
     }, () => {
       this.spinner.hide()
       this.emitCreatedVoucher.emit(voucher);

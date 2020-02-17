@@ -6,8 +6,8 @@ import { Store } from '../../model/store.model';
 import { StoreService } from '../../services/store.service';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
-import { AdvGrowlService } from 'primeng-advanced-growl';
 import { AppConstants } from '../../app.constants';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-create-store',
@@ -30,7 +30,7 @@ export class CreateStoreComponent implements OnInit {
     private storeService: StoreService,
     private messageService: MessageService,
     public router: Router,
-    private growlService : AdvGrowlService,
+    private growlService : ToastrService,
     private spinnerService : NgxSpinnerService
   ) { }
 
@@ -68,13 +68,13 @@ export class CreateStoreComponent implements OnInit {
     this.spinnerService.show()
     this.storeService.createNewStore(store).subscribe(data => {
         if(data.success){
-          this.growlService.createTimedSuccessMessage('Store Created', 'Success', 5000);
+          this.growlService.success('Store Created', 'Success');
         } else {
-          this.growlService.createTimedErrorMessage('Error creating store', 'Error', 5000);
+          this.growlService.error('Error creating store', 'Error');
         }
     },
     err => {
-      this.growlService.createTimedErrorMessage('Error creating store', 'Error', 5000);
+      this.growlService.error('Error creating store', 'Error');
     },
     () => {
       this.spinnerService.hide()
@@ -109,13 +109,13 @@ export class CreateStoreComponent implements OnInit {
     this.storeService.deleteStore(store).subscribe(
       data => {
         if(data.success){
-          this.growlService.createTimedSuccessMessage('Store Deleted', 'Success', 5000);
+          this.growlService.success('Store Deleted', 'Success');
         } else {
-          this.growlService.createTimedErrorMessage('Error deleting store', 'Error', 5000);
+          this.growlService.error('Error deleting store', 'Error');
         }      
       },
       err => {
-        this.growlService.createTimedErrorMessage('Error deleting store', 'Error', 5000);
+        this.growlService.error('Error deleting store', 'Error');
       },
       () => {
         this.spinnerService.hide();
@@ -133,13 +133,13 @@ export class CreateStoreComponent implements OnInit {
     this.storeService.updateStore(store).subscribe(data => {
       this.enableStoreEdit = false;
       if(data.success){
-        this.growlService.createTimedSuccessMessage('Store Updated', 'Success', 5000);
+        this.growlService.success('Store Updated', 'Success');
       } else {
-        this.growlService.createTimedErrorMessage('Error updating store', 'Error', 5000);
+        this.growlService.error('Error updating store', 'Error');
       }
     },
     err => {
-      this.growlService.createTimedErrorMessage('Error updating store', 'Error', 5000);
+      this.growlService.error('Error updating store', 'Error');
     },
     () => {
       this.spinnerService.hide();

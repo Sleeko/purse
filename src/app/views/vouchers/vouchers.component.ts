@@ -8,7 +8,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import { UserService } from '../../services/user.service';
 import { UserInfo } from '../../model/user-info.model';
-import { AdvGrowlService } from 'primeng-advanced-growl';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-vouchers',
@@ -22,14 +22,14 @@ export class VouchersComponent implements OnInit {
   currentUser : UserInfo = new UserInfo();
   currentUid;
   //change this while role is not implemented
-  isAdmin : boolean = false; 
+  isAdmin : boolean = true; 
 
   constructor(
     private modalService: NgbModal,
     private voucherService : VoucherService,
     private userService : UserService,
     private spinner : NgxSpinnerService,
-    private growlService : AdvGrowlService
+    private growlService : ToastrService
   ) { }
 
   ngOnInit() {
@@ -70,9 +70,9 @@ export class VouchersComponent implements OnInit {
     voucherToDeny.voucherStatus = AppConstants.REJECTED;
     this.voucherService.approveOrRejectVoucher(voucher).subscribe(
       res => {
-      this.growlService.createTimedSuccessMessage('Voucher Denied', 'Success', 5000);
+      this.growlService.success('Voucher Denied', 'Success');
     }, err => {
-      this.growlService.createTimedErrorMessage('Failed to deny voucher', 'Error', 5000);
+      this.growlService.error('Failed to deny voucher', 'Error');
     }, () => { 
       this.spinner.hide()
       this.vouchers.splice(this.vouchers.findIndex(vou => vou.id == voucher.id),1);
@@ -89,9 +89,9 @@ export class VouchersComponent implements OnInit {
     voucherToApprove.voucherStatus = AppConstants.APPROVED;
     this.voucherService.approveOrRejectVoucher(voucher).subscribe(
       res => {
-      this.growlService.createTimedSuccessMessage('Voucher Approved', 'Success', 5000);
+      this.growlService.success('Voucher Approved', 'Success');
     }, err => {
-      this.growlService.createTimedErrorMessage('Failed to approve voucher', 'Error', 5000);
+      this.growlService.error('Failed to approve voucher', 'Error');
     }, () => {
        this.spinner.hide()
        this.vouchers.splice(this.vouchers.findIndex(vou => vou.id == voucher.id),1);

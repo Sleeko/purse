@@ -13,13 +13,13 @@ import { FirebaseUserModel } from '../../model/user.model';
 import { DatePipe } from '@angular/common';
 import { Timestamp } from 'rxjs/internal/operators/timestamp';
 import { AccountInfo } from '../../model/account-info.model';
-import { AdvGrowlService } from 'primeng-advanced-growl';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Profile } from './../../model/profile.model';
 import { Beneficiaries } from '../../model/beneficiaries.model';
 import { MemberProfile } from './../../model/member-profile.model';
 import { BankAccount } from './../../model/bank-account.model';
 import { GovermentDocuments } from './../../model/government-documents.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   templateUrl: 'account-settings.component.html',
@@ -47,7 +47,7 @@ export class AccountSettingsComponent implements OnInit {
     private userService: UserService,
     private datePipe: DatePipe,
     public router: Router,
-    private growlService : AdvGrowlService,
+    private growlService : ToastrService,
     private spinner : NgxSpinnerService,
     private cdr : ChangeDetectorRef) { }
 
@@ -137,17 +137,17 @@ export class AccountSettingsComponent implements OnInit {
     var profile : Profile = this.mapFormToUserInfo();
     if (this.photoFile != null || this.photoFile != undefined) {
     this.userService.uploadPhoto(this.photoFile, profile).then(res => {
-      this.growlService.createTimedSuccessMessage('User Successfully Updated', 'Success', 5000);
+      this.growlService.success('User Successfully Updated', 'Success');
       this.spinner.hide();
       this.photoUrl = res;
     })
     } else {
       this.userService.updateUserInfo(profile).subscribe(
         data => {
-          this.growlService.createTimedSuccessMessage('User Successfully Updated', 'Success', 5000);
+          this.growlService.success('User Successfully Updated', 'Success');
         },
         err => {
-          this.growlService.createTimedErrorMessage('Error Updating User', 'Error', 5000);
+          this.growlService.error('Error Updating User', 'Error');
         },
         () => {
           this.spinner.hide();

@@ -6,7 +6,7 @@ import { take } from 'rxjs/operators';
 import { UserService } from '../../services/user.service';
 import { UserInfo } from '../../model/user-info.model';
 import { AppConstants } from '../../app.constants';
-import { AdvGrowlService } from 'primeng-advanced-growl';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
   constructor(public authService: AuthService,
     public router: Router,
     private userService: UserService,
-    private growlService : AdvGrowlService,
+    private growlService : ToastrService,
     private fb: FormBuilder) {
     this.errorText = '';
     this.createForm();
@@ -51,9 +51,9 @@ export class LoginComponent implements OnInit {
   tryLogin(value) {
     this.authService.login(value).subscribe(res => {
       if(res.httpStatus == 'OK'){
-        this.growlService.createTimedSuccessMessage(res.message, 'Success', 5000);
+        this.growlService.success(res.message, 'Success');
       } else if(res.httpStatus == 500){
-        this.growlService.createTimedErrorMessage(res.message, 'Error', 5000);
+        this.growlService.error(res.message, 'Error');
       }
       const user = {
         role: res.userData.accountType
@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit {
       this.navigateUserByRole(user);
     },
     err => {
-      this.growlService.createTimedErrorMessage('Username or Password is incorrect', 'Error', 5000);
+      this.growlService.error('Username or Password is incorrect', 'Error');
     },
     () => {
 

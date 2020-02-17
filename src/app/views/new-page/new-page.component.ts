@@ -4,7 +4,7 @@ import { FeaturedContent } from '../../model/featured-content.model';
 import { FeaturedContentService } from '../../services/featured-content.service';
 import { AppConstants } from '../../app.constants';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { AdvGrowlService } from 'primeng-advanced-growl';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-new-page',
@@ -23,7 +23,7 @@ export class NewPageComponent implements OnInit {
     private featuredContentService: FeaturedContentService,
     private spinnerService: NgxSpinnerService,
     private cdr: ChangeDetectorRef,
-    private growlService: AdvGrowlService) { }
+    private growlService: ToastrService) { }
 
   ngOnInit() {
     this.contentForm = this.formBuilder.group({
@@ -46,10 +46,10 @@ export class NewPageComponent implements OnInit {
       this.featuredContentService.updateFeaturedContent(featured).subscribe(
         data => {
           console.log(data)
-          this.growlService.createTimedSuccessMessage('Featured Content Updated', 'Success', 5000);
+          this.growlService.success('Featured Content Updated', 'Success');
         },
         err => {
-          this.growlService.createTimedErrorMessage('Failed to update content', 'Error', 5000);
+          this.growlService.error('Failed to update content', 'Error');
         },
         () => {
           this.spinnerService.hide();
@@ -64,10 +64,10 @@ export class NewPageComponent implements OnInit {
     this.spinnerService.show()
     this.featuredContentService.deleteFeaturedContent(featured).subscribe(
       data => {
-        this.growlService.createTimedSuccessMessage('Featured Content Deleted', 'Success', 5000);
+        this.growlService.success('Featured Content Deleted', 'Success');
       },
       err => {
-        this.growlService.createTimedErrorMessage('Failed to delete content', 'Error', 5000);
+        this.growlService.error('Failed to delete content', 'Error');
       },
       () => {
         this.spinnerService.hide();

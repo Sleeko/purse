@@ -30,7 +30,7 @@ import { ChartsModule } from 'ng2-charts';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxSpinnerModule } from "ngx-spinner";
 import {CarouselModule} from 'primeng/carousel';
-import {AdvGrowlModule} from 'primeng-advanced-growl';
+import { ToastrModule } from 'ngx-toastr';
 
 
 import { AppComponent } from './app.component';
@@ -97,7 +97,11 @@ firebase.initializeApp(environment.firebase);
     CarouselModule,
     DirectivesModule,
     CreateStoreModule,
-    AdvGrowlModule
+    ToastrModule.forRoot({
+      timeOut: 10000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+    })
   ],
   declarations: [
     AppComponent,

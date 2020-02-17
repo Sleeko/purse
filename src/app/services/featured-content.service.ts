@@ -4,8 +4,8 @@ import * as firebase from 'firebase/app';
 import 'firebase/storage'
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { AppConstants } from '../app.constants';
-import { AdvGrowlService } from 'primeng-advanced-growl';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Injectable({
@@ -21,7 +21,7 @@ export class FeaturedContentService {
 
   constructor(
     private http: HttpClient,
-    private growlService : AdvGrowlService,
+    private growlService : ToastrService,
     private spinnerService : NgxSpinnerService
     ) { }
 
